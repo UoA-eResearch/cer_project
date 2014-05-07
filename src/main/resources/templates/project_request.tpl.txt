@@ -1,0 +1,12 @@
+__RESEARCHER_NAME__ requested a new project to be created.
+
+Title:
+__PROJECT_TITLE__
+
+Description:
+__PROJECT_DESCRIPTION__
+
+
+Link to newly created project in database:
+__PROJECT_LINK__
+

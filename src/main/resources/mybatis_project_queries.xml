@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nz.ac.auckland.cer.project">
+
+  <select id="getAdviserForTuakiriSharedToken" parameterType="java.lang.String" resultType="nz.ac.auckland.cer.project.pojo.Adviser">
+    SELECT *
+    FROM adviser 
+    WHERE id IN (
+      SELECT adviserId 
+      FROM adviser_properties
+      WHERE propname = 'tuakiriSharedToken' AND
+            propvalue = #{sharedToken}
+    )
+  </select>	
+
+  <select id="getResearcherForTuakiriSharedToken" parameterType="java.lang.String" resultType="nz.ac.auckland.cer.project.pojo.Researcher">
+    SELECT *
+    FROM researcher 
+    WHERE id IN (
+      SELECT researcherId 
+      FROM researcher_properties
+      WHERE propname = 'tuakiriSharedToken' AND
+            propvalue = #{sharedToken}
+    )
+  </select> 
+
+  <select id="getAccountNamesForResearcherId" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT propvalue
+    FROM researcher_properties
+    WHERE researcherId = #{researcherId} AND
+          propname = 'linuxUsername'
+  </select> 
+
+  <select id="getAccountNamesForAdviserId" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT propvalue
+    FROM adviser_properties
+    WHERE adviserId = #{adviserId} AND
+          propname = 'linuxUsername'
+  </select> 
+	
+  <select id="getAffiliations" resultType="nz.ac.auckland.cer.project.pojo.Affiliation">
+    SELECT DISTINCT
+      IFNULL(i.name,'') as institution, '' as division, '' as department
+    FROM institution i
+
+    UNION
+
+    SELECT IFNULL(i.name,'') as institution,
+           IFNULL(d.name,'') as division, '' as department
+    FROM institution i
+    LEFT JOIN division d ON i.id = d.institutionId
+
+    UNION
+
+    SELECT IFNULL(i.name,'') AS institution,
+           IFNULL(di.name,'') AS division,
+           IFNULL(de.name,'') AS department
+    FROM institution i
+    LEFT JOIN division di ON i.id = di.institutionId
+    LEFT JOIN department de on di.id = de.divisionId
+
+    ORDER BY institution, division, department
+  </select>
+
+  <select id="getInstitutionalRoles" resultType="nz.ac.auckland.cer.project.pojo.InstitutionalRole">
+    SELECT *
+    FROM institutionalrole
+    ORDER BY name
+  </select> 
+  
+  <insert id="createResearcher" parameterType="nz.ac.auckland.cer.project.pojo.Researcher">
+    INSERT INTO researcher (
+      fullName,
+      preferredName,
+      statusId,
+      pictureUrl,
+      email,
+      phone,
+      institution,
+      division,
+      department,
+      institutionalRoleId,
+      startDate,
+      endDate,
+      notes
+    ) values (
+      #{fullName},
+      #{preferredName},
+      #{statusId},
+      #{pictureUrl},
+      #{email},
+      #{phone},
+      #{institution},
+      #{division},
+      #{department},
+      #{institutionalRoleId},
+      #{startDate},
+      #{endDate},
+      #{notes}
+    )
+    <selectKey keyProperty="id" resultType="int">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
+  </insert>
+
+  <insert id="createAdviser" parameterType="nz.ac.auckland.cer.project.pojo.Adviser">
+    INSERT INTO adviser (
+      fullName,
+      pictureUrl,
+      email,
+      phone,
+      institution,
+      division,
+      department,
+      startDate,
+      endDate,
+      notes
+    ) values (
+      #{fullName},
+      #{pictureUrl},
+      #{email},
+      #{phone},
+      #{institution},
+      #{division},
+      #{department},
+      #{startDate},
+      #{endDate},
+      #{notes}
+    )
+    <selectKey keyProperty="id" resultType="int">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
+  </insert>
+
+  <insert id="createTuakiriSharedTokenPropertyForAdviser" parameterType="java.lang.String">
+    INSERT INTO adviser_properties (
+      adviserId,
+      siteId,
+      propname,
+      propvalue
+    ) VALUES (
+      #{id},
+      1,
+      "tuakiriSharedToken",
+      #{tuakiriSharedToken}
+    )
+  </insert>
+
+  <insert id="createTuakiriSharedTokenPropertyForResearcher" parameterType="java.util.Map">
+    INSERT INTO researcher_properties (
+      researcherId,
+      siteId,
+      propname,
+      propvalue
+    ) VALUES (
+      #{id},
+      1,
+      "tuakiriSharedToken",
+      #{tuakiriSharedToken}
+    )
+  </insert> 
+
+  <select id="getInstitutionalRoleName" resultType="java.lang.String" parameterType="java.lang.Integer">
+    SELECT name
+    FROM institutionalrole 
+    WHERE id = #{id}
+  </select> 
+
+  <select id="getResearcherStatusName" resultType="java.lang.String" parameterType="java.lang.Integer">
+    SELECT name
+    FROM researcher_status 
+    WHERE id = #{id}
+  </select> 
+
+</mapper>

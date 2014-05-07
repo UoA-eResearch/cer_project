@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+  <context:component-scan base-package="nz.ac.auckland.cer.project.controller" />
+
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:configuration.properties</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="projectRequestController" class="nz.ac.auckland.cer.project.controller.ProjectRequestController">
+    <property name="hostInstitution" value="${project.hostinstitution}"/>    
+    <property name="initialResearcherRoleOnProject" value="${project.researcher.initial.role.on.project.id}"/>
+    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+  </bean>
+
+  <bean id="membershipRequestController" class="nz.ac.auckland.cer.project.controller.MembershipRequestController">
+    <property name="initialResearcherRoleOnProject" value="${project.researcher.initial.role.on.project.id}"/>
+    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+  </bean>
+
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/jsp/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+  
+  <bean id="AdminFilter" class="nz.ac.auckland.cer.project.filter.AdminFilter"/>
+  
+  <bean id="IdentityInterceptor" class="nz.ac.auckland.cer.project.filter.IdentityInterceptor">
+    <property name="idResource" value="${test.identity.properties.path}"/>
+  </bean>
+
+</beans>

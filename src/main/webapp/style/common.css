@@ -1,0 +1,61 @@
+div#header {
+  color: white; 
+  background-color: #333; 
+  padding: 8px; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  height: 15pt; 
+}
+
+thead th {
+  padding-right: 20px;
+}
+
+div#body {
+  background-color: white; 
+  padding: 8px; 
+  position: absolute; 
+  top: 25pt; 
+  left: 0; 
+  right: 0; }
+
+h3 {
+  color: #000;
+  background: none;
+  font-weight: bold;
+  text-align: left;
+  font-size: 14pt;
+  margin-bottom: 5px;
+}
+
+h4 {
+  color: #000;
+  background: none;
+  font-weight: bold;
+  text-align: left;
+  font-size: 12pt;
+  margin-bottom: 5px;
+}
+
+a {
+  color: #336699;
+  text-decoration: none;
+}
+
+.infoblock{
+  color: #000;
+  background-color: #e0ecf3;
+  border: 2px solid #336699;
+  padding: 8px;
+  margin: 2px;
+}
+
+.errorblock {
+  color: #000;
+  background-color: #ffEEEE;
+  border: 3px solid #ff0000;
+  padding: 8px;
+  margin: 2px;
+}

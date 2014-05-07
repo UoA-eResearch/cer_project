@@ -1,0 +1,14 @@
+__RESEARCHER_NAME__ requested membership to the following project.
+
+Title:
+__PROJECT_TITLE__
+
+Description:
+__PROJECT_DESCRIPTION__
+
+
+__RESEARCHER_NAME__ has been added to the project in the database in status "Pending"
+
+Link to project in database:
+__PROJECT_LINK__
+

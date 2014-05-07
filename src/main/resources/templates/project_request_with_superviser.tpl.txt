@@ -1,0 +1,20 @@
+__RESEARCHER_NAME__ requested a new project to be created.
+
+Title:
+__PROJECT_TITLE__
+
+Description:
+__PROJECT_DESCRIPTION__
+
+
+Link to newly created project in database:
+__PROJECT_LINK__
+
+Superviser information:
+
+Name        : __SUPERVISER_NAME__
+Affiliation : __SUPERVISER_AFFILIATION__
+E-mail      : __SUPERVISER_EMAIL__
+Phone       : __SUPERVISER_PHONE__
+
+__SUPERVISER_EXTRA_INFOS__

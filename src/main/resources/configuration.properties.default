@@ -1,0 +1,35 @@
+# project management configuration
+project.rest.baseurl=
+project.html.project.baseurl=
+project.html.researcher.baseurl=
+project.html.adviser.baseurl=
+project.researcher.default.picture=
+project.researcher.initial.status.id=
+project.researcher.initial.role.on.project.id=
+project.admin.remote.user=
+project.hostinstitution=
+project.jdbc.driver.className=
+project.jdbc.url=
+project.jdbc.username=
+project.jdbc.password=
+project.request.url=
+
+# email configuration
+email.smtp.server=
+request.email.from=
+request.email.to=
+project.request.email.subject=
+project.request.email.template.path=
+project.request.with.superviser.email.template.path=
+project.request.without.account.redirect=
+membership.request.email.subject=
+membership.request.email.template.path=
+
+test.identity.properties.path=
+
+# Proxy configuration
+proxy=
+proxyIp=
+
+# SLCS
+slcs.mapping.url=
