@@ -38,8 +38,8 @@ import org.springframework.web.context.WebApplicationContext;
 public class RequestProjectControllerValidationTest {
 
     @Autowired private WebApplicationContext wac;
-    private ProjectDatabaseDao projectDao;
-    private EmailUtil emailUtil;
+    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private EmailUtil emailUtil;
     private MockMvc mockMvc;
     private ProjectRequest pr;
     private Project p;
@@ -80,8 +80,6 @@ public class RequestProjectControllerValidationTest {
         p.setDescription(pr.getProjectDescription());
         p.setId(42);
 
-        this.projectDao = (ProjectDatabaseDao) wac.getBean("projectDao");
-        this.emailUtil = (EmailUtil) wac.getBean("emailUtil");
         this.affiliations = new Affiliation[] { new Affiliation("Test", "Test", "Test") };
         this.researchers = new Researcher[1];
         Researcher tmp = new Researcher();
