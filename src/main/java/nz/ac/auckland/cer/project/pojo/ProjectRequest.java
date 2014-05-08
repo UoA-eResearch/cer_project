@@ -15,7 +15,8 @@ public class ProjectRequest {
     // survey
     private String motivation;
     private String otherMotivation;
-    private String currentEnv;
+    private String currentCompEnv;
+    private String otherCompEnv;
     private Limitations limitations;
 
     public String getMotivation() {
@@ -40,15 +41,15 @@ public class ProjectRequest {
         this.limitations = limitations;
     }
 
-    public String getCurrentEnv() {
+    public String getCurrentCompEnv() {
 
-        return currentEnv;
+        return currentCompEnv;
     }
 
-    public void setCurrentEnv(
-            String currentEnv) {
+    public void setCurrentCompEnv(
+            String currentCompEnv) {
 
-        this.currentEnv = currentEnv;
+        this.currentCompEnv = currentCompEnv;
     }
 
     public String getSuperviserName() {
@@ -159,6 +160,17 @@ public class ProjectRequest {
             String superviserOtherAffiliation) {
 
         this.superviserOtherAffiliation = superviserOtherAffiliation;
+    }
+
+    public String getOtherCompEnv() {
+    
+        return otherCompEnv;
+    }
+
+    public void setOtherCompEnv(
+            String otherCompEnv) {
+    
+        this.otherCompEnv = otherCompEnv;
     }
 
 }

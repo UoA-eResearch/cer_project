@@ -69,11 +69,16 @@ public class ProjectRequestValidator implements Validator {
         }
 
         // validate current computational environment
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currentEnv", "project.currentCompEnv.required");
-        if (!errors.hasFieldErrors("currentEnv") && pr.getCurrentEnv().equals("cluster_or_set_of_computers")) {
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.cpuCores", "project.currentCompEnv.cpucores.required");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.memory", "project.currentCompEnv.memory.required");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.concurrency", "project.currentCompEnv.concurrrency.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currentCompEnv", "project.currentCompEnv.required");
+        if (!errors.hasFieldErrors("currentCompEnv")) {
+            if (pr.getCurrentCompEnv().equals("OTHER")) {
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "otherCompEnv", "project.currentCompEnv.required");
+            }
+            if (!pr.getCurrentCompEnv().equals("standard_computer")) {
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.cpuCores", "project.currentCompEnv.cpucores.required");
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.memory", "project.currentCompEnv.memory.required");
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.concurrency", "project.currentCompEnv.concurrrency.required");
+            }
         }
     }
 

@@ -23,7 +23,8 @@
       }
       
       function show_hide_limitations() {
-          if ($("input[name='currentEnv']:checked").val() == '${compEnv2}') {
+    	  var val = $("input[name='currentCompEnv']:checked").val();
+          if (val == '${compEnv2}' || val == "OTHER") {
               $("#limitations").css("display", "inline");
             } else {
               $("#limitations").css("display", "none");
@@ -45,17 +46,27 @@
               $("#other_superviser_affiliation").css("display", "none");          
           }       
       }
-      
+
+      function show_hide_other_comp_env() {
+          var val = $("input[name='currentCompEnv']:checked").val();
+          if (val == "OTHER") {
+              $("#other_comp_env").css("display", "inline");
+            } else {
+              $("#other_comp_env").css("display", "none");
+            }         
+      }
+
       $(document).ready(function() {
         // on page load 
         show_hide_other_motivation();
         show_hide_limitations();
         show_hide_other_superviser();
         show_hide_other_superviser_affiliation();
-        
+        show_hide_other_comp_env();
+      
         // on change events 
         $("input[name='motivation']").change(function() { show_hide_other_motivation(); });
-        $("input[name='currentEnv']").change(function() { show_hide_limitations(); });
+        $("input[name='currentCompEnv']").change(function() { show_hide_limitations(); show_hide_other_comp_env(); });
         $("#superviserId").change(function() { show_hide_other_superviser(); });
         $("#superviserAffiliation").change(function() { show_hide_other_superviser_affiliation(); });
       });
@@ -181,7 +192,7 @@
           <tr>
             <td><form:radiobutton name="motivation" path="motivation" value="__OTHER__" label="Other" />
               <div id="other_motivation" style="display: none;">
-                <br> <br>Please specify:<br>
+                <br><br>Please specify:<br>
                 <form:input path="otherMotivation" type="text" size="100" maxlength="100" />
               </div>
             </td>  
@@ -195,16 +206,31 @@
             <td><h3>What is the computational environment to your availability now?</h3></td>
           </tr>          
           <tr>
-            <td valign="top"><form:radiobutton name="currentEnv" path="currentEnv"
+            <td valign="top">
+              <form:radiobutton name="currentCompEnv" path="currentCompEnv"
                 value="standard_computer"
-                label="I have a standard desktop/laptop computer" /></td>
+                label="I have a standard desktop/laptop computer" />
+            </td>
           </tr>
           <tr>
             <td valign="top">
-              <form:radiobutton name="currentEnv" path="currentEnv" 
+              <form:radiobutton name="currentCompEnv" path="currentCompEnv" 
                 value="${compEnv2}"
                 label="I have access to a cluster or a set of computers to run my jobs on" />
-
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <form:radiobutton name="currentCompEnv" path="currentCompEnv" 
+                value="OTHER" label="Other" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div id="other_comp_env" style="display: none;">
+                Please specify:<br>
+                <form:input path="otherCompEnv" type="text" size="100" maxlength="100" />           
+              </div>
               <div id="limitations" style="display: none;">
                 <p>Please specify your current job submission characteristics:</p>
                 <table>

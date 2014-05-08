@@ -192,31 +192,29 @@ public class ProjectRequestController {
         this.projectDao.createProjectProperty(pp);
 
         pp.setPropname("system_available_before_using_pan");
-        pp.setPropvalue(pr.getCurrentEnv());
+        if (pr.getCurrentCompEnv().equals("OTHER")) {
+            pp.setPropvalue(pr.getOtherCompEnv());
+        } else {
+            pp.setPropvalue(pr.getCurrentCompEnv());
+        }
         this.projectDao.createProjectProperty(pp);
 
         Limitations l = pr.getLimitations();
-        if (l == null) {
+        if (pr.getCurrentCompEnv().equals("standard_computer")) {
             l = new Limitations();
+            l.setCpuCores("4");
+            l.setMemory("8GB");
+            l.setConcurrency("4");
         }
 
-        if (l.getCpuCores() == null || l.getCpuCores().length() == 0) {
-            l.setCpuCores("4");
-        }
         pp.setPropname("max_cpu_cores_before_using_pan");
         pp.setPropvalue(l.getCpuCores());
         this.projectDao.createProjectProperty(pp);
 
-        if (l.getMemory() == null || l.getMemory().length() == 0) {
-            l.setMemory("8GB");
-        }
         pp.setPropname("max_memory_before_using_pan");
         pp.setPropvalue(l.getMemory());
         this.projectDao.createProjectProperty(pp);
 
-        if (l.getConcurrency() == null || l.getConcurrency().length() == 0) {
-            l.setConcurrency("4");
-        }
         pp.setPropname("max_concurrent_jobs_before_using_pan");
         pp.setPropvalue(l.getConcurrency());
         this.projectDao.createProjectProperty(pp);

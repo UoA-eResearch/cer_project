@@ -356,7 +356,7 @@ public class RequestProjectControllerValidationTest {
     }
 
     @Test
-    public void testMissingComputationalEnvironment() throws Exception {
+    public void testMissingComputationalEnvironment1() throws Exception {
 
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
@@ -372,6 +372,31 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeErrorCount("projectrequest", 3))
                 .andExpect(
                         model().attributeHasFieldErrors("projectrequest", "limitations.cpuCores", "limitations.memory",
+                                "limitations.concurrency"));
+        verify(projectDao, times(0)).createProject((ProjectWrapper) any());
+        verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
+        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
+                (Researcher) any(), eq(person.getFullName()));
+    }
+
+    @Test
+    public void testMissingComputationalEnvironment2() throws Exception {
+
+        when(projectDao.getAffiliations()).thenReturn(this.affiliations);
+        when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
+        pr.setCurrentCompEnv("OTHER");
+        pr.setLimitations(new Limitations());
+        RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
+                .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
+                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
+                .param("currentCompEnv", pr.getCurrentCompEnv());
+        ResultActions ra = this.mockMvc.perform(rb);
+        ra.andExpect(status().isOk())
+                .andExpect(view().name("request_project"))
+                .andExpect(model().attributeErrorCount("projectrequest", 4))
+                .andExpect(
+                        model().attributeHasFieldErrors("projectrequest", "otherCompEnv", "limitations.cpuCores", "limitations.memory",
                                 "limitations.concurrency"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
