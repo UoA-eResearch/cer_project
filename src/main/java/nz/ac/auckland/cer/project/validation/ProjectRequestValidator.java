@@ -31,7 +31,7 @@ public class ProjectRequestValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectDescription", "project.description.required");
         if (!errors.hasFieldErrors("projectDescription")) {
             Integer descriptionLength = pr.getProjectDescription().trim().length();
-            if (descriptionLength < 100 || descriptionLength > 2500) {
+            if (descriptionLength < 500 || descriptionLength > 2500) {
                 errors.rejectValue("projectDescription", "project.description.length.limits");
             }            
         }

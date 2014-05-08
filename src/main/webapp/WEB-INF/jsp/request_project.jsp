@@ -81,7 +81,7 @@
           </tr>
           <tr>
             <td>
-              Project description (100 - 2500 characters. No special characters please):<br>
+              Project description (500 - 2500 characters. No special characters please):<br>
               <form:textarea path="projectDescription" type="text" cols="88" rows="20"/>
             </td>
           </tr>
@@ -175,7 +175,7 @@
           <tr>
             <td><form:radiobutton name="motivation" path="motivation" 
                 value="on_recommendation"
-                label="I don't really need the cluster, but someone recommended using it" />
+                label="I don't know if I need the cluster, but someone recommended using it" />
             </td>
           </tr>
           <tr>
@@ -203,7 +203,7 @@
             <td valign="top">
               <form:radiobutton name="currentEnv" path="currentEnv" 
                 value="${compEnv2}"
-                label="I have access to a small cluster or a set of computers to run my jobs on" />
+                label="I have access to a cluster or a set of computers to run my jobs on" />
 
               <div id="limitations" style="display: none;">
                 <p>Please specify your current job submission characteristics:</p>
