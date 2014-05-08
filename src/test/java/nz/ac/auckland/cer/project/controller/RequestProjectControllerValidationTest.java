@@ -56,7 +56,7 @@ public class RequestProjectControllerValidationTest {
         pr = new ProjectRequest();
         pr.setProjectTitle("Project Title");
         StringBuffer pd = new StringBuffer();
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 500; i++) {
             pd.append("a");
         }
         pr.setProjectDescription(pd.toString());
@@ -67,7 +67,7 @@ public class RequestProjectControllerValidationTest {
         limitations.setMemory("4");
         pr.setLimitations(limitations);
         pr.setMotivation("inadequate_computational_equipment");
-        pr.setCurrentEnv("standard_computer");
+        pr.setCurrentCompEnv("standard_computer");
 
         this.person = new Person();
         person.setIsResearcher(true);
@@ -99,7 +99,7 @@ public class RequestProjectControllerValidationTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentEnv", pr.getCurrentEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
@@ -124,7 +124,7 @@ public class RequestProjectControllerValidationTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "3")
-                .param("motivation", pr.getMotivation()).param("currentEnv", pr.getCurrentEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
@@ -152,7 +152,7 @@ public class RequestProjectControllerValidationTest {
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "-1")
                 .param("superviserName", "My superviser").param("superviserEmail", "superviser@company.org")
                 .param("superviserPhone", "123123213").param("superviserAffiliation", "Some University")
-                .param("motivation", pr.getMotivation()).param("currentEnv", pr.getCurrentEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
@@ -170,7 +170,7 @@ public class RequestProjectControllerValidationTest {
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("motivation", pr.getMotivation())
-                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("currentEnv", pr.getCurrentEnv());
+                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -191,7 +191,7 @@ public class RequestProjectControllerValidationTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("motivation", pr.getMotivation()).param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("currentEnv", pr.getCurrentEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -210,7 +210,7 @@ public class RequestProjectControllerValidationTest {
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectDescription", pr.getProjectDescription()).param("motivation", pr.getMotivation())
-                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("currentEnv", pr.getCurrentEnv());
+                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -231,7 +231,7 @@ public class RequestProjectControllerValidationTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("superviserId", "-2").param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("motivation", pr.getMotivation()).param("currentEnv", pr.getCurrentEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -253,7 +253,7 @@ public class RequestProjectControllerValidationTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("superviserId", "-1").param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("motivation", pr.getMotivation()).param("currentEnv", pr.getCurrentEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())
                 .andExpect(view().name("request_project"))
@@ -279,7 +279,7 @@ public class RequestProjectControllerValidationTest {
                 .param("superviserId", "-1").param("askForSuperviser", pr.getAskForSuperviser().toString())
                 .param("superviserName", "My superviser").param("superviserEmail", "a@b.org")
                 .param("superviserPhone", "123").param("superviserAffiliation", "OTHER")
-                .param("motivation", pr.getMotivation()).param("currentEnv", pr.getCurrentEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -302,7 +302,7 @@ public class RequestProjectControllerValidationTest {
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "-1")
                 .param("superviserName", "My superviser").param("superviserEmail", "invalid e-mail address")
                 .param("superviserAffiliation", "Some University").param("superviserPhone", "123123213")
-                .param("motivation", pr.getMotivation()).param("currentEnv", pr.getCurrentEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -322,7 +322,7 @@ public class RequestProjectControllerValidationTest {
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
-                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("currentEnv", pr.getCurrentEnv());
+                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -343,7 +343,7 @@ public class RequestProjectControllerValidationTest {
         RequestBuilder rb = post("/request_project").param("projectTitle", pr.getProjectTitle())
                 .param("projectDescription", pr.getProjectDescription())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentEnv", pr.getCurrentEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -360,12 +360,12 @@ public class RequestProjectControllerValidationTest {
 
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
-        pr.setCurrentEnv("cluster_or_set_of_computers");
+        pr.setCurrentCompEnv("cluster_or_set_of_computers");
         pr.setLimitations(new Limitations());
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentEnv", pr.getCurrentEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())
                 .andExpect(view().name("request_project"))
