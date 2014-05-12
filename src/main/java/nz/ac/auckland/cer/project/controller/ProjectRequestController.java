@@ -94,6 +94,11 @@ public class ProjectRequestController {
             Researcher superviser = null;
             if (pr.getSuperviserId() != null && pr.getSuperviserId() > 0) {
                 superviser = this.projectDao.getResearcherForId(pr.getSuperviserId());
+            } else {
+                if (pr.getSuperviserAffiliation() != null && pr.getSuperviserAffiliation().toLowerCase().equals("other")) {
+                    this.emailUtil.sendOtherAffiliationEmail(pr.getSuperviserOtherInstitution(),
+                            pr.getSuperviserOtherDivision(), pr.getSuperviserOtherDepartment());
+                }
             }
             Project p = this.createProject(pr, superviser, person);
             this.createProjectProperties(p, pr);

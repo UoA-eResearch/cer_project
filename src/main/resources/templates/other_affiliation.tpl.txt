@@ -1,0 +1,10 @@
+An affiliation, that has not yet been stored in the database, has been
+put into the project request form as affiliation information for a supervisor.
+
+Markus, Nick, Eva, Martin:
+Please check the following three fields for typos and add them to the database:
+
+Institution: __INSTITUTION__
+Division   : __DIVISION__
+Department : __DEPARTMENT__
+

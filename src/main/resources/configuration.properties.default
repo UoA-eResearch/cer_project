@@ -24,6 +24,8 @@ project.request.with.superviser.email.template.path=
 project.request.without.account.redirect=
 membership.request.email.subject=
 membership.request.email.template.path=
+other.affiliation.email.subject=
+other.affiliation.email.template.path=
 
 test.identity.properties.path=
 

@@ -33,9 +33,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/RequestProjectControllerValidationTest-context.xml", "/root-context.xml" })
+@ContextConfiguration(locations = { "/ProjectRequestControllerTest-context.xml", "/root-context.xml" })
 @WebAppConfiguration
-public class RequestProjectControllerValidationTest {
+public class ProjectRequestControllerTest {
 
     @Autowired private WebApplicationContext wac;
     @Autowired private ProjectDatabaseDao projectDao;
@@ -105,16 +105,15 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
         verify(projectDao, times(1)).createProject((ProjectWrapper) any());
         verify(projectDao, times(5)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(1)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
     }
 
     @DirtiesContext
-    // required so that checks for method calls via verify work in subsequent
-    // tests
     @Test
-    public void testWithSuperviserSuccess1() throws Exception {
+    public void testWithSuperviserSuccess() throws Exception {
 
         when(projectDao.createProject((ProjectWrapper) any())).thenReturn(this.p);
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
@@ -131,16 +130,15 @@ public class RequestProjectControllerValidationTest {
         verify(projectDao, times(1)).getResearcherForId(anyInt());
         verify(projectDao, times(1)).createProject((ProjectWrapper) any());
         verify(projectDao, times(5)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
     }
 
     @DirtiesContext
-    // required so that checks for method calls via verify work in subsequent
-    // tests
     @Test
-    public void testWithSuperviserSuccess2() throws Exception {
+    public void testWithOtherSuperviserSuccess() throws Exception {
 
         when(projectDao.createProject((ProjectWrapper) any())).thenReturn(this.p);
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
@@ -158,7 +156,37 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
         verify(projectDao, times(1)).createProject((ProjectWrapper) any());
         verify(projectDao, times(5)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
+        verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
+                (Researcher) any(), eq(person.getFullName()));
+    }
+
+    @DirtiesContext
+    @Test
+    public void testWithOtherSuperviserOtherInstitutionSuccess() throws Exception {
+
+        when(projectDao.createProject((ProjectWrapper) any())).thenReturn(this.p);
+        when(projectDao.getAffiliations()).thenReturn(this.affiliations);
+        when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
+        this.person.setInstitutionalRoleId(2);
+        this.pr.setAskForSuperviser(true);
+        RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
+                .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
+                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "-1")
+                .param("superviserName", "My superviser").param("superviserEmail", "superviser@company.org")
+                .param("superviserPhone", "123123213").param("superviserAffiliation", "Other")
+                .param("superviserOtherInstitution", "Some Uni")
+                .param("superviserOtherDivision", "Some Div")
+                .param("superviserOtherDepartment", "Some Dep")
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
+        ResultActions ra = this.mockMvc.perform(rb);
+        ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
+                .andExpect(model().attributeErrorCount("projectrequest", 0));
+        verify(projectDao, times(1)).createProject((ProjectWrapper) any());
+        verify(projectDao, times(5)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
+        verify(emailUtil, times(1)).sendOtherAffiliationEmail("Some Uni", "Some Div", "Some Dep");
         verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
     }
@@ -177,6 +205,7 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "projectDescription"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
@@ -198,6 +227,7 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "projectDescription"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
@@ -217,13 +247,14 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "projectTitle"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
     }
 
     @Test
-    public void testMissingSuperviserInformation1() throws Exception {
+    public void testMissingSuperviserId() throws Exception {
 
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
@@ -239,13 +270,14 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "superviserId"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
     }
 
     @Test
-    public void testMissingSuperviserInformation2() throws Exception {
+    public void testMissingSuperviserDetails() throws Exception {
 
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
@@ -263,13 +295,14 @@ public class RequestProjectControllerValidationTest {
                                 "superviserPhone", "superviserAffiliation"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
     }
 
     @Test
-    public void testMissingSuperviserInformation3() throws Exception {
+    public void testMissingSuperviserOtherInstitution() throws Exception {
 
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
@@ -283,9 +316,10 @@ public class RequestProjectControllerValidationTest {
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
-                .andExpect(model().attributeHasFieldErrors("projectrequest", "superviserOtherAffiliation"));
+                .andExpect(model().attributeHasFieldErrors("projectrequest", "superviserOtherInstitution"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
@@ -310,6 +344,7 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "superviserEmail"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
@@ -329,6 +364,7 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "motivation"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
@@ -350,6 +386,7 @@ public class RequestProjectControllerValidationTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "otherMotivation"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
@@ -375,6 +412,7 @@ public class RequestProjectControllerValidationTest {
                                 "limitations.concurrency"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));
@@ -400,6 +438,7 @@ public class RequestProjectControllerValidationTest {
                                 "limitations.concurrency"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), eq(person.getFullName()));
         verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
                 (Researcher) any(), eq(person.getFullName()));

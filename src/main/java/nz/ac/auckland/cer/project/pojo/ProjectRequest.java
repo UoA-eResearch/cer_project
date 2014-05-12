@@ -8,10 +8,12 @@ public class ProjectRequest {
     // superviser
     private Integer superviserId;
     private String superviserAffiliation;
-    private String superviserOtherAffiliation;
     private String superviserName;
     private String superviserEmail;
     private String superviserPhone;
+    private String superviserOtherInstitution;
+    private String superviserOtherDivision;
+    private String superviserOtherDepartment;
     // survey
     private String motivation;
     private String otherMotivation;
@@ -151,25 +153,47 @@ public class ProjectRequest {
         this.superviserAffiliation = superviserAffiliation;
     }
 
-    public String getSuperviserOtherAffiliation() {
+    public String getSuperviserOtherInstitution() {
 
-        return superviserOtherAffiliation;
+        return superviserOtherInstitution;
     }
 
-    public void setSuperviserOtherAffiliation(
-            String superviserOtherAffiliation) {
+    public void setSuperviserOtherInstitution(
+            String superviserOtherInstitution) {
 
-        this.superviserOtherAffiliation = superviserOtherAffiliation;
+        this.superviserOtherInstitution = superviserOtherInstitution;
+    }
+
+    public String getSuperviserOtherDivision() {
+
+        return superviserOtherDivision;
+    }
+
+    public void setSuperviserOtherDivision(
+            String superviserOtherDivision) {
+
+        this.superviserOtherDivision = superviserOtherDivision;
+    }
+
+    public String getSuperviserOtherDepartment() {
+
+        return superviserOtherDepartment;
+    }
+
+    public void setSuperviserOtherDepartment(
+            String superviserOtherDepartment) {
+
+        this.superviserOtherDepartment = superviserOtherDepartment;
     }
 
     public String getOtherCompEnv() {
-    
+
         return otherCompEnv;
     }
 
     public void setOtherCompEnv(
             String otherCompEnv) {
-    
+
         this.otherCompEnv = otherCompEnv;
     }
 

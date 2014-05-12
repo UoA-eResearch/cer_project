@@ -10,10 +10,13 @@ __PROJECT_DESCRIPTION__
 Link to newly created project in database:
 __PROJECT_LINK__
 
-Superviser information:
+
+Supervisor information:
 
 Name        : __SUPERVISER_NAME__
-Affiliation : __SUPERVISER_AFFILIATION__
+Institution : __SUPERVISER_INSTITUTION__
+Division    : __SUPERVISER_DIVISION__
+Department  : __SUPERVISER_DEPARTMENT__
 E-mail      : __SUPERVISER_EMAIL__
 Phone       : __SUPERVISER_PHONE__
 

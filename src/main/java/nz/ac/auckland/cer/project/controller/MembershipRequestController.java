@@ -29,8 +29,6 @@ public class MembershipRequestController {
     private Logger log = Logger.getLogger(ProjectRequestController.class.getName());
     @Autowired private ProjectDatabaseDao projectDao;
     @Autowired private EmailUtil emailUtil;
-    private Integer initialResearcherRoleOnProject;
-    private String redirectIfNoAccount;
 
     @RequestMapping(value = "request_membership", method = RequestMethod.GET)
     public String showMembershipRequestForm(
@@ -40,7 +38,7 @@ public class MembershipRequestController {
         MembershipRequest mr = new MembershipRequest();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return redirectIfNoAccount;
+            return "redirect:/ceraccount/html/request_account_info";
         } else if (!person.isResearcher()) {
             m.addAttribute("error_message", "Only researchers can request membership to projects."
                     + " You appear to be an adviser.");
@@ -64,7 +62,7 @@ public class MembershipRequestController {
         try {
             Person person = (Person) request.getAttribute("person");
             if (person == null) {
-                return redirectIfNoAccount;
+                return "redirect:/ceraccount/html/request_account_info";
             } else if (!person.isResearcher()) {
                 m.addAttribute("error_message", "Only researchers can request membership to projects."
                         + " You appear to be an adviser.");
@@ -103,18 +101,6 @@ public class MembershipRequestController {
             WebDataBinder binder) {
 
         binder.addValidators(new MembershipRequestValidator());
-    }
-
-    public void setInitialResearcherRoleOnProject(
-            Integer initialResearcherRoleOnProject) {
-
-        this.initialResearcherRoleOnProject = initialResearcherRoleOnProject;
-    }
-
-    public void setRedirectIfNoAccount(
-            String redirectIfNoAccount) {
-
-        this.redirectIfNoAccount = redirectIfNoAccount;
     }
 
 }

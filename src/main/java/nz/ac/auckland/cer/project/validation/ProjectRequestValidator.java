@@ -52,8 +52,8 @@ public class ProjectRequestValidator implements Validator {
                         errors.rejectValue("superviserEmail", "project.superviser.email.invalid");
                     }
                     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "superviserAffiliation", "project.superviser.affiliation.required");
-                    if (!errors.hasFieldErrors("superviserAffiliation") && pr.getSuperviserAffiliation().equals("OTHER")) {
-                        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "superviserOtherAffiliation", "project.superviser.affiliation.required");
+                    if (!errors.hasFieldErrors("superviserAffiliation") && pr.getSuperviserAffiliation().toLowerCase().equals("other")) {
+                        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "superviserOtherInstitution", "project.superviser.affiliation.required");
                     }
                 }                
             }

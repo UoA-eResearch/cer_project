@@ -20,9 +20,11 @@ public class EmailUtil {
     private Resource projectRequestEmailBodyResource;
     private Resource projectRequestWithSuperviserEmailBodyResource;
     private Resource membershipRequestEmailBodyResource;
+    private Resource otherAffiliationEmailBodyResource;
     private String projectBaseUrl;
     private String projectRequestEmailSubject;
     private String membershipRequestEmailSubject;
+    private String otherAffiliationEmailSubject;
     private String emailFrom;
     private String emailTo;
 
@@ -51,23 +53,26 @@ public class EmailUtil {
             String researcherName) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
-        String extraInfos = "The superviser does not yet exist in the database.";
+        String extraInfos = "The supervisor does not yet exist in the database.";
         if (superviser != null) {
-            extraInfos = "The superviser already exists in the database.";
+            extraInfos = "The supervisor already exists in the database.";
             templateParams.put("__SUPERVISER_NAME__", superviser.getFullName());
             templateParams.put("__SUPERVISER_EMAIL__", superviser.getEmail());
             templateParams.put("__SUPERVISER_PHONE__", superviser.getPhone());
-            String affil = this.affUtil.createAffiliationString(superviser.getInstitution(), superviser.getDivision(), superviser.getDepartment());
+            String affil = this.affUtil.createAffiliationString(superviser.getInstitution(), superviser.getDivision(),
+                    superviser.getDepartment());
             templateParams.put("__SUPERVISER_AFFILIATION__", affil);
         } else {
             templateParams.put("__SUPERVISER_NAME__", pr.getSuperviserName());
             templateParams.put("__SUPERVISER_EMAIL__", pr.getSuperviserEmail());
             templateParams.put("__SUPERVISER_PHONE__", pr.getSuperviserPhone());
-            if (pr.getSuperviserAffiliation() != null && !pr.getSuperviserAffiliation().equals("OTHER")) {
-                templateParams.put("__SUPERVISER_AFFILIATION__", pr.getSuperviserAffiliation());
-            } else {
-                templateParams.put("__SUPERVISER_AFFILIATION__", pr.getSuperviserOtherAffiliation());                
-            }
+            boolean otherAffil = pr.getSuperviserAffiliation().toLowerCase().equals("other");
+            templateParams.put("__SUPERVISER_INSTITUTION__", otherAffil ? pr.getSuperviserOtherInstitution()
+                    : this.affUtil.getInstitutionFromAffiliationString(pr.getSuperviserAffiliation()));
+            templateParams.put("__SUPERVISER_DIVISION__", otherAffil ? pr.getSuperviserOtherDivision()
+                    : this.affUtil.getDivisionFromAffiliationString(pr.getSuperviserAffiliation()));
+            templateParams.put("__SUPERVISER_DEPARTMENT__", otherAffil ? pr.getSuperviserOtherDepartment()
+                    : this.affUtil.getDepartmentFromAffiliationString(pr.getSuperviserAffiliation()));
         }
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__PROJECT_TITLE__", p.getName());
@@ -103,6 +108,21 @@ public class EmailUtil {
         }
     }
 
+    public void sendOtherAffiliationEmail(
+            String institution, String division, String department) throws Exception {
+        Map<String, String> templateParams = new HashMap<String, String>();
+        templateParams.put("__INSTITUTION__", institution);
+        templateParams.put("__DIVISION__", division);
+        templateParams.put("__DEPARTMENT__", department);
+        try {
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.otherAffiliationEmailSubject,
+                    this.otherAffiliationEmailBodyResource, templateParams);            
+        } catch (Exception e) {
+            log.error("Failed to send other institution email.", e);
+            throw new Exception("Failed to notify CeR staff about the other institution.");
+        }        
+    }
+    
     public void setEmailFrom(
             String emailFrom) {
 

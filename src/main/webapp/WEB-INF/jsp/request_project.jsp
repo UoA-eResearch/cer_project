@@ -40,10 +40,10 @@
       }
       
       function show_hide_other_superviser_affiliation() {
-          if ($("#superviserAffiliation option:selected").val() == "OTHER") {
-              $("#other_superviser_affiliation").css("display", "inline");
+          if ($("#superviserAffiliation option:selected").val() == "Other") {
+              $("#other_superviser_other_affiliation").css("display", "inline");
           } else {
-              $("#other_superviser_affiliation").css("display", "none");          
+              $("#other_superviser_other_affiliation").css("display", "none");          
           }       
       }
 
@@ -115,13 +115,15 @@
                 <form:option value="-1" label="Other"/>
               </form:select>
               <p>
-                If your supervisor is not listed, choose "Other" at the end of the list 
-                and specify details.<br>
-                Please note, that your supervisor will have access to the data generated 
-                in the context of this project.
+                If your supervisor is not listed, choose "Other". 
+                You will be asked to provide details about your supervisor.
+                <div class="infoblock">
+                  Please note, that your supervisor will have access to the data generated 
+                  in the context of this project.
+                </div>
               </p>
               <div id="other_superviser" style="display: none;">
-                <p>Please specify:</p>
+                <p>Please specify details of your supervisor:</p>
                 <table cellpadding="5">
                   <tr>
                     <td>
@@ -147,14 +149,27 @@
                       <form:select path="superviserAffiliation">
                         <form:option value="" label="Please Select"></form:option>
                         <form:options items="${affiliations}"/>
-                        <form:option value="OTHER" label="Other"/>
                       </form:select>
                       <p>
-                        If the affiliation of your supervisor is not listed, choose "Other" at the end of the list and specify.
+                        If the affiliation of your supervisor is not listed, please choose
+                        "Other". You will be asked to provide this information as text.
                       </p>
-                      <div id="other_superviser_affiliation" style="display: none;">
-                        Please specify:<br>
-                        <form:input path="superviserOtherAffiliation" type="text" size="50" maxlength="50"/>
+                      <div id="other_superviser_other_affiliation" style="display: none;">
+                         (Division/Faculty and/or Department may remain empty if they don't apply)
+                         <table cellpadding="5">
+                          <tr>
+                            <td>Institution:</td>
+                            <td><form:input path="superviserOtherInstitution"/></td>
+                          </tr>
+                          <tr>
+                            <td>Division or Faculty:</td>
+                            <td><form:input path="superviserOtherDivision" /></td>
+                          </tr>
+                          <tr>
+                            <td>Department:</td>
+                            <td><form:input path="superviserOtherDepartment" /></td>
+                          </tr>
+                        </table>
                       </div>
                     </td>
                   </tr>

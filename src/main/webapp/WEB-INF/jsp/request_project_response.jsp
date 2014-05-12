@@ -19,8 +19,8 @@
         </c:when>
         <c:otherwise>
           <p>
-            Your project request has been received.<br>
-            A staff member of the Centre for eResearch will process the request soon.
+            Your cluster account request has been received and will be processed shortly.<br>
+            If we need more information, a member of our team will be in touch with you.
           </p>
         </c:otherwise>
       </c:choose>
