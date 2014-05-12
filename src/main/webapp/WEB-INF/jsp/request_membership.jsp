@@ -13,7 +13,7 @@
   </head>
 
   <body>
-    <h3>Request membership to an existing project</h3>
+    <h3>Ask to join an existing project</h3>
 
     <form:form method="POST" commandName="membershiprequest" action='request_membership'>
       <c:if test="${not empty unexpected_error}">
