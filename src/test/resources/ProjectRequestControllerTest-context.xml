@@ -15,7 +15,7 @@
     use local version, otherwise tests won't run without internet connection  
   -->
 
-  <context:component-scan base-package="nz.ac.auckland.cer.project.controller" />
+  <bean class="nz.ac.auckland.cer.project.controller.ProjectRequestController"/>
   
   <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
     <property name="exceptionMappings">
