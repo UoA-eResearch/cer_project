@@ -15,13 +15,8 @@
     use local version, otherwise tests won't run without internet connection  
   -->
 
-  <bean class="nz.ac.auckland.cer.project.controller.MembershipRequestController"/>
-  
-  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="prefix" value="/WEB-INF/jsp/" />
-    <property name="suffix" value=".jsp" />
+  <bean class="nz.ac.auckland.cer.project.controller.ProjectController">
+    <property name="redirectIfNoAccount" value="redirect:/test"/>
   </bean>
-
-  <bean id="MembershipRequestValidator" class="nz.ac.auckland.cer.project.validation.MembershipRequestValidator" />
-
+  
 </beans>

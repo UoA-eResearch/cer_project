@@ -1,52 +1,62 @@
 package nz.ac.auckland.cer.project.pojo;
 
-public class RPLink {
+import java.io.Serializable;
 
-	private Integer projectId;
-	private Integer researcherId;
-	private Integer researcherRoleId;
-	private String notes = "";
+public class RPLink implements Serializable {
 
-	public RPLink() {
+    private String notes;
+    private Integer projectId;
+    private Researcher researcher;
+    private Integer researcherId;
+    private Integer researcherRoleId;
+    private String researcherRoleName;
 
-	}
+    public String getNotes() {
+        return notes;
+    }
 
-	public RPLink(Integer projectId, Integer researcherId, Integer researcherRoleId) {
-		this.projectId = projectId;
-		this.researcherId = researcherId;
-		this.researcherRoleId = researcherRoleId;
-	}
+    public Integer getProjectId() {
+        return projectId;
+    }
 
-	public Integer getProjectId() {
-		return projectId;
-	}
+    public Researcher getResearcher() {
+        return researcher;
+    }
 
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
+    public Integer getResearcherId() {
+        return researcherId;
+    }
 
-	public Integer getResearcherId() {
-		return researcherId;
-	}
+    public Integer getResearcherRoleId() {
+        return researcherRoleId;
+    }
 
-	public void setResearcherId(Integer researcherId) {
-		this.researcherId = researcherId;
-	}
+    public String getResearcherRoleName() {
+        return researcherRoleName;
+    }
 
-	public Integer getResearcherRoleId() {
-		return researcherRoleId;
-	}
+    public void setNotes(final String notes) {
+        this.notes = notes;
+    }
 
-	public void setResearcherRoleId(Integer researcherRoleId) {
-		this.researcherRoleId = researcherRoleId;
-	}
+    public void setProjectId(final Integer projectId) {
+        this.projectId = projectId;
+    }
 
-	public String getNotes() {
-		return notes;
-	}
+    public void setResearcher(final Researcher researcher) {
+        this.researcher = researcher;
+    }
 
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+    public void setResearcherId(final Integer researcherId) {
+        this.researcherId = researcherId;
+    }
+
+    public void setResearcherRoleId(final Integer researcherRoleId) {
+        this.researcherRoleId = researcherRoleId;
+    }
+
+    public void setResearcherRoleName(final String researcherRoleName) {
+        this.researcherRoleName = researcherRoleName;
+    }
 
 }

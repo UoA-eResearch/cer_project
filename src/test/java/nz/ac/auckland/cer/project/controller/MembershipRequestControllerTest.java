@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/MembershipRequestControllerTest-context.xml", "/root-context.xml" })
+@ContextConfiguration(locations = { "classpath:MembershipRequestControllerTest-context.xml", "classpath:root-context.xml" })
 @WebAppConfiguration
 public class MembershipRequestControllerTest {
 
@@ -38,7 +38,8 @@ public class MembershipRequestControllerTest {
     @Autowired private EmailUtil emailUtil;
     private MockMvc mockMvc;
     private MembershipRequest mr;
-    private Project p;
+    private ProjectWrapper projectWrapper;
+    private Project project;
     private Person person;
 
     @Before
@@ -54,10 +55,12 @@ public class MembershipRequestControllerTest {
         person.setId(42);
         person.setInstitutionalRoleId(1);
 
-        this.p = new Project();
-        p.setName("Some title");
-        p.setDescription("Some description");
-        p.setId(42);
+        this.projectWrapper = new ProjectWrapper();
+        this.project = new Project();
+        project.setName("Some title");
+        project.setDescription("Some description");
+        project.setId(42);
+        projectWrapper.setProject(project);
     }
 
     @Test
@@ -92,13 +95,13 @@ public class MembershipRequestControllerTest {
     @Test
     public void testPostSuccess() throws Exception {
 
-        when(projectDao.getProjectForCode(anyString())).thenReturn(this.p);
+        when(projectDao.getProjectForIdOrCode(anyString())).thenReturn(this.projectWrapper);
         RequestBuilder rb = post("/request_membership").requestAttr("person", this.person).param("projectCode",
                 mr.getProjectCode());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_membership_response"))
                 .andExpect(model().attributeErrorCount("membershiprequest", 0));
-        verify(projectDao, times(1)).getProjectForCode(this.mr.getProjectCode());
+        verify(projectDao, times(1)).getProjectForIdOrCode(this.mr.getProjectCode());
         verify(emailUtil, times(1)).sendMembershipRequestRequestEmail((Project) any(), eq(person.getFullName()));
     }
 
@@ -109,7 +112,7 @@ public class MembershipRequestControllerTest {
         RequestBuilder rb = post("/request_membership").param("projectCode", mr.getProjectCode());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isFound()).andExpect(view().name("redirect:/ceraccount/html/request_account_info"));
-        verify(projectDao, times(0)).getProjectForCode(this.mr.getProjectCode());
+        verify(projectDao, times(0)).getProjectForIdOrCode(this.mr.getProjectCode());
         verify(emailUtil, times(0)).sendMembershipRequestRequestEmail((Project) any(), eq(person.getFullName()));
     }
 

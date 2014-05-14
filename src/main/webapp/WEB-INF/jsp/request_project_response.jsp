@@ -19,7 +19,7 @@
         </c:when>
         <c:otherwise>
           <p>
-            Your cluster account request has been received and will be processed shortly.<br>
+            Your project request has been received and will be processed shortly.<br>
             If we need more information, a member of our team will be in touch with you.
           </p>
         </c:otherwise>

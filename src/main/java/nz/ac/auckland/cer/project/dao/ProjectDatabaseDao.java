@@ -1,5 +1,7 @@
 package nz.ac.auckland.cer.project.dao;
 
+import java.util.List;
+
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
@@ -24,6 +26,9 @@ public interface ProjectDatabaseDao {
     public Researcher getResearcherForId(
             Integer id) throws Exception;
 
+    public List<Project> getProjectsOfResearcher(
+            Integer researcherId) throws Exception;
+
     public Researcher[] getAllStaffOrPostDocs() throws Exception;
 
     public Project createProject(
@@ -32,7 +37,7 @@ public interface ProjectDatabaseDao {
     public void createProjectProperty(
             ProjectProperty pp) throws Exception;
 
-    public Project getProjectForCode(
+    public ProjectWrapper getProjectForIdOrCode(
             String projectCode) throws Exception;
 
     public void addResearcherToProject(

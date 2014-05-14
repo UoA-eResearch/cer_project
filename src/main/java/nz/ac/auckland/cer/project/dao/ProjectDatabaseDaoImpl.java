@@ -1,5 +1,6 @@
 package nz.ac.auckland.cer.project.dao;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import nz.ac.auckland.cer.common.util.SSLCertificateValidation;
@@ -55,40 +56,25 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
     }
 
     /*
-    public List<Researcher> getAllStaffOrPostDocs() throws Exception {
-
-        List<Researcher> researchers = new LinkedList<Researcher>();
-        String url = restBaseUrl + "researchers/";
-        Gson gson = new Gson();
-        try {
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            Researcher[] tmp = gson.fromJson(response.getBody(), Researcher[].class);
-            if (tmp != null) {
-                for (Researcher r : tmp) {
-                    if (r.getInstitutionalRoleId() == 1) {
-                        researchers.add(r);
-                    }
-                }
-            }
-        } catch (HttpStatusCodeException hsce) {
-            String tmp = hsce.getResponseBodyAsString();
-            JSONObject json = new JSONObject(tmp);
-            throw new Exception(json.getString("message"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("An unexpected error occured.", e);
-        }
-        Collections.sort(researchers, new Comparator() {
-            public int compare(
-                    Object o1,
-                    Object o2) {
-
-                return ((Comparable) ((Researcher) (o1)).getFullName()).compareTo(((Researcher) (o2)).getFullName());
-            }
-        });
-        return researchers;
-    }
-    */
+     * public List<Researcher> getAllStaffOrPostDocs() throws Exception {
+     * 
+     * List<Researcher> researchers = new LinkedList<Researcher>(); String url =
+     * restBaseUrl + "researchers/"; Gson gson = new Gson(); try {
+     * ResponseEntity<String> response = restTemplate.getForEntity(url,
+     * String.class); Researcher[] tmp = gson.fromJson(response.getBody(),
+     * Researcher[].class); if (tmp != null) { for (Researcher r : tmp) { if
+     * (r.getInstitutionalRoleId() == 1) { researchers.add(r); } } } } catch
+     * (HttpStatusCodeException hsce) { String tmp =
+     * hsce.getResponseBodyAsString(); JSONObject json = new JSONObject(tmp);
+     * throw new Exception(json.getString("message")); } catch (Exception e) {
+     * e.printStackTrace(); throw new Exception("An unexpected error occured.",
+     * e); } Collections.sort(researchers, new Comparator() { public int
+     * compare( Object o1, Object o2) {
+     * 
+     * return ((Comparable) ((Researcher)
+     * (o1)).getFullName()).compareTo(((Researcher) (o2)).getFullName()); } });
+     * return researchers; }
+     */
 
     public Researcher[] getAllStaffOrPostDocs() throws Exception {
 
@@ -142,6 +128,33 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             throw new Exception("An unexpected error occured.", e);
         }
         return r;
+    }
+
+    public List<Project> getProjectsOfResearcher(
+            Integer researcherId) throws Exception {
+
+        List<Project> projects = new LinkedList<Project>();
+        String url = restBaseUrl + "researchers/" + researcherId.toString() + "/projects";
+        Gson gson = new Gson();
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            Project[] tmp = gson.fromJson(response.getBody(), Project[].class);
+            if (tmp != null) {
+                for (Project p: tmp) {
+                    if (p.getHostInstitution().equals("University of Auckland")) {
+                        projects.add(p);                    
+                    }
+                }
+            }
+        } catch (HttpStatusCodeException hsce) {
+            String tmp = hsce.getResponseBodyAsString();
+            JSONObject json = new JSONObject(tmp);
+            throw new Exception(json.getString("message"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("An unexpected error occured.", e);
+        }
+        return projects;
     }
 
     @Override
@@ -232,17 +245,16 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         }
     }
 
-    public Project getProjectForCode(
-            String projectCode) throws Exception {
+    public ProjectWrapper getProjectForIdOrCode(
+            String identifier) throws Exception {
 
-        String url = restBaseUrl + "projects/" + projectCode;
+        String url = restBaseUrl + "projects/" + identifier;
         Gson gson = new Gson();
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             String body = response.getBody();
             JSONObject projectWrapper = new JSONObject(body);
-            JSONObject project = projectWrapper.getJSONObject("project");
-            return gson.fromJson(project.toString(), Project.class);
+            return gson.fromJson(projectWrapper.toString(), ProjectWrapper.class);
         } catch (HttpStatusCodeException hsce) {
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);

@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/ProjectRequestControllerTest-context.xml", "/root-context.xml" })
+@ContextConfiguration(locations = { "classpath:ProjectRequestControllerTest-context.xml", "classpath:root-context.xml" })
 @WebAppConfiguration
 public class ProjectRequestControllerTest {
 

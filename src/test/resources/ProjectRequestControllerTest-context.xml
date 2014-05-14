@@ -17,19 +17,11 @@
 
   <bean class="nz.ac.auckland.cer.project.controller.ProjectRequestController"/>
   
-  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-    <property name="exceptionMappings">
-      <props>
-        <prop key="common.util.CustomException">customexception</prop>
-      </props>
-    </property>
-  </bean>
+  <bean id="ProjectRequestValidator" class="nz.ac.auckland.cer.project.validation.ProjectRequestValidator" />
 
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/jsp/" />
     <property name="suffix" value=".jsp" />
   </bean>
-
-  <bean id="ProjectRequestValidator" class="nz.ac.auckland.cer.project.validation.ProjectRequestValidator" />
 
 </beans>

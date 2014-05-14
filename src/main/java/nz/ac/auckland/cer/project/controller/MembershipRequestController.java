@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.MembershipRequest;
 import nz.ac.auckland.cer.project.pojo.Project;
+import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.RPLink;
 import nz.ac.auckland.cer.project.util.EmailUtil;
 import nz.ac.auckland.cer.project.util.Person;
@@ -68,9 +69,9 @@ public class MembershipRequestController {
                         + " You appear to be an adviser.");
                 return "request_membership_response";
             }
-            Project p = projectDao.getProjectForCode(mr.getProjectCode());
-            this.addResearcherToProject(person.getId(), p);
-            this.emailUtil.sendMembershipRequestRequestEmail(p, person.getFullName());
+            ProjectWrapper pw = projectDao.getProjectForIdOrCode(mr.getProjectCode());
+            this.addResearcherToProject(person.getId(), pw.getProject());
+            this.emailUtil.sendMembershipRequestRequestEmail(pw.getProject(), person.getFullName());
             return "request_membership_response";
         } catch (Exception e) {
             log.error("Failed to create project membership request", e);
@@ -85,7 +86,10 @@ public class MembershipRequestController {
 
         try {
             // TODO: configure status pending rather than hard-coding it with 5
-            RPLink rpl = new RPLink(p.getId(), researcherDatabaseId, 5);
+            RPLink rpl = new RPLink();
+            rpl.setProjectId(p.getId());
+            rpl.setResearcherId(researcherDatabaseId);
+            rpl.setResearcherRoleId(5);
             this.projectDao.addResearcherToProject(rpl);
         } catch (Exception e) {
             log.error("Failed to add researcher to project.", e);

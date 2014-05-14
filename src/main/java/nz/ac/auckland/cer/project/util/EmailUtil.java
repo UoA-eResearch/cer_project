@@ -59,9 +59,9 @@ public class EmailUtil {
             templateParams.put("__SUPERVISER_NAME__", superviser.getFullName());
             templateParams.put("__SUPERVISER_EMAIL__", superviser.getEmail());
             templateParams.put("__SUPERVISER_PHONE__", superviser.getPhone());
-            String affil = this.affUtil.createAffiliationString(superviser.getInstitution(), superviser.getDivision(),
-                    superviser.getDepartment());
-            templateParams.put("__SUPERVISER_AFFILIATION__", affil);
+            templateParams.put("__SUPERVISER_INSTITUTION__", superviser.getInstitution());
+            templateParams.put("__SUPERVISER_DIVISION__", superviser.getDivision());
+            templateParams.put("__SUPERVISER_DEPARTMENT__", superviser.getDepartment());
         } else {
             templateParams.put("__SUPERVISER_NAME__", pr.getSuperviserName());
             templateParams.put("__SUPERVISER_EMAIL__", pr.getSuperviserEmail());

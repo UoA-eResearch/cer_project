@@ -1,52 +1,62 @@
 package nz.ac.auckland.cer.project.pojo;
 
-public class APLink {
+import java.io.Serializable;
 
-    private Integer adviserRoleId;
-    private Integer projectId;
+public class APLink implements Serializable {
+
+    private Adviser adviser;
     private Integer adviserId;
-    private String notes = "";
+    private Integer adviserRoleId;
+    private String adviserRoleName;
+    private String notes;
+    private Integer projectId;
 
-    public APLink() {
-
-    }
-
-    public APLink(Integer projectId, Integer adviserId, Integer adviserRoleId) {
-        this.projectId = projectId;
-        this.adviserId = adviserId;
-        this.adviserRoleId = adviserRoleId;
-    }
-
-    public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
+    public Adviser getAdviser() {
+        return adviser;
     }
 
     public Integer getAdviserId() {
         return adviserId;
     }
 
-    public void setAdviserId(Integer adviserId) {
-        this.adviserId = adviserId;
-    }
-
     public Integer getAdviserRoleId() {
         return adviserRoleId;
     }
 
-    public void setAdviserRoleId(Integer adviserRoleId) {
-        this.adviserRoleId = adviserRoleId;
+    public String getAdviserRoleName() {
+        return adviserRoleName;
     }
 
     public String getNotes() {
         return notes;
     }
 
-    public void setNotes(String notes) {
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public void setAdviser(final Adviser adviser) {
+        this.adviser = adviser;
+    }
+
+    public void setAdviserId(final Integer adviserId) {
+        this.adviserId = adviserId;
+    }
+
+    public void setAdviserRoleId(final Integer adviserRoleId) {
+        this.adviserRoleId = adviserRoleId;
+    }
+
+    public void setAdviserRoleName(final String adviserRoleName) {
+        this.adviserRoleName = adviserRoleName;
+    }
+
+    public void setNotes(final String notes) {
         this.notes = notes;
+    }
+
+    public void setProjectId(final Integer projectId) {
+        this.projectId = projectId;
     }
 
 }

@@ -25,6 +25,10 @@
   </bean>
 
   <bean id="membershipRequestController" class="nz.ac.auckland.cer.project.controller.MembershipRequestController"/>
+  
+  <bean id="projectController" class="nz.ac.auckland.cer.project.controller.ProjectController">
+    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+  </bean>
 
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/jsp/" />

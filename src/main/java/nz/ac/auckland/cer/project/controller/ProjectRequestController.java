@@ -2,6 +2,7 @@ package nz.ac.auckland.cer.project.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -157,12 +158,20 @@ public class ProjectRequestController {
         Project p = new Project();
         List<RPLink> rpLinks = new LinkedList<RPLink>();
         ProjectFacility pf = new ProjectFacility(1);
-        rpLinks.add(new RPLink(null, researcher.getId(), this.initialResearcherRoleOnProject));
+        RPLink rpl = new RPLink();
+        rpl.setResearcherId(researcher.getId());
+        rpl.setResearcherRoleId(this.initialResearcherRoleOnProject);
+        rpLinks.add(rpl);
         if (superviser != null) {
             // TODO: replace 2 with configured value for "Superviser"
-            rpLinks.add(new RPLink(null, superviser.getId(), 2));
+            rpl = new RPLink();
+            rpl.setResearcherId(superviser.getId());
+            rpl.setResearcherRoleId(2);
+            rpLinks.add(rpl);
         }
-        APLink apLink = new APLink(null, 6, 1);
+        APLink apl = new APLink();
+        apl.setAdviserId(6);
+        apl.setAdviserRoleId(1);
 
         p.setName(pr.getProjectTitle());
         p.setDescription(pr.getProjectDescription());
@@ -177,9 +186,9 @@ public class ProjectRequestController {
         p.setNextReviewDate(df.format(now.getTime()));
 
         pw.setProject(p);
-        pw.setProjectFacilities(new ProjectFacility[] { pf });
-        pw.setRpLinks(rpLinks.toArray(new RPLink[0]));
-        pw.setApLinks(new APLink[] { apLink });
+        pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays.asList(pf)));
+        pw.setRpLinks(rpLinks);
+        pw.setApLinks(new LinkedList<APLink>(Arrays.asList(apl)));
 
         return this.projectDao.createProject(pw);
     }
