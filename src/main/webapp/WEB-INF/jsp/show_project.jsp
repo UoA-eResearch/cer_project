@@ -24,10 +24,6 @@
   <body>
     <h3>Project Details</h3>
     
-    <div class="infoblock">
-      For changes you wish to do, but cannot do here, please send us an e-mail.
-    </div>
-    
     <c:choose>
       <c:when test="${not empty error_message}">
         <div class="errorblock">
@@ -35,6 +31,11 @@
         </div>
       </c:when>
       <c:otherwise>
+      <!-- 
+        <div class="infoblock">
+          For changes you wish to do, but cannot do here, please send us an e-mail.
+        </div>
+      -->
         <table id="projectTable" cellpadding="5">
           <tr>
             <td valign="top"><nobr><b>Title</b>:</nobr></td>
@@ -51,6 +52,14 @@
           <tr>
             <td valign="top"><nobr><b>Status</b>:</nobr></td>
             <td>${pw.project.statusName}</td>
+          </tr>
+          <tr>
+            <td valign="top"><nobr><b>First Day</b>:</nobr></td>
+            <td>${pw.project.startDate}</td>
+          </tr>
+          <tr>
+            <td valign="top"><nobr><b>Last Day</b>:</nobr></td>
+            <td>${pw.project.endDate}</td>
           </tr>
         </table>
         
