@@ -71,6 +71,7 @@ public class MembershipRequestController {
             }
             ProjectWrapper pw = projectDao.getProjectForIdOrCode(mr.getProjectCode());
             this.addResearcherToProject(person.getId(), pw.getProject());
+            // TODO: send e-mail to superviser, cc = zendesk, replyto = zendesk
             this.emailUtil.sendMembershipRequestRequestEmail(pw.getProject(), person.getFullName());
             return "request_membership_response";
         } catch (Exception e) {
