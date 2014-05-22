@@ -4,11 +4,14 @@ import java.util.List;
 
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
+import nz.ac.auckland.cer.project.pojo.FollowUp;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Project;
 import nz.ac.auckland.cer.project.pojo.ProjectProperty;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.RPLink;
+import nz.ac.auckland.cer.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 
 public interface ProjectDatabaseDao {
@@ -17,6 +20,8 @@ public interface ProjectDatabaseDao {
 
     public InstitutionalRole[] getInstitutionalRoles() throws Exception;
 
+    public ResearchOutputType[] getResearchOutputTypes() throws Exception;
+    
     public Adviser getAdviserForTuakiriSharedToken(
             String sharedToken) throws Exception;
 
@@ -42,4 +47,18 @@ public interface ProjectDatabaseDao {
 
     public void addResearcherToProject(
             RPLink rpl) throws Exception;
+
+    public void addOrUpdateFollowUp(
+            FollowUp fu) throws Exception;
+
+    public void addOrUpdateResearchOutput(
+            ResearchOutput ro) throws Exception;
+    
+    public void updateProject(
+            Integer projectId,
+            String object,
+            String field,
+            String timestamp,
+            String newValue) throws Exception;
+
 }

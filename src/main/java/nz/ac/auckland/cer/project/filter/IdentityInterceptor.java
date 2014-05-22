@@ -33,8 +33,13 @@ public class IdentityInterceptor implements Filter {
             Properties props = new Properties();
             if (this.idResource.exists() && this.idResource.isReadable()) {
                 props.load(idResource.getInputStream());
-                for (Object key : props.keySet()) {
-                    req.setAttribute((String) key, props.get(key));
+                String admins = (String) props.get("admins");
+                String eppn = (String) req.getAttribute("eppn");
+                if (admins != null && (admins.equals("*") || (eppn != null && admins.contains(eppn)))) {
+                    props.remove("admins");
+                    for (Object key : props.keySet()) {
+                        req.setAttribute((String) key, props.get(key));
+                    }                    
                 }
                 this.logIdentityChange((HttpServletRequest) req, props);
             }

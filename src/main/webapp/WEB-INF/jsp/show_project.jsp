@@ -7,16 +7,14 @@
   <head>
     <meta charset="utf-8">
     <script src="<%=request.getContextPath()%>/js/jquery-1.8.3.js"></script>
-    <script src="<%=request.getContextPath()%>/js/jquery-ui.js"></script>
     <script src="<%=request.getContextPath()%>/js/jquery.tablesorter.min.js"></script>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/jquery-ui.css" type="text/css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/tablesorter/blue/style.css" type="text/css" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/tablesorter/theme.default.css" type="text/css" />
     <script>
       $(document).ready(function() {
-        $("#researcherTable").tablesorter({sortList: [[0,0]]});
-        $("#researchOutputTable").tablesorter({sortList: [[0,1]]});
-        $("#feedbackTable").tablesorter({sortList: [[0,1]]});
+        $("#researcherTable").tablesorter({theme:'default', sortList: [[0,0]]});
+        $("#researchOutputTable").tablesorter({theme:'default', sortList: [[0,1]]});
+        $("#feedbackTable").tablesorter({theme:'default', sortList: [[0,1]]});
       });
     </script>
   </head>
@@ -33,7 +31,7 @@
       <c:otherwise>
       <!-- 
         <div class="infoblock">
-          For changes you wish to do, but cannot do here, please send us an e-mail.
+          Please send us an e-mail for changes you wish to do, but cannot do here.
         </div>
       -->
         <table id="projectTable" cellpadding="5">
@@ -62,84 +60,83 @@
             <td>${pw.project.endDate}</td>
           </tr>
         </table>
-        
+
+
         <h3>Researchers on project</h3>
-        <table id="researcherTable" class="tablesorter">
-          <thead>
-            <tr>
+          <table id="researcherTable" class="tablesorter">
+            <thead>
               <th>Name</th>
-              <th>Role on Project</th>
-            </tr>
-          </thead>
-          <tbody>
-            <c:forEach items="${pw.rpLinks}" var="rpLink">
-              <tr>
-                <td>${rpLink.researcher.fullName}</td>
-                <td>${rpLink.researcherRoleName}</td>
-              </tr>
-            </c:forEach>
-          </tbody>
-        </table>
-        
+              <th>Role on project</th>
+            </thead>
+            <tbody>
+              <c:forEach items="${pw.rpLinks}" var="rpLink">
+                <tr>
+                  <td>${rpLink.researcher.fullName}</td>
+                  <td>${rpLink.researcherRoleName}</td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+          <br>
+           
         <h3>Research Output</h3>
-        <c:choose>
-        <c:when test="${f:length(pw.researchOutputs) gt 0}">
-          <table id="researchOutputTable" class="tablesorter">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Description</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <c:forEach items="${pw.researchOutputs}" var="ro">
+            <table id="researchOutputTable" class="tablesorter">
+              <thead>
                 <tr>
-                  <td>${ro.date}</td>
-                  <td>${ro.type}</td>
-                  <td>${ro.description}</td>
-                  <td>Edit</td>
+                  <th><nobr>Date added</nobr></th>
+                  <th>Type</th>
+                  <th>Description</th>
                 </tr>
-              </c:forEach>
-            </tbody>
-          </table>
-        </c:when>
-        <c:otherwise>
-          N/A<br>
-        </c:otherwise>
-        </c:choose>
-        Add research output
+              </thead>
+              <tbody>
+                <c:forEach items="${pw.researchOutputs}" var="ro">
+                  <tr>
+                    <td>${ro.date}&nbsp;</td>
+                    <td>${ro.type}&nbsp;</td>
+                    <td><a href="edit_research_output?pid=${ro.projectId}&rid=${ro.id}">${ro.description}</a>&nbsp;</td>
+                  </tr>
+                </c:forEach>
+              </tbody>
+            </table>
+        
+        <p>
+          <form action="add_research_output" method="GET" style="display: inline;">
+            <input type="submit" value="Add Research Output"/>
+            <input type="hidden" name="pid" value="${pw.project.id}"/>
+          </form>
+        </p>
+        <br>
 
-        <!-- TODO: Display only feedback AFTER the CeR portal has been published -->
         <h3>Feedback</h3>
-        <c:choose>
-        <c:when test="${f:length(pw.followUps) gt 0}">
-          <table id="feedbackTable" class="tablesorter">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Notes</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <c:forEach items="${pw.followUps}" var="fu">
+            <table id="feedbackTable" class="tablesorter">
+              <thead>
                 <tr>
-                  <td>${fu.date}</td>
-                  <td>${fu.notes}</td>
-                  <td>Edit</td>
+                  <th><nobr>Date added</nobr></th>
+                  <th>Last updated by</th>
+                  <th>Notes</th>
                 </tr>
-              </c:forEach>
-            </tbody>
-          </table>
-        </c:when>
-        <c:otherwise>
-          N/A<br>
-        </c:otherwise>
-        </c:choose>
-        Add Feedback
-
+              </thead>
+              <tbody>
+                <c:forEach items="${pw.followUps}" var="fu">
+                  <!--  IMPORTANT: Only show entries made by researchers. Hide those from advisers -->
+                  <c:if test="${not empty fu.researcherId}">
+                    <tr>
+                      <td>${fu.date}&nbsp;</td>
+                      <td>${fu.researcherName}&nbsp;</td>
+                      <td><a href="edit_followup?pid=${fu.projectId}&fid=${fu.id}">${fu.notes}</a>&nbsp;</td>
+                    </tr>
+                  </c:if>
+                </c:forEach>
+              </tbody>
+            </table>
+        
+        <p>
+          <form action="add_followup" method="GET" style="display: inline;">
+            <input type="submit" value="Add Feedback"/>
+            <input type="hidden" name="pid" value="${pw.project.id}"/>
+          </form>
+        </p>
+      
       </c:otherwise>
     </c:choose>
   </body>

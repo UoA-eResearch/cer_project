@@ -1,0 +1,8 @@
+__RESEARCHER_NAME__ placed the following feedback on one of his projects.
+
+"""
+__FOLLOW_UP__
+"""
+
+Link to project in database:
+__PROJECT_LINK__

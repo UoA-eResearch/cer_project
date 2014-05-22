@@ -1,0 +1,11 @@
+__RESEARCHER_NAME__ added the following research output to one of his projects.
+
+Type:
+__RESEARCH_OUTPUT_TYPE__
+
+Description:
+__RESEARCH_OUTPUT_DESCRIPTION__
+
+
+Link to project in database:
+__PROJECT_LINK__

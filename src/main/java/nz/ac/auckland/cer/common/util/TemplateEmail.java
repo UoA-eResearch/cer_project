@@ -31,6 +31,9 @@ public class TemplateEmail {
 		String bodyString = null;
 		if (body != null && body.exists()) {
 			bodyString = IOUtils.toString(body.getInputStream());
+			if (bodyString == null) {
+			    throw new Exception("Failed to read " + body.getFilename());
+			}
 		} else {
 			throw new Exception("resource for email body must not be null");
 		}

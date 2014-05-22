@@ -80,14 +80,21 @@
   <bean id="auditUtil" class="nz.ac.auckland.cer.project.util.AuditUtil" />
   
   <bean id="emailUtil" class="nz.ac.auckland.cer.project.util.EmailUtil">
-    <property name="emailFrom" value="${request.email.from}"/>
-    <property name="emailTo" value="${request.email.to}"/>
+    <property name="emailFrom" value="${email.from}"/>
+    <property name="emailTo" value="${email.to}"/>
+    <property name="replyTo" value="${email.replyto}"/>
     <property name="projectBaseUrl" value="${project.html.project.baseurl}"/>
     <property name="projectRequestEmailSubject" value="${project.request.email.subject}"/>
     <property name="projectRequestEmailBodyResource" value="${project.request.email.template.path}"/>
     <property name="projectRequestWithSuperviserEmailBodyResource" value="${project.request.with.superviser.email.template.path}"/>
     <property name="membershipRequestEmailSubject" value="${membership.request.email.subject}"/>
     <property name="membershipRequestEmailBodyResource" value="${membership.request.email.template.path}"/>
+    <property name="otherAffiliationEmailSubject" value="${other.affiliation.email.subject}"/>
+    <property name="otherAffiliationEmailBodyResource" value="${other.affiliation.email.template.path}"/>
+    <property name="newFollowUpEmailSubject" value="${project.new.followup.email.subject}"/>
+    <property name="newFollowUpEmailBodyResource" value="${project.new.followup.email.template.path}"/>
+    <property name="newResearchOutputEmailSubject" value="${project.new.researchOutput.email.subject}"/>
+    <property name="newResearchOutputEmailBodyResource" value="${project.new.researchOutput.email.template.path}"/>
   </bean>
 
 </beans>

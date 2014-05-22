@@ -16,12 +16,17 @@ project.request.url=
 
 # email configuration
 email.smtp.server=
-request.email.from=
-request.email.to=
+email.from=
+email.to=
+email.replyto=
 project.request.email.subject=
 project.request.email.template.path=
 project.request.with.superviser.email.template.path=
 project.request.without.account.redirect=
+project.new.followup.email.subject=
+project.new.followup.email.template.path=
+project.new.researchOutput.email.subject=
+project.new.researchOutput.email.template.path=
 membership.request.email.subject=
 membership.request.email.template.path=
 other.affiliation.email.subject=

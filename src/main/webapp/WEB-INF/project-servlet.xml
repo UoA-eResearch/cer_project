@@ -30,6 +30,14 @@
     <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
   </bean>
 
+  <bean id="followUpController" class="nz.ac.auckland.cer.project.controller.FollowUpController">
+    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+  </bean>
+
+  <bean id="researchOutputController" class="nz.ac.auckland.cer.project.controller.ResearchOutputController">
+    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+  </bean>
+
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/jsp/" />
     <property name="suffix" value=".jsp" />

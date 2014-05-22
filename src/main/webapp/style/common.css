@@ -1,28 +1,5 @@
-div#header {
-  color: white; 
-  background-color: #333; 
-  padding: 8px; 
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  right: 0; 
-  height: 15pt; 
-}
-
-thead th {
-  padding-right: 20px;
-}
-
-div#body {
-  background-color: white; 
-  padding: 8px; 
-  position: absolute; 
-  top: 25pt; 
-  left: 0; 
-  right: 0; }
-
 h3 {
-  color: #000;
+  color: #0085b7;
   background: none;
   font-weight: bold;
   text-align: left;

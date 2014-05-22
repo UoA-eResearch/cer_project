@@ -6,10 +6,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="<%=request.getContextPath()%>/js/jquery-1.8.3.js"></script>
-    <script src="<%=request.getContextPath()%>/js/jquery-ui.js"></script>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/jquery-ui.css" type="text/css" />
   </head>
 
   <body>

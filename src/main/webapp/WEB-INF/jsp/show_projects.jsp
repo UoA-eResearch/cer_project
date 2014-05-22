@@ -7,14 +7,12 @@
   <head>
     <meta charset="utf-8">
     <script src="<%=request.getContextPath()%>/js/jquery-1.8.3.js"></script>
-    <script src="<%=request.getContextPath()%>/js/jquery-ui.js"></script>
     <script src="<%=request.getContextPath()%>/js/jquery.tablesorter.min.js"></script>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/jquery-ui.css" type="text/css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/tablesorter/blue/style.css" type="text/css" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/tablesorter/theme.default.css" type="text/css" />
     <script>
       $(document).ready(function() {
-        $("#projectTable").tablesorter({sortList: [[2,1],[3,1]]});
+        $("#projectTable").tablesorter({theme: "default", sortList: [[2,1],[3,1]]});
       });
   </script>
   </head>
@@ -43,11 +41,11 @@
               <tbody>
               <c:forEach items="${projects}" var="project">
                 <tr>
-                  <td><a href="view_project?id=${project.id}">${project.projectCode}</a></td>
-                  <td><a href="view_project?id=${project.id}">${project.name}</a></td>
-                  <td>${project.statusName}</td>
-                  <td>${project.startDate}</td>
-                  <td>${project.endDate}</td>
+                  <td>${project.projectCode}&nbsp;</td>
+                  <td><a href="view_project?id=${project.id}">${project.name}&nbsp;</a></td>
+                  <td>${project.statusName}&nbsp;</td>
+                  <td>${project.startDate}&nbsp;</td>
+                  <td>${project.endDate}&nbsp;</td>
                 </tr>
               </c:forEach> 
               </tbody>

@@ -6,11 +6,14 @@ import java.util.List;
 import nz.ac.auckland.cer.common.util.SSLCertificateValidation;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
+import nz.ac.auckland.cer.project.pojo.FollowUp;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Project;
 import nz.ac.auckland.cer.project.pojo.ProjectProperty;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.RPLink;
+import nz.ac.auckland.cer.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 
 import org.apache.log4j.Logger;
@@ -85,11 +88,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             researchers = gson.fromJson(response.getBody(), Researcher[].class);
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An unexpected error occured.", e);
             throw new Exception("An unexpected error occured.", e);
         }
         return researchers;
@@ -120,11 +124,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             r = gson.fromJson(response.getBody(), Researcher.class);
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An unexpected error occured.", e);
             throw new Exception("An unexpected error occured.", e);
         }
         return r;
@@ -147,11 +152,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
                 }
             }
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An unexpected error occured.", e);
             throw new Exception("An unexpected error occured.", e);
         }
         return projects;
@@ -167,14 +173,35 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             affiliations = gson.fromJson(response.getBody(), Affiliation[].class);
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An unexpected error occured.", e);
             throw new Exception("An unexpected error occured.", e);
         }
         return affiliations;
+    }
+
+    public ResearchOutputType[] getResearchOutputTypes() throws Exception {
+        
+        ResearchOutputType[] researchOutputTypes = new ResearchOutputType[0];
+        String url = restBaseUrl + "projects/rotype";
+        Gson gson = new Gson();
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            researchOutputTypes = gson.fromJson(response.getBody(), ResearchOutputType[].class);
+        } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
+            String tmp = hsce.getResponseBodyAsString();
+            JSONObject json = new JSONObject(tmp);
+            throw new Exception(json.getString("message"));
+        } catch (Exception e) {
+            log.error("An unexpected error occured.", e);
+            throw new Exception("An unexpected error occured.", e);
+        }
+        return researchOutputTypes;
     }
 
     @Override
@@ -187,11 +214,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             iRoles = gson.fromJson(response.getBody(), InstitutionalRole[].class);
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An unexpected error occured.", e);
             throw new Exception("An unexpected error occured.", e);
         }
         return iRoles;
@@ -214,11 +242,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             p.setId(new Integer(he.getBody()));
             return p;
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An unexpected error occured.", e);
             throw new Exception("An unexpected error occured.", e);
         }
     }
@@ -236,11 +265,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             HttpEntity<String> request = new HttpEntity<String>(gson.toJson(pp), headers);
             restTemplate.put(url, request);
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("An unexpected error occured.", e);
             throw new Exception("An unexpected error occured.", e);
         }
     }
@@ -256,11 +286,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             JSONObject projectWrapper = new JSONObject(body);
             return gson.fromJson(projectWrapper.toString(), ProjectWrapper.class);
         } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e3) {
-            e3.printStackTrace();
+            log.error("An unexpected error occured.", e3);
             throw new Exception("An unexpected error occured.", e3);
         }
     }
@@ -277,15 +308,86 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             HttpEntity<String> entity = new HttpEntity<String>(gson.toJson(rpl), headers);
             restTemplate.put(url, entity);
         } catch (HttpStatusCodeException hsce) {
-            hsce.printStackTrace();
+            log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e3) {
-            e3.printStackTrace();
+            log.error("An unexpected error occured.", e3);
             throw new Exception("An unexpected error occured.", e3);
         }
     }
+
+    public void addOrUpdateFollowUp(
+            FollowUp fu) throws Exception {
+        
+        String url = restBaseUrl + "projects/followup";
+        Gson gson = new Gson();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("RemoteUser", this.restAdminUser);
+            HttpEntity<String> entity = new HttpEntity<String>(gson.toJson(fu), headers);
+            restTemplate.put(url, entity);
+        } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
+            String tmp = hsce.getResponseBodyAsString();
+            JSONObject json = new JSONObject(tmp);
+            throw new Exception(json.getString("message"));
+        } catch (Exception e3) {
+            log.error("An unexpected error occured.", e3);
+            throw new Exception("An unexpected error occured.", e3);
+        }
+    }
+    
+    public void addOrUpdateResearchOutput(
+            ResearchOutput ro) throws Exception {
+        
+        String url = restBaseUrl + "projects/ro";
+        Gson gson = new Gson();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("RemoteUser", this.restAdminUser);
+            HttpEntity<String> entity = new HttpEntity<String>(gson.toJson(ro), headers);
+            restTemplate.put(url, entity);
+        } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
+            String tmp = hsce.getResponseBodyAsString();
+            JSONObject json = new JSONObject(tmp);
+            throw new Exception(json.getString("message"));
+        } catch (Exception e3) {
+            log.error("An unexpected error occured.", e3);
+            throw new Exception("An unexpected error occured.", e3);
+        }
+    }
+    
+    public void updateProject(
+            Integer projectId,
+            String object,
+            String field,
+            String timestamp,
+            String newValue) throws Exception {
+        
+        String url = restBaseUrl + "projects/" + projectId + "/" + object + "/" + field + "/" + timestamp + "/";
+        JSONObject json = new JSONObject();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("RemoteUser", this.restAdminUser);
+            HttpEntity<String> request = new HttpEntity<String>(newValue, headers);
+            restTemplate.postForEntity(url, request, String.class);
+        } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
+            String tmp = hsce.getResponseBodyAsString();
+            json = new JSONObject(tmp);
+            throw new Exception(json.getString("message"));
+        } catch (Exception e) {
+            log.error("An unexpected error occured.", e);
+            throw new Exception("An unexpected error occured.", e);
+        }
+    }
+
 
     public void setRestTemplate(
             RestTemplate restTemplate) {
