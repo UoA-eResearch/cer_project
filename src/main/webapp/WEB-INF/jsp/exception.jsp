@@ -6,7 +6,7 @@
 
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css"/>  
+    <link rel="stylesheet" href="../style/common.css" type="text/css"/>  
   </head>
 
   <body>

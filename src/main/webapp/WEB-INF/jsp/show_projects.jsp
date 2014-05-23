@@ -6,10 +6,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="<%=request.getContextPath()%>/js/jquery-1.8.3.min.js"></script>
-    <script src="<%=request.getContextPath()%>/js/jquery.tablesorter.min.js"></script>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/tablesorter/theme.default.css" type="text/css" />
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script src="../js/jquery.tablesorter.min.js"></script>
+    <link rel="stylesheet" href="../style/common.css" type="text/css" />
+    <link rel="stylesheet" href="../style/tablesorter/theme.default.css" type="text/css" />
     <script>
       $(document).ready(function() {
         $("#projectTable").tablesorter({theme: "default", sortList: [[2,1],[3,1]]});

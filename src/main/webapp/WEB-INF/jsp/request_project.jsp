@@ -6,8 +6,8 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="<%=request.getContextPath()%>/js/jquery-1.8.3.min.js"></script>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css" />
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="../style/common.css" type="text/css" />
     <script type="text/javascript">
     
       <c:set var="compEnv2" value="cluster_or_set_of_computers"/>
