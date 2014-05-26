@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +16,6 @@ import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.APLink;
@@ -50,47 +52,47 @@ public class ProjectRequestController {
     private String hostInstitution;
     private String redirectIfNoAccount;
     private Integer initialResearcherRoleOnProject;
+    private String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
 
     @RequestMapping(value = "request_project", method = RequestMethod.GET)
-    public String showProjectRequestForm(
-            Model m,
+    public ModelAndView showProjectRequestForm(
             HttpServletRequest request) throws Exception {
 
         ProjectRequest pr = new ProjectRequest();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return redirectIfNoAccount;
+            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
-            m.addAttribute("error_message", "Only researchers can apply for projects."
-                    + " You appear to be an adviser.");
-            return "request_project_response";
+            Map<String,Object> m = new HashMap<String,Object>();
+            m.put("error_message", adviserWarning);
+            return new ModelAndView("request_project_response", m);
         }
         pr.setAskForSuperviser(this.askForSuperviser(person));
-        m.addAttribute("projectrequest", pr);
-        this.augmentModel(m);
-        return "request_project";
+        ModelAndView mav = new ModelAndView("request_project");
+        mav.addObject("projectrequest", pr);
+        this.augmentModel(mav.getModel());
+        return mav;
     }
 
     @RequestMapping(value = "request_project", method = RequestMethod.POST)
-    public String processProjectRequestForm(
-            Model m,
+    public ModelAndView processProjectRequestForm(
             @Valid @ModelAttribute("projectrequest") ProjectRequest pr,
             BindingResult bResult,
             HttpServletRequest request) throws Exception {
 
+        Map<String, Object> m = new HashMap<String, Object>();
         if (bResult.hasErrors()) {
-            m.addAttribute("projectrequest", pr);
+            m.put("projectrequest", pr);
             this.augmentModel(m);
-            return "request_project";
+            return new ModelAndView("request_project", m);
         }
         try {
             Person person = (Person) request.getAttribute("person");
             if (person == null) {
-                return redirectIfNoAccount;
+                return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
             } else if (!person.isResearcher()) {
-                m.addAttribute("error_message", "Only researchers can apply for projects."
-                        + " You appear to be an adviser.");
-                return "request_project_response";
+                m.put("error_message", adviserWarning);
+                return new ModelAndView("request_project_response", m);
             }
             Researcher superviser = null;
             if (pr.getSuperviserId() != null && pr.getSuperviserId() > 0) {
@@ -108,16 +110,16 @@ public class ProjectRequestController {
             } else {
                 this.emailUtil.sendProjectRequestEmail(p, person.getFullName());
             }
-            return "request_project_response";
+            return new ModelAndView("request_project_response");
         } catch (Exception e) {
             log.error("Failed to create project", e);
             bResult.addError(new ObjectError(bResult.getObjectName(), e.getMessage()));
-            return "request_project";
+            return new ModelAndView("request_project");
         }
     }
 
     private void augmentModel(
-            Model m) {
+            Map<String, Object> mav) {
 
         Affiliation[] afs = null;
         Map<Integer, String> superviserMap = null;
@@ -128,7 +130,7 @@ public class ProjectRequestController {
                 throw new Exception();
             }
             List<String> tmp = this.affilUtil.getAffiliationStrings(afs);
-            m.addAttribute("affiliations", tmp);
+            mav.put("affiliations", tmp);
         } catch (Exception e) {
             String error = "Failed to load affiliations.";
             errorMessage += "Internal Error: " + error;
@@ -137,7 +139,7 @@ public class ProjectRequestController {
 
         try {
             superviserMap = this.getSortedSuperviserMap();
-            m.addAttribute("superviserDropdownMap", superviserMap);
+            mav.put("superviserDropdownMap", superviserMap);
         } catch (Exception e) {
             String error = "Failed to load superviser map.";
             errorMessage += "Internal Error: " + error;
@@ -145,7 +147,7 @@ public class ProjectRequestController {
         }
 
         if (errorMessage.trim().length() > 0) {
-            m.addAttribute("unexpected_error", errorMessage);
+            mav.put("unexpected_error", errorMessage);
         }
     }
 

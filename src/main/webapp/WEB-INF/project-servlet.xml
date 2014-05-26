@@ -21,21 +21,23 @@
   <bean id="projectRequestController" class="nz.ac.auckland.cer.project.controller.ProjectRequestController">
     <property name="hostInstitution" value="${project.hostinstitution}"/>    
     <property name="initialResearcherRoleOnProject" value="${project.researcher.initial.role.on.project.id}"/>
-    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+    <property name="redirectIfNoAccount" value="${no.account.redirect}"/>
   </bean>
 
-  <bean id="membershipRequestController" class="nz.ac.auckland.cer.project.controller.MembershipRequestController"/>
+  <bean id="membershipRequestController" class="nz.ac.auckland.cer.project.controller.MembershipRequestController">
+    <property name="redirectIfNoAccount" value="${no.account.redirect}"/>
+  </bean>
   
   <bean id="projectController" class="nz.ac.auckland.cer.project.controller.ProjectController">
-    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+    <property name="redirectIfNoAccount" value="${no.account.redirect}"/>
   </bean>
 
   <bean id="followUpController" class="nz.ac.auckland.cer.project.controller.FollowUpController">
-    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+    <property name="redirectIfNoAccount" value="${no.account.redirect}"/>
   </bean>
 
   <bean id="researchOutputController" class="nz.ac.auckland.cer.project.controller.ResearchOutputController">
-    <property name="redirectIfNoAccount" value="${project.request.without.account.redirect}"/>
+    <property name="redirectIfNoAccount" value="${no.account.redirect}"/>
   </bean>
 
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">

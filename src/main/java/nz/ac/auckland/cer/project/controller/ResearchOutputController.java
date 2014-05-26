@@ -2,6 +2,7 @@ package nz.ac.auckland.cer.project.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,7 +12,6 @@ import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
@@ -35,114 +37,117 @@ public class ResearchOutputController {
     @Autowired private ProjectDatabaseDao projectDao;
     @Autowired private EmailUtil emailUtil;
     private String redirectIfNoAccount;
+    private String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
 
     @RequestMapping(value = "add_research_output", method = RequestMethod.GET)
-    public String addResearcherOutput(
-            Model m,
+    public ModelAndView addResearcherOutput(
             @RequestParam(value = "pid", required = false) Integer projectId,
             HttpServletRequest request) throws Exception {
 
+        Map<String,Object> m = new HashMap<String,Object>();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return redirectIfNoAccount;
+            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
-            m.addAttribute("error_message", "Only researchers, but not advisers can provide research output");
+            m.put("error_message", adviserWarning);
         } else if (projectId == null) {
-            m.addAttribute("error_message", "No project id specified");
+            m.put("error_message", "No project id specified");
+        } else {
+            ResearchOutput ro = new ResearchOutput();
+            ro.setProjectId(projectId);
+            m.put("researchOutput", ro);            
         }
-        ResearchOutput ro = new ResearchOutput();
-        ro.setProjectId(projectId);
-        m.addAttribute("researchOutput", ro);
         this.augmentModel(m);
-        return "add_research_output";
+        return new ModelAndView("add_research_output", m);
     }
 
     @RequestMapping(value = "add_research_output", method = RequestMethod.POST)
-    public String processAddResearchOutput(
-            Model m,
+    public ModelAndView processAddResearchOutput(
             @Valid @ModelAttribute("researchOutput") ResearchOutput ro,
             BindingResult bResult,
             HttpServletRequest request) throws Exception {
 
+        Map<String,Object> m = new HashMap<String,Object>();
         if (bResult.hasErrors()) {
-            m.addAttribute("researchOutput", ro);
+            m.put("researchOutput", ro);
             this.augmentModel(m);
-            return "add_research_output";
+            return new ModelAndView("add_research_output", m);
         }
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return redirectIfNoAccount;
+            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
-            m.addAttribute("error_message", "Only researchers, but not advisers can provide research output");
-            return "add_research_output";
+            m.put("error_message", adviserWarning);
+            return new ModelAndView("add_research_output", m);
         } else {
             ro.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             try {
                 this.projectDao.addOrUpdateResearchOutput(ro);
                 this.emailUtil.sendNewResearchOutputEmail(person.getFullName(),
                         this.getResearchOutputTypeMap().get(ro.getTypeId()), ro.getDescription(), ro.getProjectId());
-                return "redirect:view_project?id=" + ro.getProjectId();
+                return new ModelAndView(new RedirectView("view_project?id=" + ro.getProjectId(), true));
             } catch (Exception e) {
-                m.addAttribute("error_message", e.getMessage());
-                return "add_research_output";
+                m.put("error_message", e.getMessage());
+                return new ModelAndView("add_research_output", m);
             }
         }
     }
 
     @RequestMapping(value = "edit_research_output", method = RequestMethod.GET)
-    public String editFollowUp(
-            Model m,
+    public ModelAndView editFollowUp(
             @RequestParam(value = "pid", required = false) Integer projectId,
             @RequestParam(value = "rid", required = false) Integer researchOutputId,
             HttpServletRequest request) throws Exception {
 
+        Map<String,Object> m = new HashMap<String,Object>();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return redirectIfNoAccount;
+            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
-            m.addAttribute("error_message", "Only researchers, but not advisers can provide research output.");
+            m.put("error_message", adviserWarning);
         } else if (projectId == null) {
-            m.addAttribute("error_message", "No project id specified");
-        }
-        ProjectWrapper pw = this.projectDao.getProjectForIdOrCode(Integer.toString(projectId));
-        ResearchOutput ro = null;
-        for (ResearchOutput tmp : pw.getResearchOutputs()) {
-            if (tmp.getId().equals(researchOutputId)) {
-                ro = tmp;
-                break;
+            m.put("error_message", "No project id specified");
+        } else {
+            ProjectWrapper pw = this.projectDao.getProjectForIdOrCode(Integer.toString(projectId));
+            ResearchOutput ro = null;
+            for (ResearchOutput tmp : pw.getResearchOutputs()) {
+                if (tmp.getId().equals(researchOutputId)) {
+                    ro = tmp;
+                    break;
+                }
             }
+            m.put("researchOutput", ro);            
         }
-        m.addAttribute("researchOutput", ro);
         this.augmentModel(m);
-        return "edit_research_output";
+        return new ModelAndView("edit_research_output", m);
     }
 
     @RequestMapping(value = "edit_research_output", method = RequestMethod.POST)
-    public String processEditFollowUp(
-            Model m,
+    public ModelAndView processEditFollowUp(
             @Valid @ModelAttribute("researchOutput") ResearchOutput ro,
             BindingResult bResult,
             HttpServletRequest request) throws Exception {
 
+        Map<String,Object> m = new HashMap<String,Object>();
         if (bResult.hasErrors()) {
-            m.addAttribute("researchOutput", ro);
+            m.put("researchOutput", ro);
             this.augmentModel(m);
-            return "edit_research_output";
+            return new ModelAndView("edit_research_output", m);
         }
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return redirectIfNoAccount;
+            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
-            m.addAttribute("error_message", "Only researchers, but not advisers can provide research output.");
-            return "edit_research_output";
+            m.put("error_message", adviserWarning);
+            return new ModelAndView("edit_research_output", m);
         } else {
             try {
                 this.projectDao.addOrUpdateResearchOutput(ro);
-                return "redirect:view_project?id=" + ro.getProjectId();
+                return new ModelAndView(new RedirectView("view_project?id=" + ro.getProjectId(), true));
             } catch (Exception e) {
-                m.addAttribute("error_message", e.getMessage());
-                m.addAttribute("researchOutput", ro);
-                return "edit_research_output";
+                m.put("error_message", e.getMessage());
+                m.put("researchOutput", ro);
+                return new ModelAndView("edit_research_output", m);
             }
         }
     }
@@ -158,11 +163,11 @@ public class ResearchOutputController {
     }
 
     private void augmentModel(
-            Model m) {
+            Map<String,Object> m) {
 
         String errorMessage = "";
         try {
-            m.addAttribute("researchOutputTypeMap", this.getResearchOutputTypeMap());
+            m.put("researchOutputTypeMap", this.getResearchOutputTypeMap());
         } catch (Exception e) {
             String error = "Failed to load research output types.";
             errorMessage += "Internal Error: " + error;
@@ -170,7 +175,7 @@ public class ResearchOutputController {
         }
 
         if (errorMessage.trim().length() > 0) {
-            m.addAttribute("unexpected_error", errorMessage);
+            m.put("unexpected_error", errorMessage);
         }
     }
 

@@ -78,7 +78,7 @@ public class ProjectControllerTest {
 
         RequestBuilder rb = get("/view_projects");
         ResultActions ra = this.mockMvc.perform(rb);
-        ra.andExpect(status().isFound()).andExpect(view().name("redirect:/test"));
+        ra.andExpect(status().isFound()).andExpect(redirectedUrl("redirect"));
         verify(projectDao, times(0)).getProjectsOfResearcher(anyInt());
     }
 
@@ -136,7 +136,7 @@ public class ProjectControllerTest {
 
         RequestBuilder rb = get("/view_project").param("id", Integer.toString(project.getId()));
         ResultActions ra = this.mockMvc.perform(rb);
-        ra.andExpect(status().isFound()).andExpect(view().name("redirect:/test"));
+        ra.andExpect(status().isFound()).andExpect(redirectedUrl("redirect"));
         verify(projectDao, times(0)).getProjectForIdOrCode(anyString());
     }
 

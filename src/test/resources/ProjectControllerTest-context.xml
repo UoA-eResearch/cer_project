@@ -16,7 +16,7 @@
   -->
 
   <bean class="nz.ac.auckland.cer.project.controller.ProjectController">
-    <property name="redirectIfNoAccount" value="redirect:/test"/>
+    <property name="redirectIfNoAccount" value="redirect"/>
   </bean>
   
 </beans>

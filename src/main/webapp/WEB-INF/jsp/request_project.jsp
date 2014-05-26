@@ -84,13 +84,13 @@
         <tbody>
           <tr>
             <td>
-              Project title (max 160 characters. No special characters please):<br>
+              Project title (max 160 characters):<br>
               <form:input path="projectTitle" type="text" size="100" maxlength="160"/>
             </td>
           </tr>
           <tr>
             <td>
-              Project description (500 - 2500 characters. No special characters please):<br>
+              Project description (500 - 2500 characters):<br>
               <form:textarea path="projectDescription" type="text" cols="88" rows="20"/>
             </td>
           </tr>

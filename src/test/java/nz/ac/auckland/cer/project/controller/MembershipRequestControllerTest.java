@@ -76,7 +76,7 @@ public class MembershipRequestControllerTest {
 
         RequestBuilder rb = get("/request_membership");
         ResultActions ra = this.mockMvc.perform(rb);
-        ra.andExpect(status().isFound()).andExpect(view().name("redirect:/ceraccount/html/request_account_info"));
+        ra.andExpect(status().isFound()).andExpect(redirectedUrl("redirect"));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class MembershipRequestControllerTest {
 
         RequestBuilder rb = post("/request_membership").param("projectCode", mr.getProjectCode());
         ResultActions ra = this.mockMvc.perform(rb);
-        ra.andExpect(status().isFound()).andExpect(view().name("redirect:/ceraccount/html/request_account_info"));
+        ra.andExpect(status().isFound()).andExpect(redirectedUrl("redirect"));
         verify(projectDao, times(0)).getProjectForIdOrCode(this.mr.getProjectCode());
         verify(emailUtil, times(0)).sendMembershipRequestRequestEmail((Project) any(), eq(person.getFullName()));
     }
