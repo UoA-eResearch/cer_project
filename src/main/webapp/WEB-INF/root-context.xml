@@ -67,6 +67,7 @@
     <property name="restTemplate" ref="projectRestTemplate" />
     <property name="sqlSessionFactory" ref="projectSqlSessionFactoryBean"/>
     <property name="restAdminUser" value="${project.admin.remote.user}"/>
+    <property name="restAuthzHeader" value="${project.rest.authzheader}"/>
   </bean>
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
