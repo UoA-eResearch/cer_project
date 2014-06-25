@@ -1,0 +1,28 @@
+.survey-section {
+  border: 2px solid #336699;
+}
+
+.survey-section-header {
+  color: #fff;
+  background-color: #003366;
+  border-bottom: 1px solid #336699;
+  padding: 8px;
+  margin: 0px;
+  font-weight: bold;
+}
+
+.survey-section-description {
+  color: #000;
+  background-color: #e0ecf3;
+  border-bottom: 1px solid #336699;
+  padding: 8px;
+  margin: 0px;
+}
+
+.survey-section-body {
+  color: #000;
+  /*background-color: #e0ecf3;*/
+  background-color: #fff;
+  padding: 8px;
+  margin-top: 1px;
+}

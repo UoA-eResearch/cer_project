@@ -1,0 +1,41 @@
+Survey reply for project __PROJECT_CODE__, provided by __RESEARCHER_NAME__:
+
+Project Information:
+====================
+
+Title:
+__PROJECT_TITLE__
+
+Description:
+__PROJECT_DESCRIPTION__
+
+
+Survey:
+=======
+
+1. Performance Improvements:
+
+__PERFORMANCE_IMPROVEMENTS__
+
+
+
+2. Research Outcomes:
+
+__RESEARCH_OUTCOME__
+
+
+
+3. Anticipated Future Needs (optional):
+
+__FUTURE_NEEDS__
+
+
+
+4. Feedback (optional):
+
+__FEEDBACK__
+
+
+
+Link to project in database:
+__PROJECT_LINK__
