@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../style/tablesorter/theme.default.css" type="text/css" />
     <script>
       $(document).ready(function() {
-        $("#projectTable").tablesorter({theme: "default", sortList: [[2,1],[3,1]]});
+        $("#projectTable").tablesorter({theme: "default", sortList: [[3,1],[4,1]]});
       });
   </script>
   </head>
@@ -33,6 +33,7 @@
                 <tr>
                   <th>Code</th>
                   <th>Title</th>
+                  <th>Your role</th>
                   <th>Status</th>
                   <th>First Day</th>
                   <th>Last Day</th>
@@ -43,6 +44,7 @@
                 <tr>
                   <td>${project.projectCode}&nbsp;</td>
                   <td><a href="view_project?id=${project.id}">${project.name}&nbsp;</a></td>
+                  <td>${roles[project.id]}</td>
                   <td>${project.statusName}&nbsp;</td>
                   <td>${project.startDate}&nbsp;</td>
                   <td>${project.endDate}&nbsp;</td>
