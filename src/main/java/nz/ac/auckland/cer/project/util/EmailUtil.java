@@ -10,7 +10,13 @@ import org.springframework.core.io.Resource;
 import nz.ac.auckland.cer.common.util.TemplateEmail;
 import nz.ac.auckland.cer.project.pojo.Project;
 import nz.ac.auckland.cer.project.pojo.ProjectRequest;
+import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.pojo.survey.Bigger;
+import nz.ac.auckland.cer.project.pojo.survey.Faster;
+import nz.ac.auckland.cer.project.pojo.survey.More;
+import nz.ac.auckland.cer.project.pojo.survey.Survey;
 
 public class EmailUtil {
 
@@ -23,12 +29,14 @@ public class EmailUtil {
     private Resource otherAffiliationEmailBodyResource;
     private Resource newFollowUpEmailBodyResource;
     private Resource newResearchOutputEmailBodyResource;
+    private Resource surveyNoticeBodyResource;
     private String projectBaseUrl;
     private String projectRequestEmailSubject;
     private String membershipRequestEmailSubject;
     private String otherAffiliationEmailSubject;
     private String newFollowUpEmailSubject;
     private String newResearchOutputEmailSubject;
+    private String surveyNoticeEmailSubject;
     private String emailFrom;
     private String emailTo;
     private String replyTo;
@@ -171,6 +179,60 @@ public class EmailUtil {
         }
     }
 
+    public void sendSurveyEmail(
+            String researcherName,
+            ProjectWrapper pw,
+            Survey survey) throws Exception {
+
+        Map<String, String> templateParams = new HashMap<String, String>();
+        templateParams.put("__RESEARCHER_NAME__", researcherName);
+        templateParams.put("__PROJECT_CODE__", pw.getProject().getProjectCode());
+        templateParams.put("__PROJECT_TITLE__", pw.getProject().getName());
+        templateParams.put("__PROJECT_DESCRIPTION__", pw.getProject().getDescription());
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + "?id=" + pw.getProject().getId());
+        String perfImp = "";
+        Faster faster = survey.getFaster();
+        Bigger bigger = survey.getBigger();
+        More more = survey.getMore();
+        if (faster == null && bigger == null && more == null) {
+            perfImp = "N/A";
+        } else {
+            if (faster != null) {
+                perfImp += faster.toString() + " ";
+            }
+            if (bigger != null) {
+                perfImp += bigger.toString() + " ";
+            }
+            if (more != null) {
+                perfImp += more.toString();
+            }
+        }
+        templateParams.put("__PERFORMANCE_IMPROVEMENTS__", perfImp);
+        templateParams.put("__FUTURE_NEEDS__", survey.getFutureNeeds().toString());
+        String tmp = "";
+        Integer noResearchOutput = survey.getResearchOutcome().getNoResearchOutput();
+        if (noResearchOutput != null && noResearchOutput > 0) {
+            tmp = "N/A";
+        } else {
+            for (ResearchOutput ro : survey.getResearchOutcome().getResearchOutputs()) {
+                if (ro.getDescription() != null && !ro.getDescription().trim().isEmpty()) {
+                    tmp += ro.getDescription() + System.getProperty("line.separator")
+                            + System.getProperty("line.separator");
+                }
+            }
+        }
+        templateParams.put("__RESEARCH_OUTCOME__", tmp.trim());
+        templateParams.put("__FEEDBACK__", survey.getFeedback().toString());
+
+        try {
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.surveyNoticeEmailSubject, this.surveyNoticeBodyResource, templateParams);
+        } catch (Exception e) {
+            log.error("Failed to send new followup email.", e);
+            throw new Exception("Failed to notify CeR staff about the new feedback.");
+        }
+    }
+
     public void setEmailFrom(
             String emailFrom) {
 
@@ -259,6 +321,18 @@ public class EmailUtil {
             String replyTo) {
 
         this.replyTo = replyTo;
+    }
+
+    public void setSurveyNoticeBodyResource(
+            Resource surveyNoticeBodyResource) {
+
+        this.surveyNoticeBodyResource = surveyNoticeBodyResource;
+    }
+
+    public void setSurveyNoticeEmailSubject(
+            String surveyNoticeEmailSubject) {
+
+        this.surveyNoticeEmailSubject = surveyNoticeEmailSubject;
     }
 
 }
