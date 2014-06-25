@@ -1,6 +1,7 @@
 package nz.ac.auckland.cer.project.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
@@ -21,7 +22,7 @@ public interface ProjectDatabaseDao {
     public InstitutionalRole[] getInstitutionalRoles() throws Exception;
 
     public ResearchOutputType[] getResearchOutputTypes() throws Exception;
-    
+
     public Adviser getAdviserForTuakiriSharedToken(
             String sharedToken) throws Exception;
 
@@ -53,12 +54,15 @@ public interface ProjectDatabaseDao {
 
     public void addOrUpdateResearchOutput(
             ResearchOutput ro) throws Exception;
-    
+
     public void updateProject(
             Integer projectId,
             String object,
             String field,
             String timestamp,
             String newValue) throws Exception;
+
+    public Map<Integer, String> getRolesOnProjectsForResearcher(
+            Integer researcherId) throws Exception;
 
 }
