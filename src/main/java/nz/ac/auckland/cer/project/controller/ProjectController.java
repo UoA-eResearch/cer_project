@@ -1,5 +1,7 @@
 package nz.ac.auckland.cer.project.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -37,7 +39,8 @@ public class ProjectController {
             mav.addObject("error_message", adviserWarning);
         } else {
             try {
-                mav.addObject("projects", this.projectDao.getProjectsOfResearcher(person.getId()));                
+                mav.addObject("projects", this.projectDao.getProjectsOfResearcher(person.getId()));
+                mav.addObject("roles", this.projectDao.getRolesOnProjectsForResearcher(person.getId()));
             } catch (Exception e) {
                 log.error("Failed to fetch projects for researcher.", e);
                 mav.addObject("error_message", "Failed to fetch projects from database.");
