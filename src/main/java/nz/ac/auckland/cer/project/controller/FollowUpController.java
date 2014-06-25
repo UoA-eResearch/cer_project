@@ -129,7 +129,7 @@ public class FollowUpController {
         ModelAndView mav = new ModelAndView("edit_followup");
         if (bResult.hasErrors()) {
             mav.addObject("followUp", fu);
-            new InternalResourceView("edit_followup");
+            return mav;
         }
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
