@@ -1,7 +1,9 @@
 package nz.ac.auckland.cer.project.dao;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import nz.ac.auckland.cer.common.util.SSLCertificateValidation;
 import nz.ac.auckland.cer.project.pojo.Adviser;
@@ -59,27 +61,6 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         }
         return null;
     }
-
-    /*
-     * public List<Researcher> getAllStaffOrPostDocs() throws Exception {
-     * 
-     * List<Researcher> researchers = new LinkedList<Researcher>(); String url =
-     * restBaseUrl + "researchers/"; Gson gson = new Gson(); try {
-     * ResponseEntity<String> response = restTemplate.getForEntity(url,
-     * String.class); Researcher[] tmp = gson.fromJson(response.getBody(),
-     * Researcher[].class); if (tmp != null) { for (Researcher r : tmp) { if
-     * (r.getInstitutionalRoleId() == 1) { researchers.add(r); } } } } catch
-     * (HttpStatusCodeException hsce) { String tmp =
-     * hsce.getResponseBodyAsString(); JSONObject json = new JSONObject(tmp);
-     * throw new Exception(json.getString("message")); } catch (Exception e) {
-     * e.printStackTrace(); throw new Exception("An unexpected error occured.",
-     * e); } Collections.sort(researchers, new Comparator() { public int
-     * compare( Object o1, Object o2) {
-     * 
-     * return ((Comparable) ((Researcher)
-     * (o1)).getFullName()).compareTo(((Researcher) (o2)).getFullName()); } });
-     * return researchers; }
-     */
 
     public Researcher[] getAllStaffOrPostDocs() throws Exception {
 
@@ -379,6 +360,15 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         }
     }
 
+    public Map<Integer, String> getRolesOnProjectsForResearcher(Integer researcherId) throws Exception {
+        Map<Integer,HashMap<String,String>> m = getSqlSession().selectMap("getRolesOnProjectsForResearcher", researcherId, "pid");
+        Map<Integer,String> tmp = new HashMap<Integer,String>(m.size());
+        for (Integer i: m.keySet()) {
+            tmp.put(i, m.get(i).get("role"));
+        }
+        return tmp;
+    }
+    
     private HttpHeaders setupHeaders() {
 
         HttpHeaders headers = new HttpHeaders();
@@ -413,20 +403,4 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         this.restAuthzHeader = restAuthzHeader;
     }
 
-    /*
-     * @Override public Integer createResearcher( Researcher r, String
-     * adminUser) throws Exception {
-     * 
-     * String url = restBaseUrl + "researchers/"; Gson gson = new Gson(); try {
-     * HttpHeaders headers = new HttpHeaders();
-     * headers.setContentType(MediaType.APPLICATION_JSON);
-     * headers.set("RemoteUser", adminUser); HttpEntity<String> request = new
-     * HttpEntity<String>(gson.toJson(r), headers); HttpEntity<String> he =
-     * restTemplate.postForEntity(url, request, String.class); return new
-     * Integer((String) he.getBody()); } catch (HttpStatusCodeException hsce) {
-     * String tmp = hsce.getResponseBodyAsString(); JSONObject json = new
-     * JSONObject(tmp); throw new Exception(json.getString("message")); } catch
-     * (Exception e) { e.printStackTrace(); throw new
-     * Exception("An unexpected error occured.", e); } }
-     */
 }
