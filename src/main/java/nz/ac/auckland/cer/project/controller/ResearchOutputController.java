@@ -40,7 +40,7 @@ public class ResearchOutputController {
     private String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
 
     @RequestMapping(value = "add_research_output", method = RequestMethod.GET)
-    public ModelAndView addResearcherOutput(
+    public ModelAndView addResearchOutput(
             @RequestParam(value = "pid", required = false) Integer projectId,
             HttpServletRequest request) throws Exception {
 
