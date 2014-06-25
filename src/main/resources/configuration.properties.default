@@ -31,6 +31,8 @@ membership.request.email.subject=
 membership.request.email.template.path=
 other.affiliation.email.subject=
 other.affiliation.email.template.path=
+survey.notice.email.subject=
+survey.notice.email.template.path=
 
 test.identity.properties.path=
 
