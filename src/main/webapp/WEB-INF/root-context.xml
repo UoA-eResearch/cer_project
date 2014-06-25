@@ -96,6 +96,8 @@
     <property name="newFollowUpEmailBodyResource" value="${project.new.followup.email.template.path}"/>
     <property name="newResearchOutputEmailSubject" value="${project.new.researchOutput.email.subject}"/>
     <property name="newResearchOutputEmailBodyResource" value="${project.new.researchOutput.email.template.path}"/>
+    <property name="surveyNoticeEmailSubject" value="${survey.notice.email.subject}"/>
+    <property name="surveyNoticeBodyResource" value="${survey.notice.email.template.path}"/>
   </bean>
 
 </beans>
