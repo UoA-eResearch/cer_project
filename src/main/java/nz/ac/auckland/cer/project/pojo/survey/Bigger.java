@@ -43,7 +43,7 @@ public class Bigger {
                 s += other;
             }
         }
-        return s.trim();
+        return (s == null) ? s : s.trim();
     }
 
     public void setFactor(
