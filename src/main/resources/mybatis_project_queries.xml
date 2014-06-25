@@ -68,98 +68,6 @@
     ORDER BY name
   </select> 
   
-  <insert id="createResearcher" parameterType="nz.ac.auckland.cer.project.pojo.Researcher">
-    INSERT INTO researcher (
-      fullName,
-      preferredName,
-      statusId,
-      pictureUrl,
-      email,
-      phone,
-      institution,
-      division,
-      department,
-      institutionalRoleId,
-      startDate,
-      endDate,
-      notes
-    ) values (
-      #{fullName},
-      #{preferredName},
-      #{statusId},
-      #{pictureUrl},
-      #{email},
-      #{phone},
-      #{institution},
-      #{division},
-      #{department},
-      #{institutionalRoleId},
-      #{startDate},
-      #{endDate},
-      #{notes}
-    )
-    <selectKey keyProperty="id" resultType="int">
-      SELECT LAST_INSERT_ID() AS id
-    </selectKey>
-  </insert>
-
-  <insert id="createAdviser" parameterType="nz.ac.auckland.cer.project.pojo.Adviser">
-    INSERT INTO adviser (
-      fullName,
-      pictureUrl,
-      email,
-      phone,
-      institution,
-      division,
-      department,
-      startDate,
-      endDate,
-      notes
-    ) values (
-      #{fullName},
-      #{pictureUrl},
-      #{email},
-      #{phone},
-      #{institution},
-      #{division},
-      #{department},
-      #{startDate},
-      #{endDate},
-      #{notes}
-    )
-    <selectKey keyProperty="id" resultType="int">
-      SELECT LAST_INSERT_ID() AS id
-    </selectKey>
-  </insert>
-
-  <insert id="createTuakiriSharedTokenPropertyForAdviser" parameterType="java.lang.String">
-    INSERT INTO adviser_properties (
-      adviserId,
-      siteId,
-      propname,
-      propvalue
-    ) VALUES (
-      #{id},
-      1,
-      "tuakiriSharedToken",
-      #{tuakiriSharedToken}
-    )
-  </insert>
-
-  <insert id="createTuakiriSharedTokenPropertyForResearcher" parameterType="java.util.Map">
-    INSERT INTO researcher_properties (
-      researcherId,
-      siteId,
-      propname,
-      propvalue
-    ) VALUES (
-      #{id},
-      1,
-      "tuakiriSharedToken",
-      #{tuakiriSharedToken}
-    )
-  </insert> 
-
   <select id="getInstitutionalRoleName" resultType="java.lang.String" parameterType="java.lang.Integer">
     SELECT name
     FROM institutionalrole 
@@ -172,4 +80,10 @@
     WHERE id = #{id}
   </select> 
 
+  <select id="getRolesOnProjectsForResearcher" resultType="java.util.HashMap" parameterType="java.lang.Integer">
+    SELECT rp.projectId AS pid, rr.name AS role
+    FROM researcher_project rp 
+    INNER JOIN researcherrole rr ON rr.id=rp.researcherRoleId 
+    WHERE rp.researcherId=#{id};
+  </select>
 </mapper>
