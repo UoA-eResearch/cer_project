@@ -287,6 +287,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         Gson gson = new Gson();
         try {
             HttpEntity<String> entity = new HttpEntity<String>(gson.toJson(rpl), this.setupHeaders());
+            JSONObject json = new JSONObject(rpl);
             restTemplate.put(url, entity);
         } catch (HttpStatusCodeException hsce) {
             log.error("Status Code Exception.", hsce);
@@ -373,7 +374,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("RemoteUser", this.restAdminUser);
+        headers.set("X-Proxy-REMOTE-USER", this.restAdminUser);
         headers.set("Authorization", this.restAuthzHeader);
         return headers;
     }
