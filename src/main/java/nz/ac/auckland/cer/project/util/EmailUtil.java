@@ -230,8 +230,8 @@ public class EmailUtil {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
                     this.surveyNoticeEmailSubject, this.surveyNoticeBodyResource, templateParams);
         } catch (Exception e) {
-            log.error("Failed to send new followup email.", e);
-            throw new Exception("Failed to notify CeR staff about the new feedback.");
+            log.error("Failed to send survey email.", e);
+            throw new Exception("Failed to notify CeR staff about your survey response.");
         }
     }
 
