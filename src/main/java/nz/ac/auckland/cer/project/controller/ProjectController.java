@@ -1,7 +1,5 @@
 package nz.ac.auckland.cer.project.controller;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
