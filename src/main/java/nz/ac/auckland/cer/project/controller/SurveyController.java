@@ -100,8 +100,18 @@ public class SurveyController {
             m.put("survey", survey);
             return new ModelAndView("survey", m);
         }
-        this.emailUtil.sendSurveyEmail(person.getFullName(), person.getEmail(), pw, survey);
-        this.addFeedbackToDatabase(survey, pw, person);
+        // TODO: handle errors here
+        try {
+            this.emailUtil.sendSurveyEmail(person.getFullName(), person.getEmail(), pw, survey);            
+        } catch (Exception e) {
+            log.error("Failed to send survey response email from " + person.getEmail(), e);
+        }
+        
+        try {
+            this.addFeedbackToDatabase(survey, pw, person);            
+        } catch (Exception e) {
+            log.error("Failed to store survey in database from " + person.getEmail(), e);
+        }
         return new ModelAndView("survey_response");
     }
 
