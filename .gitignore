@@ -20,6 +20,5 @@ target
 *.iml
 
 configuration.properties
-configuration.properties.local
 configuration.properties.prod
-configuration.properties.saga
+configuration.properties.test
