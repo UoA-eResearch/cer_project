@@ -49,7 +49,7 @@ public class EmailUtil {
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + "?id=" + p.getProjectId());
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getProjectId());
         try {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
                     this.projectRequestEmailSubject, this.projectRequestEmailBodyResource, templateParams);
@@ -92,7 +92,7 @@ public class EmailUtil {
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + "?id=" + p.getId());
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getId());
         templateParams.put("__SUPERVISER_EXTRA_INFOS__", extraInfos);
 
         try {
@@ -113,7 +113,7 @@ public class EmailUtil {
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + "?id=" + p.getId());
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getId());
         try {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
                     this.membershipRequestEmailSubject, this.membershipRequestEmailBodyResource, templateParams);
@@ -149,7 +149,7 @@ public class EmailUtil {
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__FOLLOW_UP__", followUp);
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + "?id=" + projectId);
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + projectId);
         try {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.newFollowUpEmailSubject,
                     this.newFollowUpEmailBodyResource, templateParams);
@@ -169,7 +169,7 @@ public class EmailUtil {
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__RESEARCH_OUTPUT_TYPE__", researchOutputType);
         templateParams.put("__RESEARCH_OUTPUT_DESCRIPTION__", researchOutputDescription);
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + "?id=" + projectId);
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + projectId);
         try {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
                     this.newResearchOutputEmailSubject, this.newResearchOutputEmailBodyResource, templateParams);
@@ -189,7 +189,7 @@ public class EmailUtil {
         templateParams.put("__PROJECT_CODE__", pw.getProject().getProjectCode());
         templateParams.put("__PROJECT_TITLE__", pw.getProject().getName());
         templateParams.put("__PROJECT_DESCRIPTION__", pw.getProject().getDescription());
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + "?id=" + pw.getProject().getId());
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + pw.getProject().getId());
         String perfImp = "";
         Faster faster = survey.getFaster();
         Bigger bigger = survey.getBigger();
