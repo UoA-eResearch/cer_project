@@ -1,10 +1,7 @@
 # project management configuration
 project.rest.baseurl=
+project.rest.authzheader=
 project.html.project.baseurl=
-project.html.researcher.baseurl=
-project.html.adviser.baseurl=
-project.researcher.default.picture=
-project.researcher.initial.status.id=
 project.researcher.initial.role.on.project.id=
 project.admin.remote.user=
 project.hostinstitution=
@@ -36,9 +33,3 @@ survey.notice.email.template.path=
 
 test.identity.properties.path=
 
-# Proxy configuration
-proxy=
-proxyIp=
-
-# SLCS
-slcs.mapping.url=
