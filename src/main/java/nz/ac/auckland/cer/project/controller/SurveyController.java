@@ -100,7 +100,7 @@ public class SurveyController {
             m.put("survey", survey);
             return new ModelAndView("survey", m);
         }
-        this.emailUtil.sendSurveyEmail(person.getFullName(), pw, survey);
+        this.emailUtil.sendSurveyEmail(person.getFullName(), person.getEmail(), pw, survey);
         this.addFeedbackToDatabase(survey, pw, person);
         return new ModelAndView("survey_response");
     }
