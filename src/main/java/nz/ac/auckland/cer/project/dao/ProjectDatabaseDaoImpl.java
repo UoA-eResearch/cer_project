@@ -132,7 +132,9 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             Project[] tmp = gson.fromJson(response.getBody(), Project[].class);
             if (tmp != null) {
                 for (Project p : tmp) {
-                    if (p.getHostInstitution().equals("University of Auckland")) {
+                    if (p.getProjectCode().startsWith("uoa") ||
+                            p.getProjectCode().startsWith("uoo") ||
+                            p.getProjectCode().startsWith("landcare") ) {
                         projects.add(p);
                     }
                 }
