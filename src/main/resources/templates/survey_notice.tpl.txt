@@ -1,3 +1,6 @@
+#requester __RESEARCHER_EMAIL__
+#tags no_feedback no_initial_notification no_solved_notification
+
 Survey reply for project __PROJECT_CODE__, provided by __RESEARCHER_NAME__:
 
 Project Information:
