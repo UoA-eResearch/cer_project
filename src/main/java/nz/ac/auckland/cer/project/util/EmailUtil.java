@@ -181,11 +181,13 @@ public class EmailUtil {
 
     public void sendSurveyEmail(
             String researcherName,
+            String researcherEmail,
             ProjectWrapper pw,
             Survey survey) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__RESEARCHER_NAME__", researcherName);
+        templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);        
         templateParams.put("__PROJECT_CODE__", pw.getProject().getProjectCode());
         templateParams.put("__PROJECT_TITLE__", pw.getProject().getName());
         templateParams.put("__PROJECT_DESCRIPTION__", pw.getProject().getDescription());
