@@ -1,3 +1,5 @@
+<%@include file="header.tpl.txt"%>
+
 An affiliation, that has not yet been stored in the database, has been
 put into the project request form as affiliation information for a supervisor.
 

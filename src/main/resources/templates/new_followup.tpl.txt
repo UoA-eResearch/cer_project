@@ -1,3 +1,5 @@
+<%@include file="header.tpl.txt"%>
+
 __RESEARCHER_NAME__ placed the following feedback on one of his projects.
 
 """

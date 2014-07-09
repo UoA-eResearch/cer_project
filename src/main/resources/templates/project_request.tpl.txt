@@ -1,3 +1,5 @@
+<%@include file="header.tpl.txt"%>
+
 __RESEARCHER_NAME__ requested a new project to be created.
 
 Title:

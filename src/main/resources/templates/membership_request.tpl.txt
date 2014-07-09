@@ -1,3 +1,5 @@
+<%@include file="header.tpl.txt"%>
+
 __RESEARCHER_NAME__ requested membership to the following project.
 
 Title:

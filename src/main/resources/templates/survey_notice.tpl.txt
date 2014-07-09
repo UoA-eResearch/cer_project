@@ -1,5 +1,4 @@
-#requester __RESEARCHER_EMAIL__
-#tags no_feedback no_initial_notification no_solved_notification
+<%@include file="header.tpl.txt"%>
 
 Survey reply for project __PROJECT_CODE__, provided by __RESEARCHER_NAME__:
 

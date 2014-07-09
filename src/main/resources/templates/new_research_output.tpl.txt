@@ -1,3 +1,5 @@
+<%@include file="header.tpl.txt"%>
+
 __RESEARCHER_NAME__ added the following research output to one of his projects.
 
 Type:

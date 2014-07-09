@@ -158,6 +158,7 @@ public class ResearchOutputController {
             try {
                 this.projectDao.addOrUpdateResearchOutput(ro);
                 this.emailUtil.sendNewResearchOutputEmail(person.getFullName(),
+                        person.getEmail(),
                         this.getResearchOutputTypeMap().get(ro.getTypeId()),
                         ro.getDescription(), ro.getProjectId());
                 return new ModelAndView(new RedirectView("view_project?id="
