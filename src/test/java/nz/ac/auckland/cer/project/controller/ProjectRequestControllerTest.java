@@ -503,6 +503,7 @@ public class ProjectRequestControllerTest {
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
         this.person.setInstitutionalRoleId(2);
+        this.person.setEmail("Some email");
         this.pr.setAskForSuperviser(true);
         RequestBuilder rb = post("/request_project")
                 .requestAttr("person", this.person)
@@ -566,7 +567,7 @@ public class ProjectRequestControllerTest {
                 anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(),
                 eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail(
+        verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail(
                 (Project) any(), (ProjectRequest) any(), (Researcher) any(),
                 eq(person.getFullName()), eq(person.getEmail()));
     }
@@ -600,7 +601,7 @@ public class ProjectRequestControllerTest {
                 anyString(), anyString(), anyString());
         verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(),
                 eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail(
+        verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail(
                 (Project) any(), (ProjectRequest) any(), (Researcher) any(),
                 eq(person.getFullName()), eq(person.getEmail()));
     }
