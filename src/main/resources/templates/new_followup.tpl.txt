@@ -1,4 +1,5 @@
-<%@include file="header.tpl.txt"%>
+#requester __RESEARCHER_EMAIL__
+#tags no_feedback no_initial_notification no_solved_notification
 
 __RESEARCHER_NAME__ placed the following feedback on one of his projects.
 
