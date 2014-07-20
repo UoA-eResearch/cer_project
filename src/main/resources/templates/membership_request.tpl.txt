@@ -1,3 +1,6 @@
+#requester __RESEARCHER_EMAIL__
+#tags no_feedback no_initial_notification no_solved_notification
+
 __RESEARCHER_NAME__ requested membership to the following project.
 
 Title:

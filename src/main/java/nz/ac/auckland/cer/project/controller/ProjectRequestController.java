@@ -13,6 +13,22 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
+import nz.ac.auckland.cer.project.pojo.APLink;
+import nz.ac.auckland.cer.project.pojo.Affiliation;
+import nz.ac.auckland.cer.project.pojo.Limitations;
+import nz.ac.auckland.cer.project.pojo.Project;
+import nz.ac.auckland.cer.project.pojo.ProjectFacility;
+import nz.ac.auckland.cer.project.pojo.ProjectProperty;
+import nz.ac.auckland.cer.project.pojo.ProjectRequest;
+import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.project.pojo.RPLink;
+import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.util.AffiliationUtil;
+import nz.ac.auckland.cer.project.util.EmailUtil;
+import nz.ac.auckland.cer.project.util.Person;
+import nz.ac.auckland.cer.project.validation.ProjectRequestValidator;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,100 +42,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.APLink;
-import nz.ac.auckland.cer.project.pojo.Affiliation;
-import nz.ac.auckland.cer.project.pojo.Limitations;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectFacility;
-import nz.ac.auckland.cer.project.pojo.ProjectProperty;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.RPLink;
-import nz.ac.auckland.cer.project.pojo.ProjectRequest;
-import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.util.AffiliationUtil;
-import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
-import nz.ac.auckland.cer.project.validation.ProjectRequestValidator;
-
 @Controller
 public class ProjectRequestController {
 
-    private Logger log = Logger.getLogger(ProjectRequestController.class.getName());
-    @Autowired private ProjectDatabaseDao projectDao;
-    @Autowired private AffiliationUtil affilUtil;
-    @Autowired private EmailUtil emailUtil;
+    private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
+    @Autowired
+    private AffiliationUtil affilUtil;
+    @Autowired
+    private EmailUtil emailUtil;
     private String hostInstitution;
-    private String redirectIfNoAccount;
     private Integer initialResearcherRoleOnProject;
-    private String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
+    private final Logger log = Logger.getLogger(ProjectRequestController.class
+            .getName());
+    @Autowired
+    private ProjectDatabaseDao projectDao;
+    private String redirectIfNoAccount;
 
-    @RequestMapping(value = "request_project", method = RequestMethod.GET)
-    public ModelAndView showProjectRequestForm(
-            HttpServletRequest request) throws Exception {
+    /**
+     * Check whether we need to ask for superviser information or not.
+     */
+    private boolean askForSuperviser(Person p) throws Exception {
 
-        ProjectRequest pr = new ProjectRequest();
-        Person person = (Person) request.getAttribute("person");
-        if (person == null) {
-            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
-        } else if (!person.isResearcher()) {
-            Map<String,Object> m = new HashMap<String,Object>();
-            m.put("error_message", adviserWarning);
-            return new ModelAndView("request_project_response", m);
-        }
-        pr.setAskForSuperviser(this.askForSuperviser(person));
-        ModelAndView mav = new ModelAndView("request_project");
-        mav.addObject("projectrequest", pr);
-        this.augmentModel(mav.getModel());
-        return mav;
+        return p.isResearcher() && (p.getInstitutionalRoleId() > 1);
     }
 
-    @RequestMapping(value = "request_project", method = RequestMethod.POST)
-    public ModelAndView processProjectRequestForm(
-            @Valid @ModelAttribute("projectrequest") ProjectRequest pr,
-            BindingResult bResult,
-            HttpServletRequest request) throws Exception {
-
-        Map<String, Object> m = new HashMap<String, Object>();
-        if (bResult.hasErrors()) {
-            m.put("projectrequest", pr);
-            this.augmentModel(m);
-            return new ModelAndView("request_project", m);
-        }
-        try {
-            Person person = (Person) request.getAttribute("person");
-            if (person == null) {
-                return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
-            } else if (!person.isResearcher()) {
-                m.put("error_message", adviserWarning);
-                return new ModelAndView("request_project_response", m);
-            }
-            Researcher superviser = null;
-            if (pr.getSuperviserId() != null && pr.getSuperviserId() > 0) {
-                superviser = this.projectDao.getResearcherForId(pr.getSuperviserId());
-            } else {
-                if (pr.getSuperviserAffiliation() != null && pr.getSuperviserAffiliation().toLowerCase().equals("other")) {
-                    this.emailUtil.sendOtherAffiliationEmail(pr.getSuperviserOtherInstitution(),
-                            pr.getSuperviserOtherDivision(), pr.getSuperviserOtherDepartment());
-                }
-            }
-            Project p = this.createProject(pr, superviser, person);
-            this.createProjectProperties(p, pr);
-            if (this.askForSuperviser(person)) {
-                this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr, superviser, person.getFullName());
-            } else {
-                this.emailUtil.sendProjectRequestEmail(p, person.getFullName());
-            }
-            return new ModelAndView("request_project_response");
-        } catch (Exception e) {
-            log.error("Failed to create project", e);
-            bResult.addError(new ObjectError(bResult.getObjectName(), e.getMessage()));
-            return new ModelAndView("request_project");
-        }
-    }
-
-    private void augmentModel(
-            Map<String, Object> mav) {
+    private void augmentModel(Map<String, Object> mav) {
 
         Affiliation[] afs = null;
         Map<Integer, String> superviserMap = null;
@@ -151,9 +98,7 @@ public class ProjectRequestController {
         }
     }
 
-    private Project createProject(
-            ProjectRequest pr,
-            Researcher superviser,
+    private Project createProject(ProjectRequest pr, Researcher superviser,
             Person researcher) throws Exception {
 
         ProjectWrapper pw = new ProjectWrapper();
@@ -188,16 +133,16 @@ public class ProjectRequestController {
         p.setNextReviewDate(df.format(now.getTime()));
 
         pw.setProject(p);
-        pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays.asList(pf)));
+        pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays
+                .asList(pf)));
         pw.setRpLinks(rpLinks);
         pw.setApLinks(new LinkedList<APLink>(Arrays.asList(apl)));
 
         return this.projectDao.createProject(pw);
     }
 
-    private void createProjectProperties(
-            Project project,
-            ProjectRequest pr) throws Exception {
+    private void createProjectProperties(Project project, ProjectRequest pr)
+            throws Exception {
 
         ProjectProperty pp = new ProjectProperty();
         pp.setFacilityId(1);
@@ -236,23 +181,15 @@ public class ProjectRequestController {
         this.projectDao.createProjectProperty(pp);
     }
 
-    /**
-     * Check whether we need to ask for superviser information or not.
-     */
-    private boolean askForSuperviser(
-            Person p) throws Exception {
-
-        return p.isResearcher() && (p.getInstitutionalRoleId() > 1);
-    }
-
     private Map<Integer, String> getSortedSuperviserMap() throws Exception {
 
         Map<Integer, String> superviserMap = new LinkedHashMap<Integer, String>();
         Researcher[] staffOrPostDocs = this.projectDao.getAllStaffOrPostDocs();
         for (Researcher r : staffOrPostDocs) {
-            String affilString = affilUtil.createAffiliationString(r.getInstitution(), r.getDivision(),
-                    r.getDepartment());
-            superviserMap.put(r.getId(), r.getFullName() + " (" + affilString + ")");
+            String affilString = affilUtil.createAffiliationString(
+                    r.getInstitution(), r.getDivision(), r.getDepartment());
+            superviserMap.put(r.getId(), r.getFullName() + " (" + affilString
+                    + ")");
         }
         return superviserMap;
     }
@@ -261,10 +198,67 @@ public class ProjectRequestController {
      * Configure validator for cluster project and membership request form
      */
     @InitBinder
-    protected void initBinder(
-            WebDataBinder binder) {
+    protected void initBinder(WebDataBinder binder) {
 
         binder.addValidators(new ProjectRequestValidator());
+    }
+
+    @RequestMapping(value = "request_project", method = RequestMethod.POST)
+    public ModelAndView processProjectRequestForm(
+            @Valid @ModelAttribute("projectrequest") ProjectRequest pr,
+            BindingResult bResult, HttpServletRequest request) throws Exception {
+
+        Map<String, Object> m = new HashMap<String, Object>();
+        if (bResult.hasErrors()) {
+            m.put("projectrequest", pr);
+            this.augmentModel(m);
+            return new ModelAndView("request_project", m);
+        }
+        try {
+            Person person = (Person) request.getAttribute("person");
+            if (person == null) {
+                return new ModelAndView(new RedirectView(redirectIfNoAccount,
+                        false));
+            } else if (!person.isResearcher()) {
+                m.put("error_message", adviserWarning);
+                return new ModelAndView("request_project_response", m);
+            }
+            Researcher superviser = null;
+            if (pr.getSuperviserId() != null && pr.getSuperviserId() > 0) {
+                superviser = this.projectDao.getResearcherForId(pr
+                        .getSuperviserId());
+            } else {
+                if (pr.getSuperviserAffiliation() != null
+                        && pr.getSuperviserAffiliation().toLowerCase()
+                                .equals("other")) {
+                    this.emailUtil.sendOtherAffiliationEmail(
+                            pr.getSuperviserOtherInstitution(),
+                            pr.getSuperviserOtherDivision(),
+                            pr.getSuperviserOtherDepartment(),
+                            person.getEmail());
+                }
+            }
+            Project p = this.createProject(pr, superviser, person);
+            this.createProjectProperties(p, pr);
+            if (this.askForSuperviser(person)) {
+                this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr,
+                        superviser, person.getFullName(), person.getEmail());
+            } else {
+                this.emailUtil.sendProjectRequestEmail(p, person.getFullName(),
+                        person.getEmail());
+            }
+            return new ModelAndView("request_project_response");
+        } catch (Exception e) {
+            log.error("Failed to create project", e);
+            bResult.addError(new ObjectError(bResult.getObjectName(), e
+                    .getMessage()));
+            return new ModelAndView("request_project");
+        }
+    }
+
+    public void setHostInstitution(String hostInstitution) {
+
+        this.hostInstitution = hostInstitution;
     }
 
     public void setInitialResearcherRoleOnProject(
@@ -273,16 +267,30 @@ public class ProjectRequestController {
         this.initialResearcherRoleOnProject = initialResearcherRoleOnProject;
     }
 
-    public void setHostInstitution(
-            String hostInstitution) {
-
-        this.hostInstitution = hostInstitution;
-    }
-
-    public void setRedirectIfNoAccount(
-            String redirectIfNoAccount) {
+    public void setRedirectIfNoAccount(String redirectIfNoAccount) {
 
         this.redirectIfNoAccount = redirectIfNoAccount;
+    }
+
+    @RequestMapping(value = "request_project", method = RequestMethod.GET)
+    public ModelAndView showProjectRequestForm(HttpServletRequest request)
+            throws Exception {
+
+        ProjectRequest pr = new ProjectRequest();
+        Person person = (Person) request.getAttribute("person");
+        if (person == null) {
+            return new ModelAndView(
+                    new RedirectView(redirectIfNoAccount, false));
+        } else if (!person.isResearcher()) {
+            Map<String, Object> m = new HashMap<String, Object>();
+            m.put("error_message", adviserWarning);
+            return new ModelAndView("request_project_response", m);
+        }
+        pr.setAskForSuperviser(this.askForSuperviser(person));
+        ModelAndView mav = new ModelAndView("request_project");
+        mav.addObject("projectrequest", pr);
+        this.augmentModel(mav.getModel());
+        return mav;
     }
 
 }

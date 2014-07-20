@@ -1,3 +1,6 @@
+#requester __RESEARCHER_EMAIL__
+#tags no_feedback no_initial_notification no_solved_notification
+
 An affiliation, that has not yet been stored in the database, has been
 put into the project request form as affiliation information for a supervisor.
 

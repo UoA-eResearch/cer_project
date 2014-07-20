@@ -9,21 +9,83 @@ import org.apache.commons.logging.LogFactory;
 
 public class Bigger {
 
-    private Log log = LogFactory.getLog(Bigger.class.getName());
-    private String factor;
-    private List<String> reasons = new ArrayList<String>();
-    protected String moreMem = "more memory available";
     protected String distMemPar = "distributed memory parallelisation";
-    protected String moreDisk = "more disk space";
     protected String dontKnow = "I don't know";
+    private String factor = "1";
+    private final Log log = LogFactory.getLog(Bigger.class.getName());
+    protected String moreDisk = "more disk space";
+    protected String moreMem = "more memory available";
     protected String other;
+    private List<String> reasons = new ArrayList<String>();
 
+    public String getDistMemPar() {
+
+        return distMemPar;
+    }
+
+    public String getDontKnow() {
+
+        return dontKnow;
+    }
+
+    public String getFactor() {
+
+        return factor;
+    }
+
+    public String getMoreMem() {
+
+        return moreMem;
+    }
+
+    public String getOther() {
+
+        return other;
+    }
+
+    public List<String> getReasons() {
+
+        return reasons;
+    }
+
+    public void setDistMemPar(String distMemPar) {
+
+        this.distMemPar = distMemPar;
+    }
+
+    public void setDontKnow(String dontKnow) {
+
+        this.dontKnow = dontKnow;
+    }
+
+    public void setFactor(String factor) {
+
+        this.factor = factor;
+    }
+
+    public void setMoreMem(String moreMem) {
+
+        this.moreMem = moreMem;
+    }
+
+    public void setOther(String other) {
+
+        this.other = other;
+    }
+
+    public void setReasons(List<String> reasons) {
+
+        this.reasons = reasons;
+    }
+
+    @Override
     public String toString() {
 
         String s = null;
         int numReasons = reasons.size();
         if (numReasons > 0 || (other != null && other.length() > 0)) {
-            s = "I can run larger jobs now, up to " + factor + " times larger than before, thanks to: ";
+            s = "I can run larger jobs now, up to " + factor
+                    + " times larger than before, thanks to: ";
             for (int i = 0; i < numReasons; i++) {
                 String tmp = reasons.get(i);
                 try {
@@ -44,72 +106,6 @@ public class Bigger {
             }
         }
         return (s == null) ? s : s.trim();
-    }
-
-    public void setFactor(
-            String factor) {
-
-        this.factor = factor;
-    }
-
-    public void setReasons(
-            List<String> reasons) {
-
-        this.reasons = reasons;
-    }
-
-    public void setMoreMem(
-            String moreMem) {
-
-        this.moreMem = moreMem;
-    }
-
-    public void setDistMemPar(
-            String distMemPar) {
-
-        this.distMemPar = distMemPar;
-    }
-
-    public void setOther(
-            String other) {
-
-        this.other = other;
-    }
-
-    public void setDontKnow(
-            String dontKnow) {
-
-        this.dontKnow = dontKnow;
-    }
-
-    public String getFactor() {
-
-        return factor;
-    }
-
-    public List<String> getReasons() {
-
-        return reasons;
-    }
-
-    public String getMoreMem() {
-
-        return moreMem;
-    }
-
-    public String getDistMemPar() {
-
-        return distMemPar;
-    }
-
-    public String getDontKnow() {
-
-        return dontKnow;
-    }
-
-    public String getOther() {
-
-        return other;
     }
 
 }

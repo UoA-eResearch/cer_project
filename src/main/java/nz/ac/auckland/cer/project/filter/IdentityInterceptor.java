@@ -19,14 +19,21 @@ import org.springframework.core.io.Resource;
 
 public class IdentityInterceptor implements Filter {
 
+    @Autowired
+    private AuditUtil auditUtil;
+    private final Logger flog = Logger.getLogger("file."
+            + IdentityInterceptor.class.getName());
     private Resource idResource;
-    @Autowired private AuditUtil auditUtil;
-    private Logger log = Logger.getLogger(IdentityInterceptor.class.getName());
-    private Logger flog = Logger.getLogger("file." + IdentityInterceptor.class.getName());
+    private final Logger log = Logger.getLogger(IdentityInterceptor.class
+            .getName());
 
-    public void doFilter(
-            ServletRequest req,
-            ServletResponse resp,
+    @Override
+    public void destroy() {
+
+    }
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp,
             FilterChain filterChain) throws IOException, ServletException {
 
         try {
@@ -35,13 +42,15 @@ public class IdentityInterceptor implements Filter {
                 props.load(idResource.getInputStream());
                 String admins = (String) props.get("admins");
                 String eppn = (String) req.getAttribute("eppn");
-                if (admins != null && (admins.equals("*") || (eppn != null && admins.contains(eppn)))) {
+                if (admins != null
+                        && (admins.equals("*") || (eppn != null && admins
+                                .contains(eppn)))) {
                     props.remove("admins");
                     for (Object key : props.keySet()) {
                         req.setAttribute((String) key, props.get(key));
-                    }                    
+                    }
+                    this.logIdentityChange((HttpServletRequest) req, props);
                 }
-                this.logIdentityChange((HttpServletRequest) req, props);
             }
         } catch (Exception e) {
             log.error("Unexpected error", e);
@@ -50,12 +59,15 @@ public class IdentityInterceptor implements Filter {
         filterChain.doFilter(req, resp);
     }
 
+    @Override
+    public void init(FilterConfig arg0) throws ServletException {
+
+    }
+
     /*
      * Log message
      */
-    private void logIdentityChange(
-            HttpServletRequest request,
-            Properties props) {
+    private void logIdentityChange(HttpServletRequest request, Properties props) {
 
         StringBuffer msg = new StringBuffer();
         msg.append("ID-INTERCEPT:");
@@ -66,17 +78,7 @@ public class IdentityInterceptor implements Filter {
         flog.info(auditUtil.createAuditLogMessage(request, msg.toString()));
     }
 
-    public void init(
-            FilterConfig arg0) throws ServletException {
-
-    }
-
-    public void destroy() {
-
-    }
-
-    public void setIdResource(
-            Resource idResource) {
+    public void setIdResource(Resource idResource) {
 
         this.idResource = idResource;
     }
