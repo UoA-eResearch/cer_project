@@ -82,7 +82,12 @@ public class Bigger {
     public String toString() {
 
         String s = null;
-        int numReasons = reasons.size();
+        int numReasons = 0;
+
+        if (reasons != null) {
+            numReasons = reasons.size();
+        }
+        
         if (numReasons > 0 || (other != null && other.length() > 0)) {
             s = "I can run larger jobs now, up to " + factor
                     + " times larger than before, thanks to: ";
