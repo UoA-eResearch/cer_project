@@ -39,17 +39,16 @@ import org.springframework.web.servlet.ModelAndView;
 public class SurveyController {
 
     private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
-    @Autowired
-    private EmailUtil emailUtil;
-    private final Logger log = Logger.getLogger(SurveyController.class
-            .getName());
-    @Autowired
-    private ProjectDatabaseDao projectDao;
+    @Autowired private EmailUtil emailUtil;
+    private final Logger log = Logger.getLogger(SurveyController.class.getName());
+    @Autowired private ProjectDatabaseDao projectDao;
 
-    private void addFeedbackToDatabase(Survey survey, ProjectWrapper pw,
+    private void addFeedbackToDatabase(
+            Survey survey,
+            ProjectWrapper pw,
             Person person) throws Exception {
-        String dateString = new SimpleDateFormat("yyyy-MM-dd")
-                .format(new Date());
+
+        String dateString = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String feedback = "Performance Improvements:<br>";
         Faster faster = survey.getFaster();
         Bigger bigger = survey.getBigger();
@@ -67,8 +66,7 @@ public class SurveyController {
                 feedback += more.toString();
             }
         }
-        feedback += "<br><br>Future Needs:<br>"
-                + survey.getFutureNeeds().toString() + "<br><br>Feedback:<br>"
+        feedback += "<br><br>Future Needs:<br>" + survey.getFutureNeeds().toString() + "<br><br>Feedback:<br>"
                 + survey.getFeedback().toString();
         FollowUp fu = new FollowUp();
         fu.setResearcherId(person.getId());
@@ -79,8 +77,7 @@ public class SurveyController {
         ResearchOutcome ro = survey.getResearchOutcome();
         if (ro != null && ro.getResearchOutputs() != null) {
             for (ResearchOutput tmp : ro.getResearchOutputs()) {
-                if (tmp.getDescription() != null
-                        && !tmp.getDescription().trim().isEmpty()) {
+                if (tmp.getDescription() != null && !tmp.getDescription().trim().isEmpty()) {
                     tmp.setProjectId(pw.getProject().getId());
                     tmp.setDate(dateString);
                     tmp.setResearcherId(person.getId());
@@ -107,7 +104,8 @@ public class SurveyController {
      * Configure validator
      */
     @InitBinder("survey")
-    protected void initBinder(WebDataBinder binder) {
+    protected void initBinder(
+            WebDataBinder binder) {
 
         binder.addValidators(new SurveyValidator());
     }
@@ -115,19 +113,18 @@ public class SurveyController {
     @RequestMapping(value = "survey", method = RequestMethod.POST)
     public ModelAndView process_survey(
             @Valid @ModelAttribute("survey") Survey survey,
-            BindingResult bResult, HttpServletRequest request) throws Exception {
+            BindingResult bResult,
+            HttpServletRequest request) throws Exception {
 
         Map<String, Object> m = new HashMap<String, Object>();
         Person person = (Person) request.getAttribute("person");
-        ProjectWrapper pw = this.projectDao.getProjectForIdOrCode(survey
-                .getProjectCode());
+        ProjectWrapper pw = this.projectDao.getProjectForIdOrCode(survey.getProjectCode());
         // only add another row for research output
         if (survey.getResearchOutcome().getAddResearchOutputRow() > 0) {
             m.put("pw", pw);
             m.put("survey", survey);
             m.put("researchOutputTypeMap", this.getResearchOutputTypeMap());
-            survey.getResearchOutcome().getResearchOutputs()
-                    .add(new ResearchOutput());
+            survey.getResearchOutcome().getResearchOutputs().add(new ResearchOutput());
             return new ModelAndView("survey", m);
         }
 
@@ -139,13 +136,13 @@ public class SurveyController {
         }
         // TODO: handle errors here
         try {
-            this.emailUtil.sendSurveyEmail(person.getFullName(), person.getEmail(), pw, survey);            
+            this.emailUtil.sendSurveyEmail(person.getFullName(), person.getEmail(), pw, survey);
         } catch (Exception e) {
             log.error("Failed to send survey response email from " + person.getEmail(), e);
         }
-        
+
         try {
-            this.addFeedbackToDatabase(survey, pw, person);            
+            this.addFeedbackToDatabase(survey, pw, person);
         } catch (Exception e) {
             log.error("Failed to store survey in database from " + person.getEmail(), e);
         }
@@ -160,19 +157,15 @@ public class SurveyController {
         Map<String, Object> m = new HashMap<String, Object>();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            m.put("error_message",
-                    "Cannot display survey: You don't seem to have a cluster account. "
-                            + "Only researchers with a cluster account can view the survey.");
+            m.put("error_message", "Cannot display survey: You don't seem to have a cluster account. "
+                    + "Only researchers with a cluster account can view the survey.");
         } else if (!person.isResearcher()) {
             m.put("error_message", adviserWarning);
         } else if (projectCode == null) {
-            m.put("error_message",
-                    "Cannot display survey: No project code specified");
+            m.put("error_message", "Cannot display survey: No project code specified");
         } else {
-            ProjectWrapper pw = this.projectDao
-                    .getProjectForIdOrCode(projectCode);
-            Map<Integer, String> projectRoleMap = this.projectDao
-                    .getRolesOnProjectsForResearcher(person.getId());
+            ProjectWrapper pw = this.projectDao.getProjectForIdOrCode(projectCode);
+            Map<Integer, String> projectRoleMap = this.projectDao.getRolesOnProjectsForResearcher(person.getId());
             if (!projectRoleMap.containsKey(pw.getProject().getId())) {
                 m.put("error_message",
                         "Cannot display survey: You are not a member of the project covered by this survey");
