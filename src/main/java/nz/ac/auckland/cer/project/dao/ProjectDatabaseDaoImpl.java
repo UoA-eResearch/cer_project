@@ -224,7 +224,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         Gson gson = new Gson();
         JSONObject json = new JSONObject();
         try {
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(pw), this.setupHeaders());
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(pw).getBytes("UTF-8"), this.setupHeaders());
             HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
             Project p = pw.getProject();
             p.setId(new Integer(he.getBody()));
@@ -247,7 +247,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         Gson gson = new Gson();
         JSONObject json = new JSONObject();
         try {
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(pp), this.setupHeaders());
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(pp).getBytes("UTF-8"), this.setupHeaders());
             restTemplate.put(url, request);
         } catch (HttpStatusCodeException hsce) {
             log.error("Status Code Exception.", hsce);
@@ -308,11 +308,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "projects/followup";
         Gson gson = new Gson();
         try {
-            HttpEntity<String> entity = new HttpEntity<String>(gson.toJson(fu), this.setupHeaders());
+            HttpEntity<byte[]> entity = new HttpEntity<byte[]>(gson.toJson(fu).getBytes("UTF-8"), this.setupHeaders());
             restTemplate.put(url, entity);
         } catch (HttpStatusCodeException hsce) {
             log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
+            System.err.println(tmp);
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e3) {
@@ -327,11 +328,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "projects/ro";
         Gson gson = new Gson();
         try {
-            HttpEntity<String> entity = new HttpEntity<String>(gson.toJson(ro), this.setupHeaders());
+            HttpEntity<byte[]> entity = new HttpEntity<byte[]>(gson.toJson(ro).getBytes("UTF-8"), this.setupHeaders());
             restTemplate.put(url, entity);
         } catch (HttpStatusCodeException hsce) {
             log.error("Status Code Exception.", hsce);
             String tmp = hsce.getResponseBodyAsString();
+            System.err.println(tmp);
             JSONObject json = new JSONObject(tmp);
             throw new Exception(json.getString("message"));
         } catch (Exception e3) {
@@ -350,7 +352,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "projects/" + projectId + "/" + object + "/" + field + "/" + timestamp + "/";
         JSONObject json = new JSONObject();
         try {
-            HttpEntity<String> request = new HttpEntity<String>(newValue, this.setupHeaders());
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(newValue.getBytes("UTF-8"), this.setupHeaders());
             restTemplate.postForEntity(url, request, String.class);
         } catch (HttpStatusCodeException hsce) {
             log.error("Status Code Exception.", hsce);
@@ -377,6 +379,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-Proxy-REMOTE-USER", this.restAdminUser);
+        //headers.set("RemoteUser", this.restAdminUser);
         headers.set("Authorization", this.restAuthzHeader);
         return headers;
     }
