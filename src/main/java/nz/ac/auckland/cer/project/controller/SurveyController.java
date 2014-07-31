@@ -116,11 +116,15 @@ public class SurveyController {
             BindingResult bResult,
             HttpServletRequest request) throws Exception {
 
+        log.debug("entering process_survey");
         Map<String, Object> m = new HashMap<String, Object>();
         Person person = (Person) request.getAttribute("person");
         ProjectWrapper pw = this.projectDao.getProjectForIdOrCode(survey.getProjectCode());
+        log.debug("person: " + person.getFullName());
+
         // only add another row for research output
         if (survey.getResearchOutcome().getAddResearchOutputRow() > 0) {
+            log.debug("adding another row to add more research output");
             m.put("pw", pw);
             m.put("survey", survey);
             m.put("researchOutputTypeMap", this.getResearchOutputTypeMap());
@@ -128,24 +132,29 @@ public class SurveyController {
             return new ModelAndView("survey", m);
         }
 
+        log.debug("checking for errors");
         if (bResult.hasErrors()) {
+            log.debug("form has errors");
             m.put("pw", pw);
             m.put("researchOutputTypeMap", this.getResearchOutputTypeMap());
             m.put("survey", survey);
             return new ModelAndView("survey", m);
         }
-        // TODO: handle errors here
+
         try {
+            log.debug("sending e-mail");
             this.emailUtil.sendSurveyEmail(person.getFullName(), person.getEmail(), pw, survey);
         } catch (Exception e) {
             log.error("Failed to send survey response email from " + person.getEmail(), e);
         }
 
         try {
+            log.debug("storing survey in database");
             this.addFeedbackToDatabase(survey, pw, person);
         } catch (Exception e) {
             log.error("Failed to store survey in database from " + person.getEmail(), e);
         }
+        log.debug("leaving process_survey");
         return new ModelAndView("survey_response");
     }
 
