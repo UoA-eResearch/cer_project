@@ -46,27 +46,25 @@ import org.springframework.web.servlet.view.RedirectView;
 public class ProjectRequestController {
 
     private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
-    @Autowired
-    private AffiliationUtil affilUtil;
-    @Autowired
-    private EmailUtil emailUtil;
+    @Autowired private AffiliationUtil affilUtil;
+    @Autowired private EmailUtil emailUtil;
     private String hostInstitution;
     private Integer initialResearcherRoleOnProject;
-    private final Logger log = Logger.getLogger(ProjectRequestController.class
-            .getName());
-    @Autowired
-    private ProjectDatabaseDao projectDao;
+    private final Logger log = Logger.getLogger(ProjectRequestController.class.getName());
+    @Autowired private ProjectDatabaseDao projectDao;
     private String redirectIfNoAccount;
 
     /**
      * Check whether we need to ask for superviser information or not.
      */
-    private boolean askForSuperviser(Person p) throws Exception {
+    private boolean askForSuperviser(
+            Person p) throws Exception {
 
         return p.isResearcher() && (p.getInstitutionalRoleId() > 1);
     }
 
-    private void augmentModel(Map<String, Object> mav) {
+    private void augmentModel(
+            Map<String, Object> mav) {
 
         Affiliation[] afs = null;
         Map<Integer, String> superviserMap = null;
@@ -98,7 +96,9 @@ public class ProjectRequestController {
         }
     }
 
-    private Project createProject(ProjectRequest pr, Researcher superviser,
+    private Project createProject(
+            ProjectRequest pr,
+            Researcher superviser,
             Person researcher) throws Exception {
 
         ProjectWrapper pw = new ProjectWrapper();
@@ -133,16 +133,16 @@ public class ProjectRequestController {
         p.setNextReviewDate(df.format(now.getTime()));
 
         pw.setProject(p);
-        pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays
-                .asList(pf)));
+        pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays.asList(pf)));
         pw.setRpLinks(rpLinks);
         pw.setApLinks(new LinkedList<APLink>(Arrays.asList(apl)));
 
         return this.projectDao.createProject(pw);
     }
 
-    private void createProjectProperties(Project project, ProjectRequest pr)
-            throws Exception {
+    private void createProjectProperties(
+            Project project,
+            ProjectRequest pr) throws Exception {
 
         ProjectProperty pp = new ProjectProperty();
         pp.setFacilityId(1);
@@ -186,10 +186,9 @@ public class ProjectRequestController {
         Map<Integer, String> superviserMap = new LinkedHashMap<Integer, String>();
         Researcher[] staffOrPostDocs = this.projectDao.getAllStaffOrPostDocs();
         for (Researcher r : staffOrPostDocs) {
-            String affilString = affilUtil.createAffiliationString(
-                    r.getInstitution(), r.getDivision(), r.getDepartment());
-            superviserMap.put(r.getId(), r.getFullName() + " (" + affilString
-                    + ")");
+            String affilString = affilUtil.createAffiliationString(r.getInstitution(), r.getDivision(),
+                    r.getDepartment());
+            superviserMap.put(r.getId(), r.getFullName() + " (" + affilString + ")");
         }
         return superviserMap;
     }
@@ -198,7 +197,8 @@ public class ProjectRequestController {
      * Configure validator for cluster project and membership request form
      */
     @InitBinder
-    protected void initBinder(WebDataBinder binder) {
+    protected void initBinder(
+            WebDataBinder binder) {
 
         binder.addValidators(new ProjectRequestValidator());
     }
@@ -206,7 +206,8 @@ public class ProjectRequestController {
     @RequestMapping(value = "request_project", method = RequestMethod.POST)
     public ModelAndView processProjectRequestForm(
             @Valid @ModelAttribute("projectrequest") ProjectRequest pr,
-            BindingResult bResult, HttpServletRequest request) throws Exception {
+            BindingResult bResult,
+            HttpServletRequest request) throws Exception {
 
         Map<String, Object> m = new HashMap<String, Object>();
         if (bResult.hasErrors()) {
@@ -217,46 +218,39 @@ public class ProjectRequestController {
         try {
             Person person = (Person) request.getAttribute("person");
             if (person == null) {
-                return new ModelAndView(new RedirectView(redirectIfNoAccount,
-                        false));
+                return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
             } else if (!person.isResearcher()) {
                 m.put("error_message", adviserWarning);
                 return new ModelAndView("request_project_response", m);
             }
             Researcher superviser = null;
             if (pr.getSuperviserId() != null && pr.getSuperviserId() > 0) {
-                superviser = this.projectDao.getResearcherForId(pr
-                        .getSuperviserId());
+                superviser = this.projectDao.getResearcherForId(pr.getSuperviserId());
             } else {
                 if (pr.getSuperviserAffiliation() != null
-                        && pr.getSuperviserAffiliation().toLowerCase()
-                                .equals("other")) {
-                    this.emailUtil.sendOtherAffiliationEmail(
-                            pr.getSuperviserOtherInstitution(),
-                            pr.getSuperviserOtherDivision(),
-                            pr.getSuperviserOtherDepartment(),
-                            person.getEmail());
+                        && pr.getSuperviserAffiliation().toLowerCase().equals("other")) {
+                    this.emailUtil.sendOtherAffiliationEmail(pr.getSuperviserOtherInstitution(),
+                            pr.getSuperviserOtherDivision(), pr.getSuperviserOtherDepartment(), person.getEmail());
                 }
             }
             Project p = this.createProject(pr, superviser, person);
             this.createProjectProperties(p, pr);
             if (this.askForSuperviser(person)) {
-                this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr,
-                        superviser, person.getFullName(), person.getEmail());
-            } else {
-                this.emailUtil.sendProjectRequestEmail(p, person.getFullName(),
+                this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr, superviser, person.getFullName(),
                         person.getEmail());
+            } else {
+                this.emailUtil.sendProjectRequestEmail(p, person.getFullName(), person.getEmail());
             }
             return new ModelAndView("request_project_response");
         } catch (Exception e) {
             log.error("Failed to create project", e);
-            bResult.addError(new ObjectError(bResult.getObjectName(), e
-                    .getMessage()));
+            bResult.addError(new ObjectError(bResult.getObjectName(), e.getMessage()));
             return new ModelAndView("request_project");
         }
     }
 
-    public void setHostInstitution(String hostInstitution) {
+    public void setHostInstitution(
+            String hostInstitution) {
 
         this.hostInstitution = hostInstitution;
     }
@@ -267,20 +261,20 @@ public class ProjectRequestController {
         this.initialResearcherRoleOnProject = initialResearcherRoleOnProject;
     }
 
-    public void setRedirectIfNoAccount(String redirectIfNoAccount) {
+    public void setRedirectIfNoAccount(
+            String redirectIfNoAccount) {
 
         this.redirectIfNoAccount = redirectIfNoAccount;
     }
 
     @RequestMapping(value = "request_project", method = RequestMethod.GET)
-    public ModelAndView showProjectRequestForm(HttpServletRequest request)
-            throws Exception {
+    public ModelAndView showProjectRequestForm(
+            HttpServletRequest request) throws Exception {
 
         ProjectRequest pr = new ProjectRequest();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return new ModelAndView(
-                    new RedirectView(redirectIfNoAccount, false));
+            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
             Map<String, Object> m = new HashMap<String, Object>();
             m.put("error_message", adviserWarning);
