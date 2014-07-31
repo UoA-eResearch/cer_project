@@ -32,14 +32,10 @@
     <property name="messageConverters">
       <list>
         <bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
-          <property name="supportedMediaTypes">
-            <list>
-              <bean class="org.springframework.http.MediaType">
-                <constructor-arg value="application" />
-                <constructor-arg value="json" />
-              </bean>
-            </list>
-          </property>
+          <property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
+        </bean>
+        <bean id="byteArrayConverter" class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+          <property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
         </bean>
       </list>
     </property>
