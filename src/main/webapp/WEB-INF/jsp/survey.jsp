@@ -128,9 +128,9 @@
         <div class="survey-section-header">1. Performance Improvements</div>
         <div class="survey-section-description">
           Please tick the appropriate boxes if the cluster enables you to run more, larger or faster jobs. 
-          More than one box could apply to you.<br>
+          More than one box could apply to you.<br/>
           If this is the first time we have asked for your feedback, please think of this section as <i>Performance improvements
-          compared to using your desktop environment, or machines available in your lab</i>.<br>
+          compared to using your desktop environment, or machines available in your lab</i>.<br/>
           Otherwise, please specify improvements since last year's survey.
         </div>
         <div class="survey-section-body">
@@ -146,20 +146,20 @@
                   than before, thanks to:
                 </p>
                 <p>
-                  <form:checkbox path="faster.reasons" value="sharedMemPar" label="Shared memory parallelisation"/><br>
-                  <form:checkbox path="faster.reasons" value="distMemPar" label="Distributed memory parallelisation"/><br>
-                  <form:checkbox path="faster.reasons" value="algorithmOptimisation" label="Algorithmic improvements to my software"/><br>
-                  <form:checkbox path="faster.reasons" value="buildOptimisation" label="Compile-time optimization of my software"/><br>
-                  <form:checkbox path="faster.reasons" value="dontKnow" label="I don't know and need help figuring out why"/><br>
+                  <form:checkbox path="faster.reasons" value="sharedMemPar" label="Shared memory parallelisation"/><br/>
+                  <form:checkbox path="faster.reasons" value="distMemPar" label="Distributed memory parallelisation"/><br/>
+                  <form:checkbox path="faster.reasons" value="algorithmOptimisation" label="Algorithmic improvements to my software"/><br/>
+                  <form:checkbox path="faster.reasons" value="buildOptimisation" label="Compile-time optimization of my software"/><br/>
+                  <form:checkbox path="faster.reasons" value="dontKnow" label="I don't know and need help figuring out why"/><br/>
                   <p>
-                    Other reason:<br>
+                    Other reason:<br/>
                     <form:textarea path="faster.other" rows="3" cols="40"/>
                   </p>
                 </p>
               </div>
             </td>
           
-            <td valign="top" bgcolor="#fff">
+            <td valign="top">
               <form:checkbox id="improv_bigger" path="improvements" value="bigger" label="I can run larger jobs"/>
               <div id="bigger_div">
                 <hr>
@@ -168,19 +168,19 @@
                   larger than before, thanks to:
                 </p>
                 <p>
-                  <form:checkbox path="bigger.reasons" value="moreMem" label="More memory available"/><br>
-                  <form:checkbox path="bigger.reasons" value="distMemPar" label="Distributed memory parallelisation"/><br>
-                  <form:checkbox path="bigger.reasons" value="moreDisk" label="More disk space"/><br>
-                  <form:checkbox path="bigger.reasons" value="dontKnow" label="I don't know and need help figuring out why"/><br>
+                  <form:checkbox path="bigger.reasons" value="moreMem" label="More memory available"/><br/>
+                  <form:checkbox path="bigger.reasons" value="distMemPar" label="Distributed memory parallelisation"/><br/>
+                  <form:checkbox path="bigger.reasons" value="moreDisk" label="More disk space"/><br/>
+                  <form:checkbox path="bigger.reasons" value="dontKnow" label="I don't know and need help figuring out why"/><br/>
                   <p>
-                    Other reason:<br>
+                    Other reason:<br/>
                     <form:textarea path="bigger.other" rows="3" cols="40"/>
                   </p>
                 </p>
               </div>
             </td>
 
-            <td valign="top" bgcolor="#fff">
+            <td valign="top">
               <form:checkbox id="improv_more" path="improvements" value="more" label="I can run more jobs"/>
               <div id="more_div">
                 <hr>
@@ -195,7 +195,7 @@
           </tr>
       
           <tr>
-            <td colspan="3" bgcolor="#fff">
+            <td colspan="3">
               <form:checkbox id="improv_same" path="improvements" value="same" label="No improvements"/>
             </td>
           </tr>
@@ -206,13 +206,12 @@
 
       
         <!-- Research Outcomes -->
-        <br><br>
-        <a id="ro"/>
+        <br/><br/>
         <div class="survey-section">
         <div class="survey-section-header">2. Research Outcomes</div>
         <div class="survey-section-description">
           In order to demonstrate our value to the institution, we need to provide evidence of research
-          outcomes that we have in some way enabled via our services.<br>
+          outcomes that we have in some way enabled via our services.<br/>
           Please list here any relevant research outcomes (publications, conference proceedings,
           talks, posters, etc) since your last review, or tick the <i>There are no new research outputs
           to list for this project</i> checkbox.
@@ -239,7 +238,7 @@
           </tr>
           <tr>
             <td colspan="2">
-              <br>
+              <br/>
               <form:checkbox path="researchOutcome.noResearchOutput" value="1" label="There are no new research outputs to list for this project"/>
             </td>
           </tr>
@@ -247,7 +246,7 @@
 
         <c:if test="${f:length(pw.researchOutputs) > 0}">
         <p>
-          <b>List of research outcomes we already have registered for this project:</b><br>
+          <b>List of research outcomes we already have registered for this project:</b><br/>
           <table id="researchOutputTable" class="tablesorter">
             <thead>
               <tr>
@@ -274,7 +273,7 @@
 
 
         <!-- Future needs -->
-        <br><br>
+        <br/><br/>
         <div class="survey-section">
         <div class="survey-section-header">3. Anticipated Future Needs (optional)</div>
         <div class="survey-section-description">
@@ -284,21 +283,21 @@
           To be able to conduct my research on this project, or to scale my research further, I will need
           <table cellpadding="10" cellspacing="2">
             <tr>
-              <td valign="top" bgcolor="#fff">
+              <td valign="top">
                 <p>
-                  <form:checkbox path="futureNeeds.comments" value="moreCpus" label="More CPU cores per machine to run larger multi-threaded jobs"/><br>
-                  <form:checkbox path="futureNeeds.comments" value="fastInterconnect" label="Fast interconnect between the machines for my MPI jobs"/><br>
-                  <form:checkbox path="futureNeeds.comments" value="moreGpus" label="More GPUs"/><br>
-                  <form:checkbox path="futureNeeds.comments" value="morePhis" label="More Intel Xeon Phi's"/><br>
-                  <form:checkbox path="futureNeeds.comments" value="moreMemory" label="More memory per machine"/><br>
-                  <form:checkbox path="futureNeeds.comments" value="moreDisk" label="More disk space"/><br>
-                  <form:checkbox path="futureNeeds.comments" value="shorterWaitTimes" label="Shorter wait times"/><br>
-                  <form:checkbox path="futureNeeds.comments" value="moreScalingAdvice" label="Advice on how to parallelise/scale/tune my software"/><br>
+                  <form:checkbox path="futureNeeds.comments" value="moreCpus" label="More CPU cores per machine to run larger multi-threaded jobs"/><br/>
+                  <form:checkbox path="futureNeeds.comments" value="fastInterconnect" label="Fast interconnect between the machines for my MPI jobs"/><br/>
+                  <form:checkbox path="futureNeeds.comments" value="moreGpus" label="More GPUs"/><br/>
+                  <form:checkbox path="futureNeeds.comments" value="morePhis" label="More Intel Xeon Phi's"/><br/>
+                  <form:checkbox path="futureNeeds.comments" value="moreMemory" label="More memory per machine"/><br/>
+                  <form:checkbox path="futureNeeds.comments" value="moreDisk" label="More disk space"/><br/>
+                  <form:checkbox path="futureNeeds.comments" value="shorterWaitTimes" label="Shorter wait times"/><br/>
+                  <form:checkbox path="futureNeeds.comments" value="moreScalingAdvice" label="Advice on how to parallelise/scale/tune my software"/><br/>
                   <form:checkbox path="futureNeeds.comments" value="moreSupport" label="More general support around the cluster"/>
                 </p>
             
                 <p>
-                  Other:<br>
+                  Other:<br/>
                   <form:textarea path="futureNeeds.other" rows="5" cols="100"/>
                 </p>
               </td>
@@ -310,7 +309,7 @@
 
       
       <!-- Feedback -->
-      <br><br>
+      <br/><br/>
       <div class="survey-section">
       <div class="survey-section-header">4. Feedback (optional)</div>
       <div class="survey-section-description">
@@ -318,7 +317,7 @@
       </div>
       <div class="survey-section-body">
       
-          Feedback:<br>
+          Feedback:<br/>
           <form:textarea path="feedback.feedback" rows="8" cols="100"/>
       </div>
       </div>
