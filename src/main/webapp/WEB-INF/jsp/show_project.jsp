@@ -22,6 +22,8 @@
   <body>
     <h3>Project Details</h3>
     
+    <p><b><a style="color:red;" href="/cerproject/html/survey?pCode=${pw.project.projectCode}">Take survey</a></font><b></p>
+
     <c:choose>
       <c:when test="${not empty error_message}">
         <div class="errorblock">
