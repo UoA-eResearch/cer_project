@@ -134,6 +134,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
                 for (Project p : tmp) {
                     if (p.getProjectCode().startsWith("uoa") ||
                             p.getProjectCode().startsWith("uoo") ||
+                            p.getProjectCode().startsWith("rvmf") ||
                             p.getProjectCode().startsWith("landcare") ) {
                         projects.add(p);
                     }
