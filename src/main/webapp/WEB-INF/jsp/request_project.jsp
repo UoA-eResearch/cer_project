@@ -216,7 +216,7 @@
             <td colspan="2"></td>
           </tr>
           <tr>
-            <td><h3>What is the computational environment to your availability now?</h3></td>
+            <td><h3>What is the computational environment available to you now?</h3></td>
           </tr>          
           <tr>
             <td valign="top">
