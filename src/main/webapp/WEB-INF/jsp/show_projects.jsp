@@ -18,7 +18,6 @@
   </head>
 
   <body>
-    <h3>List of projects you are associated with</h3>
     <c:choose>
       <c:when test="${not empty error_message}">
         <div class="errorblock">
@@ -26,6 +25,7 @@
         </div>
       </c:when>
       <c:otherwise>
+        <h3>List of projects you are associated with</h3>
         <c:choose>
           <c:when test="${f:length(projects) gt 0}">
             <table id="projectTable" class="tablesorter">
