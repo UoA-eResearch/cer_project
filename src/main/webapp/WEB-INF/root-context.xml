@@ -62,8 +62,9 @@
     <property name="restBaseUrl" value="${project.rest.baseurl}" />
     <property name="restTemplate" ref="projectRestTemplate" />
     <property name="sqlSessionFactory" ref="projectSqlSessionFactoryBean"/>
-    <property name="restAdminUser" value="${project.admin.remote.user}"/>
-    <property name="restAuthzHeader" value="${project.rest.authzheader}"/>
+    <property name="restRemoteUserHeaderName" value="${project.rest.remoteuser.header.name}"/>
+    <property name="restRemoteUserHeaderValue" value="${project.rest.remoteuser.header.value}"/>
+    <property name="restAuthzHeaderValue" value="${project.rest.authz.header.value}"/>
   </bean>
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
