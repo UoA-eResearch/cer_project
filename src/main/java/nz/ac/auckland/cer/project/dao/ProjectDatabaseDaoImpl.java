@@ -34,8 +34,9 @@ import com.google.gson.Gson;
 public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements ProjectDatabaseDao {
 
     private String restBaseUrl;
-    private String restAdminUser;
-    private String restAuthzHeader;
+    private String restRemoteUserHeaderName;
+    private String restRemoteUserHeaderValue;
+    private String restAuthzHeaderValue;
     private RestTemplate restTemplate;
     private Logger log = Logger.getLogger(ProjectDatabaseDaoImpl.class.getName());
 
@@ -375,16 +376,6 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return tmp;
     }
     
-    private HttpHeaders setupHeaders() {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Proxy-REMOTE-USER", this.restAdminUser);
-        //headers.set("RemoteUser", this.restAdminUser);
-        headers.set("Authorization", this.restAuthzHeader);
-        return headers;
-    }
-
     public void setRestTemplate(
             RestTemplate restTemplate) {
 
@@ -398,16 +389,31 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         this.restBaseUrl = restBaseUrl;
     }
 
-    public void setRestAdminUser(
-            String restAdminUser) {
+    public void setRestAuthzHeaderValue(
+            String restAuthzHeaderValue) {
 
-        this.restAdminUser = restAdminUser;
+        this.restAuthzHeaderValue = restAuthzHeaderValue;
     }
 
-    public void setRestAuthzHeader(
-            String restAuthzHeader) {
+    public void setRestRemoteUserHeaderName(
+            String restRemoteUserHeaderName) {
 
-        this.restAuthzHeader = restAuthzHeader;
+        this.restRemoteUserHeaderName = restRemoteUserHeaderName;
+    }
+
+    public void setRestRemoteUserHeaderValue(
+            String restRemoteUserHeaderValue) {
+
+        this.restRemoteUserHeaderValue = restRemoteUserHeaderValue;
+    }
+
+    private HttpHeaders setupHeaders() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(this.restRemoteUserHeaderName, this.restRemoteUserHeaderValue);
+        headers.set("Authorization", this.restAuthzHeaderValue);
+        return headers;
     }
 
 }
