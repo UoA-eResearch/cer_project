@@ -1,9 +1,10 @@
 # project management configuration
 project.rest.baseurl=
-project.rest.authzheader=
 project.html.project.baseurl=
 project.researcher.initial.role.on.project.id=
-project.admin.remote.user=
+project.rest.authz.header.value=
+project.rest.remoteuser.header.name=
+project.rest.remoteuser.header.value=
 project.hostinstitution=
 project.jdbc.driver.className=
 project.jdbc.url=
