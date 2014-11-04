@@ -19,7 +19,7 @@
   </bean>
 
   <bean id="projectRequestController" class="nz.ac.auckland.cer.project.controller.ProjectRequestController">
-    <property name="hostInstitution" value="${project.hostinstitution}"/>    
+    <property name="defaultHostInstitution" value="${project.default.hostinstitution}"/>    
     <property name="initialResearcherRoleOnProject" value="${project.researcher.initial.role.on.project.id}"/>
     <property name="redirectIfNoAccount" value="${no.account.redirect}"/>
   </bean>
