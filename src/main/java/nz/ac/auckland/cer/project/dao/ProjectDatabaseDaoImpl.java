@@ -17,6 +17,7 @@ import nz.ac.auckland.cer.project.pojo.RPLink;
 import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.pojo.ScienceStudy;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -218,6 +219,24 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return iRoles;
     }
 
+    @Override
+    public List<ScienceStudy> getScienceStudies() throws Exception {
+       List<ScienceStudy> list = getSqlSession().selectList("getScienceStudies");
+       return list;
+    }
+    
+    @Override
+    public String getScienceStudyNameForId(
+            String id) throws Exception {
+        return getSqlSession().selectOne("getScienceStudyNameForId", id);
+    }
+
+    @Override
+    public String getScienceDomainNameForScienceStudyId(
+            String id) throws Exception {
+        return getSqlSession().selectOne("getScienceDomainNameForScienceStudyId", id);        
+    }
+    
     @Override
     public Project createProject(
             ProjectWrapper pw) throws Exception {

@@ -84,6 +84,24 @@
     SELECT rp.projectId AS pid, rr.name AS role
     FROM researcher_project rp 
     INNER JOIN researcherrole rr ON rr.id=rp.researcherRoleId 
-    WHERE rp.researcherId=#{id};
+    WHERE rp.researcherId=#{id}
   </select>
+
+  <select id="getScienceStudies" resultType="nz.ac.auckland.cer.project.pojo.ScienceStudy">
+    SELECT id, name
+    FROM sciencestudy
+    ORDER BY name
+  </select>
+
+  <select id="getScienceStudyNameForId" resultType="java.lang.String"  parameterType="java.lang.Integer">
+    SELECT name
+    FROM sciencestudy
+    WHERE id = #{id}
+  </select>
+
+  <select id="getScienceDomainNameForScienceStudyId" resultType="java.lang.String"  parameterType="java.lang.Integer">
+    SELECT name FROM sciencedomain
+    WHERE id = (SELECT scienceDomainId FROM sciencestudy WHERE id = #{id})
+  </select>
+
 </mapper>

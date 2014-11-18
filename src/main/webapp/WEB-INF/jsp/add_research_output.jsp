@@ -22,7 +22,7 @@
           <td>
             Type:<br>
             <form:select path="typeId">
-              <form:option value="-1" label="Please Select" />
+              <form:option value="-1" label="Please select" />
               <form:options items="${researchOutputTypeMap}" />
             </form:select>
           </td>

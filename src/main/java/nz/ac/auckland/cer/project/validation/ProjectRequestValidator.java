@@ -23,11 +23,13 @@ public class ProjectRequestValidator implements Validator {
 
         ProjectRequest pr = (ProjectRequest) projectRequest;
         
+        // validate project title
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectTitle", "project.title.required");
         if (!errors.hasFieldErrors("projectTitle") && pr.getProjectTitle().trim().length() > 160) {
             errors.rejectValue("projectTitle", "project.title.length.limits");
         }
         
+        // validate project description
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectDescription", "project.description.required");
         if (!errors.hasFieldErrors("projectDescription")) {
             Integer descriptionLength = pr.getProjectDescription().trim().length();
@@ -36,12 +38,23 @@ public class ProjectRequestValidator implements Validator {
             }            
         }
         
+        // validate field of science
+        Integer scienceStudyId = null;
+        try {
+            scienceStudyId = Integer.valueOf(pr.getScienceStudyId());
+            if (scienceStudyId < 0) {
+                errors.rejectValue("scienceStudyId", "project.sciencestudyid.required");
+            } 
+        } catch (Exception e) {
+            errors.rejectValue("scienceStudyId", "project.sciencestudyid.required");
+        }
+        
         // validate superviser information
         if (pr.getAskForSuperviser() != null && pr.getAskForSuperviser()) {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "superviserId", "project.superviser.name.required");
             if (!errors.hasFieldErrors("superviserId")) {
                 if (pr.getSuperviserId() == -2) {
-                    // "Please Select"
+                    // "Please select"
                     errors.rejectValue("superviserId", "project.superviser.name.required");
                 } else if (pr.getSuperviserId() == -1) {
                     // "Other"

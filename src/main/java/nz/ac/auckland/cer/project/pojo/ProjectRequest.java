@@ -4,6 +4,8 @@ public class ProjectRequest {
 
     private String projectTitle;
     private String projectDescription;
+    private String scienceStudyId;
+    private String scienceStudyName;
     private Boolean askForSuperviser;
     // superviser
     private Integer superviserId;
@@ -195,6 +197,28 @@ public class ProjectRequest {
             String otherCompEnv) {
 
         this.otherCompEnv = otherCompEnv;
+    }
+
+    public String getScienceStudyId() {
+
+        return scienceStudyId;
+    }
+
+    public void setScienceStudyId(
+            String scienceStudyId) {
+
+        this.scienceStudyId = scienceStudyId;
+    }
+
+    public String getScienceStudyName() {
+    
+        return scienceStudyName;
+    }
+
+    public void setScienceStudyName(
+            String scienceStudyName) {
+    
+        this.scienceStudyName = scienceStudyName;
     }
 
 }

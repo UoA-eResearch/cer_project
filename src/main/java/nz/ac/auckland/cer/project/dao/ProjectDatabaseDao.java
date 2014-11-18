@@ -14,6 +14,7 @@ import nz.ac.auckland.cer.project.pojo.RPLink;
 import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.pojo.ScienceStudy;
 
 public interface ProjectDatabaseDao {
 
@@ -36,6 +37,14 @@ public interface ProjectDatabaseDao {
             Integer researcherId) throws Exception;
 
     public Researcher[] getAllStaffOrPostDocs() throws Exception;
+
+    public List<ScienceStudy> getScienceStudies() throws Exception;
+
+    public String getScienceStudyNameForId(
+            String id) throws Exception;
+
+    public String getScienceDomainNameForScienceStudyId(
+            String id) throws Exception;
 
     public Project createProject(
             ProjectWrapper pw) throws Exception;

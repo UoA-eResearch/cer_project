@@ -125,7 +125,7 @@ public class EmailUtil {
         }
     }
 
-    public void sendProjectRequestEmail(Project p, String researcherName,
+    public void sendProjectRequestEmail(Project p, ProjectRequest pr, String researcherName,
             String researcherEmail) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
@@ -133,6 +133,7 @@ public class EmailUtil {
         templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
+        templateParams.put("__SCIENCE_STUDY__", pr.getScienceStudyName());
         templateParams.put("__PROJECT_LINK__",
                 this.projectBaseUrl + p.getProjectId());
         try {

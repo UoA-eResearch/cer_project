@@ -94,6 +94,19 @@
               <form:textarea path="projectDescription" type="text" cols="88" rows="20"/>
             </td>
           </tr>
+          <tr>
+            <td>
+              Field of science:<br>
+              <form:select path="scienceStudyId">
+                <form:option value="-1" label="Please select"></form:option>
+                <form:options items="${scienceStudies}"/>
+                <form:option value="0" label="Other"></form:option>
+              </form:select>
+              <p>
+              If your field of science is not listed, choose "Other" from the bottom of the list. 
+              </p>
+            </td>
+          </tr>
 
         <!-- supervisor information -->
         <c:if test="${projectrequest.askForSuperviser}">
@@ -108,7 +121,7 @@
               Please select your supervisor:<br>
               <form:hidden path="askForSuperviser" value="${projectrequest.askForSuperviser}"/>
               <form:select path="superviserId">
-                <form:option value="-2" label="Please Select"></form:option>
+                <form:option value="-2" label="Please select"></form:option>
                 <form:options items="${superviserDropdownMap}"/>
                 <form:option value="-1" label="Other"/>
               </form:select>
@@ -145,7 +158,7 @@
                     <td>
                       Affiliation:<br>
                       <form:select path="superviserAffiliation">
-                        <form:option value="" label="Please Select"></form:option>
+                        <form:option value="" label="Please select"></form:option>
                         <form:options items="${affiliations}"/>
                       </form:select>
                       <p>

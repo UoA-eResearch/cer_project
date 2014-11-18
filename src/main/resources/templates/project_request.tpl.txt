@@ -8,6 +8,8 @@ __PROJECT_TITLE__
 Description:
 __PROJECT_DESCRIPTION__
 
+Field of Science:
+__SCIENCE_STUDY__
 
 Link to newly created project in database:
 __PROJECT_LINK__

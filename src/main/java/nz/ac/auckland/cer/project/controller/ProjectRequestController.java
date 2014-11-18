@@ -24,6 +24,7 @@ import nz.ac.auckland.cer.project.pojo.ProjectRequest;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.RPLink;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.pojo.ScienceStudy;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
 import nz.ac.auckland.cer.project.util.EmailUtil;
 import nz.ac.auckland.cer.project.util.Person;
@@ -45,13 +46,13 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 public class ProjectRequestController {
 
-    private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
     @Autowired private AffiliationUtil affilUtil;
     @Autowired private EmailUtil emailUtil;
+    @Autowired private ProjectDatabaseDao projectDao;
+    private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
     private String defaultHostInstitution;
     private Integer initialResearcherRoleOnProject;
     private final Logger log = Logger.getLogger(ProjectRequestController.class.getName());
-    @Autowired private ProjectDatabaseDao projectDao;
     private String redirectIfNoAccount;
 
     /**
@@ -68,7 +69,9 @@ public class ProjectRequestController {
 
         Affiliation[] afs = null;
         Map<Integer, String> superviserMap = null;
+        Map<Integer, String> scienceStuyMap = null;
         String errorMessage = "";
+
         try {
             afs = this.projectDao.getAffiliations();
             if (afs == null || afs.length == 0) {
@@ -87,6 +90,15 @@ public class ProjectRequestController {
             mav.put("superviserDropdownMap", superviserMap);
         } catch (Exception e) {
             String error = "Failed to load superviser map.";
+            errorMessage += "Internal Error: " + error;
+            log.error(error, e);
+        }
+
+        try {
+            scienceStuyMap = this.getScienceStudies();
+            mav.put("scienceStudies", scienceStuyMap);
+        } catch (Exception e) {
+            String error = "Failed to load science study map.";
             errorMessage += "Internal Error: " + error;
             log.error(error, e);
         }
@@ -153,6 +165,32 @@ public class ProjectRequestController {
         pp.setFacilityId(1);
         pp.setProjectId(project.getId());
 
+        String scienceStudyId = pr.getScienceStudyId();
+        String scienceStudyName = "Other (Requires manual intervention. "
+                + "No science_domain and science_study project properties have been added to project database)";
+        if (Integer.valueOf(scienceStudyId) > 0) {
+            scienceStudyName = this.projectDao.getScienceStudyNameForId(scienceStudyId);
+            if (scienceStudyName != null && !scienceStudyName.isEmpty()) {
+                String scienceDomainName = this.projectDao.getScienceDomainNameForScienceStudyId(scienceStudyId);
+                if (scienceDomainName != null && !scienceDomainName.isEmpty()) {
+                    pp.setPropname("science_domain");
+                    pp.setPropvalue(scienceDomainName);
+                    this.projectDao.createProjectProperty(pp);
+                    pp.setPropname("science_study");
+                    pp.setPropvalue(scienceStudyName);
+                    this.projectDao.createProjectProperty(pp);
+                    pr.setScienceStudyName(scienceStudyName);
+                } else {
+                    this.log.warn("No science domain found for science study id " + pr.getScienceStudyId()
+                            + " (project id: " + project.getProjectId() + ")");
+                }
+            } else {
+                this.log.warn("No science study name found for id " + pr.getScienceStudyId() + " (project id: "
+                        + project.getProjectId() + ")");
+            }
+        }
+        pr.setScienceStudyName(scienceStudyName);
+
         pp.setPropname("motivation_for_using_pan");
         pp.setPropvalue(pr.getMotivation());
         this.projectDao.createProjectProperty(pp);
@@ -196,6 +234,16 @@ public class ProjectRequestController {
             superviserMap.put(r.getId(), r.getFullName() + " (" + affilString + ")");
         }
         return superviserMap;
+    }
+
+    private Map<Integer, String> getScienceStudies() throws Exception {
+
+        Map<Integer, String> scienceStudyMap = new LinkedHashMap<Integer, String>();
+        List<ScienceStudy> scienceStudies = this.projectDao.getScienceStudies();
+        for (ScienceStudy ss : scienceStudies) {
+            scienceStudyMap.put(ss.getId(), ss.getName());
+        }
+        return scienceStudyMap;
     }
 
     /**
@@ -244,7 +292,7 @@ public class ProjectRequestController {
                 this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr, superviser, person.getFullName(),
                         person.getEmail());
             } else {
-                this.emailUtil.sendProjectRequestEmail(p, person.getFullName(), person.getEmail());
+                this.emailUtil.sendProjectRequestEmail(p, pr, person.getFullName(), person.getEmail());
             }
             return new ModelAndView("request_project_response");
         } catch (Exception e) {
