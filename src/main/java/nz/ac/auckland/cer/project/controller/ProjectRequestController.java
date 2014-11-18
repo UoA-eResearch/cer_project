@@ -48,7 +48,7 @@ public class ProjectRequestController {
     private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
     @Autowired private AffiliationUtil affilUtil;
     @Autowired private EmailUtil emailUtil;
-    private String hostInstitution;
+    private String defaultHostInstitution;
     private Integer initialResearcherRoleOnProject;
     private final Logger log = Logger.getLogger(ProjectRequestController.class.getName());
     @Autowired private ProjectDatabaseDao projectDao;
@@ -122,7 +122,12 @@ public class ProjectRequestController {
 
         p.setName(pr.getProjectTitle());
         p.setDescription(pr.getProjectDescription());
-        p.setHostInstitution(this.hostInstitution);
+        String inst = researcher.getInstitution();
+        if (inst == null || inst.trim().isEmpty()) {
+            p.setHostInstitution(this.defaultHostInstitution);
+        } else {
+            p.setHostInstitution(inst);
+        }
 
         Calendar now = Calendar.getInstance();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -249,10 +254,10 @@ public class ProjectRequestController {
         }
     }
 
-    public void setHostInstitution(
-            String hostInstitution) {
+    public void setDefaultHostInstitution(
+            String defaultHostInstitution) {
 
-        this.hostInstitution = hostInstitution;
+        this.defaultHostInstitution = defaultHostInstitution;
     }
 
     public void setInitialResearcherRoleOnProject(
