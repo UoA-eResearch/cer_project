@@ -309,8 +309,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "projects/rp";
         Gson gson = new Gson();
         try {
-            HttpEntity<String> entity = new HttpEntity<String>(gson.toJson(rpl), this.setupHeaders());
-            JSONObject json = new JSONObject(rpl);
+            HttpEntity<byte[]> entity = new HttpEntity<byte[]>(gson.toJson(rpl).getBytes("UTF-8"), this.setupHeaders());
             restTemplate.put(url, entity);
         } catch (HttpStatusCodeException hsce) {
             log.error("Status Code Exception.", hsce);
