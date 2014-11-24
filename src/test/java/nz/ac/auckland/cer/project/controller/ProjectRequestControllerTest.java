@@ -3,7 +3,6 @@ package nz.ac.auckland.cer.project.controller;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import javax.mail.Message;
+
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.Limitations;
@@ -19,9 +21,9 @@ import nz.ac.auckland.cer.project.pojo.ProjectProperty;
 import nz.ac.auckland.cer.project.pojo.ProjectRequest;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.util.EmailUtil;
 import nz.ac.auckland.cer.project.util.Person;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,25 +38,33 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetupTest;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:ProjectRequestControllerTest-context.xml", "classpath:root-context.xml" })
 @WebAppConfiguration
 public class ProjectRequestControllerTest {
 
     private Affiliation[] affiliations;
-    @Autowired private EmailUtil emailUtil;
     private final String expectedRedirect = "request_project_response";
     private Limitations limitations;
     private MockMvc mockMvc;
     private Project p;
     private Person person;
+    private Researcher superviser;
     private ProjectRequest pr;
     @Autowired private ProjectDatabaseDao projectDao;
     private Researcher[] researchers;
     @Autowired private WebApplicationContext wac;
+    private GreenMail smtpServer;
 
     @Before
     public void setup() throws Exception {
+
+        this.smtpServer = new GreenMail(ServerSetupTest.SMTP);
+        this.smtpServer.start();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         pr = new ProjectRequest();
@@ -77,8 +87,17 @@ public class ProjectRequestControllerTest {
         this.person = new Person();
         person.setIsResearcher(true);
         person.setFullName("Jane Doe");
+        person.setEmail("jane@doe.org");
         person.setId(42);
         person.setInstitutionalRoleId(1);
+
+        this.superviser = new Researcher();
+        superviser.setFullName("James Superviser");
+        superviser.setInstitution("Some Institution");
+        superviser.setDivision("Some Division");
+        superviser.setDepartment("Some Department");
+        superviser.setEmail("james@superviser.org");
+        superviser.setPhone("1234");
 
         this.p = new Project();
         p.setName(pr.getProjectTitle());
@@ -90,6 +109,12 @@ public class ProjectRequestControllerTest {
         Researcher tmp = new Researcher();
         tmp.setFullName("John Doe");
         this.researchers[0] = tmp;
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+        this.smtpServer.stop();
     }
 
     @DirtiesContext
@@ -113,11 +138,13 @@ public class ProjectRequestControllerTest {
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
         verify(projectDao, times(1)).createProject((ProjectWrapper) any());
         verify(projectDao, times(7)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(1)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        
+        assert (smtpServer.getReceivedMessages().length == 1);
+        Message m = smtpServer.getReceivedMessages()[0];
+        assert ("New Pan cluster project request".equals(m.getSubject()));
+        String body = GreenMailUtil.getBody(m);
+        assert (!body.contains("__"));
+        assert (!body.contains("N/A"));
     }
 
     @DirtiesContext
@@ -146,11 +173,21 @@ public class ProjectRequestControllerTest {
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
         verify(projectDao, times(1)).createProject((ProjectWrapper) any());
         verify(projectDao, times(7)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(1)).sendOtherAffiliationEmail("Some Uni", "Some Div", "Some Dep", "Some email");
-        verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        
+        assert (smtpServer.getReceivedMessages().length == 2);
+
+        Message m = smtpServer.getReceivedMessages()[0];
+        String body = GreenMailUtil.getBody(m);
+        assert ("New and yet unknown affiliation in researcher profile".equals(m.getSubject()));
+        assert (!body.contains("__"));
+        assert (!body.contains("N/A"));
+
+        m = smtpServer.getReceivedMessages()[1];
+        body = GreenMailUtil.getBody(m);
+        assert ("New Pan cluster project request".equals(m.getSubject()));
+        assert (body.contains("Supervisor information:"));
+        assert (!body.contains("__"));
+        assert (!body.contains("N/A"));
     }
 
     @DirtiesContext
@@ -167,20 +204,24 @@ public class ProjectRequestControllerTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId())
-                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "-1")
+                .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "3")
                 .param("superviserName", "My superviser").param("superviserEmail", "superviser@company.org")
-                .param("superviserPhone", "123123213").param("superviserAffiliation", "Some University")
+                .param("superviserPhone", "123123213")
+                .param("superviserAffiliation", "Some University -- Some Division -- Some Department")
                 .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
         verify(projectDao, times(1)).createProject((ProjectWrapper) any());
         verify(projectDao, times(7)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (smtpServer.getReceivedMessages().length == 1);
+        Message m = smtpServer.getReceivedMessages()[0];
+        String body = GreenMailUtil.getBody(m);
+        assert ("New Pan cluster project request".equals(m.getSubject()));
+        assert (body.contains("Supervisor information:"));
+        assert (body.contains("The supervisor does not yet exist in the database."));
+        assert (!body.contains("__"));
+        assert (!body.contains("N/A"));
     }
 
     @DirtiesContext
@@ -190,24 +231,30 @@ public class ProjectRequestControllerTest {
         when(projectDao.createProject((ProjectWrapper) any())).thenReturn(this.p);
         when(projectDao.getAffiliations()).thenReturn(this.affiliations);
         when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
+        when(projectDao.getResearcherForId(anyInt())).thenReturn(this.superviser);
+        
         this.person.setInstitutionalRoleId(2);
         this.pr.setAskForSuperviser(true);
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "3")
-                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("motivation", pr.getMotivation())
+                .param("currentCompEnv", pr.getCurrentCompEnv());
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
         verify(projectDao, times(1)).getResearcherForId(anyInt());
         verify(projectDao, times(1)).createProject((ProjectWrapper) any());
         verify(projectDao, times(5)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(1)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (smtpServer.getReceivedMessages().length == 1);
+        Message m = smtpServer.getReceivedMessages()[0];
+        String body = GreenMailUtil.getBody(m);
+        assert ("New Pan cluster project request".equals(m.getSubject()));
+        assert (body.contains("Supervisor information:"));
+        assert (body.contains("The supervisor already exists in the database."));
+        assert (!body.contains("__"));
+        assert (!body.contains("N/A"));
     }
 
 }

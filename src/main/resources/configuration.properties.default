@@ -14,6 +14,7 @@ project.request.url=
 
 # email configuration
 email.smtp.server=
+email.smtp.port=
 email.from=
 email.to=
 email.replyto=
@@ -27,6 +28,7 @@ project.new.researchOutput.email.subject=
 project.new.researchOutput.email.template.path=
 membership.request.email.subject=
 membership.request.email.template.path=
+membership.request.problem.email.template.path=
 other.affiliation.email.subject=
 other.affiliation.email.template.path=
 survey.notice.email.subject=

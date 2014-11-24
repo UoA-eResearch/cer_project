@@ -1,0 +1,19 @@
+#requester __RESEARCHER_EMAIL__
+#tags no_feedback no_initial_notification no_solved_notification
+
+__RESEARCHER_NAME__ requested to join project __PROJECT_CODE__.
+
+There was a problem processing the request though: __PROBLEM__
+
+Project title:
+__PROJECT_TITLE__
+
+Project description:
+__PROJECT_DESCRIPTION__
+
+
+__RESEARCHER_NAME__ has been added to the project in the database in status "Pending"
+
+Link to project in database:
+__PROJECT_LINK__
+

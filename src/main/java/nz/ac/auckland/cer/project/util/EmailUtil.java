@@ -1,12 +1,14 @@
 package nz.ac.auckland.cer.project.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import nz.ac.auckland.cer.common.util.TemplateEmail;
 import nz.ac.auckland.cer.project.pojo.Project;
 import nz.ac.auckland.cer.project.pojo.ProjectRequest;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.project.pojo.RPLink;
 import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 import nz.ac.auckland.cer.project.pojo.survey.Bigger;
@@ -20,13 +22,13 @@ import org.springframework.core.io.Resource;
 
 public class EmailUtil {
 
-    @Autowired
-    private AffiliationUtil affUtil;
+    @Autowired private AffiliationUtil affUtil;
     private String emailFrom;
     private String emailTo;
     private final Logger log = Logger.getLogger(EmailUtil.class.getName());
     private Resource membershipRequestEmailBodyResource;
     private String membershipRequestEmailSubject;
+    private Resource membershipRequestProblemEmailBodyResource;
     private Resource newFollowUpEmailBodyResource;
     private String newFollowUpEmailSubject;
     private Resource newResearchOutputEmailBodyResource;
@@ -40,32 +42,62 @@ public class EmailUtil {
     private String replyTo;
     private Resource surveyNoticeBodyResource;
     private String surveyNoticeEmailSubject;
-    @Autowired
-    private TemplateEmail templateEmail;
+    @Autowired private TemplateEmail templateEmail;
 
-    public void sendMembershipRequestRequestEmail(Project p,
-            String researcherName, String researcherEmail) throws Exception {
+    public void sendMembershipRequestRequestEmail(
+            ProjectWrapper pw,
+            String researcherName,
+            String researcherEmail) throws Exception {
+
+        Project p = pw.getProject();
+        String projectOwnerEmail = null;
+        String problem = null;
+        String cc = null;
+        Resource emailBodyResource = this.membershipRequestEmailBodyResource;
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getId());
+        templateParams.put("__PROJECT_CODE__", p.getProjectCode());
+
+        Researcher projectOwner = this.getProjectOwner(pw);
+        if (projectOwner == null) {
+            problem = "No project owner is registered with this project.";
+        } else {
+            projectOwnerEmail = projectOwner.getEmail();
+            if (projectOwnerEmail == null || projectOwnerEmail.trim().isEmpty()) {
+                problem = "No e-mail address is registered with the owner of this project.";
+            }
+        }
+
+        if (problem == null) {
+            String ownerFullName = projectOwner.getFullName();
+            if (ownerFullName != null) {
+                templateParams.put("__PROJECT_OWNER_FIRST_NAME__", ownerFullName.split(" ")[0]);
+            }
+            cc = projectOwner.getEmail();
+        } else {
+            templateParams.put("__PROBLEM__", problem);
+            templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getId());
+            emailBodyResource = this.membershipRequestProblemEmailBodyResource;
+        }
+
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-                    null, null, this.membershipRequestEmailSubject,
-                    this.membershipRequestEmailBodyResource, templateParams);
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, cc, this.replyTo,
+                    this.membershipRequestEmailSubject, emailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send project membership request email", e);
-            throw new Exception(
-                    "Failed to notify CeR staff about the project membership request");
+            throw new Exception("Failed to notify CeR staff about the project membership request");
         }
     }
 
-    public void sendNewFollowUpEmail(String researcherName,
-            String researcherEmail, String followUp, Integer projectId)
-            throws Exception {
+    public void sendNewFollowUpEmail(
+            String researcherName,
+            String researcherEmail,
+            String followUp,
+            Integer projectId) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__RESEARCHER_NAME__", researcherName);
@@ -73,41 +105,41 @@ public class EmailUtil {
         templateParams.put("__FOLLOW_UP__", followUp);
         templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + projectId);
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-                    null, null, this.newFollowUpEmailSubject,
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.newFollowUpEmailSubject,
                     this.newFollowUpEmailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send new followup email.", e);
-            throw new Exception(
-                    "Failed to notify CeR staff about the new feedback.");
+            throw new Exception("Failed to notify CeR staff about the new feedback.");
         }
     }
 
-    public void sendNewResearchOutputEmail(String researcherName,
-            String researcherEmail, String researchOutputType,
-            String researchOutputDescription, Integer projectId)
-            throws Exception {
+    public void sendNewResearchOutputEmail(
+            String researcherName,
+            String researcherEmail,
+            String researchOutputType,
+            String researchOutputDescription,
+            Integer projectId) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
         templateParams.put("__RESEARCH_OUTPUT_TYPE__", researchOutputType);
-        templateParams.put("__RESEARCH_OUTPUT_DESCRIPTION__",
-                researchOutputDescription);
+        templateParams.put("__RESEARCH_OUTPUT_DESCRIPTION__", researchOutputDescription);
         templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + projectId);
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-                    null, null, this.newResearchOutputEmailSubject,
-                    this.newResearchOutputEmailBodyResource, templateParams);
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.newResearchOutputEmailSubject, this.newResearchOutputEmailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send new followup email.", e);
-            throw new Exception(
-                    "Failed to notify CeR staff about the new feedback.");
+            throw new Exception("Failed to notify CeR staff about the new feedback.");
         }
     }
 
-    public void sendOtherAffiliationEmail(String institution, String division,
-            String department, String researcherEmail) throws Exception {
+    public void sendOtherAffiliationEmail(
+            String institution,
+            String division,
+            String department,
+            String researcherEmail) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__INSTITUTION__", institution);
@@ -115,17 +147,18 @@ public class EmailUtil {
         templateParams.put("__DEPARTMENT__", department);
         templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-                    null, null, this.otherAffiliationEmailSubject,
-                    this.otherAffiliationEmailBodyResource, templateParams);
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.otherAffiliationEmailSubject, this.otherAffiliationEmailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send other institution email.", e);
-            throw new Exception(
-                    "Failed to notify CeR staff about the other institution.");
+            throw new Exception("Failed to notify CeR staff about the other institution.");
         }
     }
 
-    public void sendProjectRequestEmail(Project p, ProjectRequest pr, String researcherName,
+    public void sendProjectRequestEmail(
+            Project p,
+            ProjectRequest pr,
+            String researcherName,
             String researcherEmail) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
@@ -134,21 +167,21 @@ public class EmailUtil {
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
         templateParams.put("__SCIENCE_STUDY__", pr.getScienceStudyName());
-        templateParams.put("__PROJECT_LINK__",
-                this.projectBaseUrl + p.getProjectId());
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getProjectId());
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-                    null, null, this.projectRequestEmailSubject,
-                    this.projectRequestEmailBodyResource, templateParams);
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.projectRequestEmailSubject, this.projectRequestEmailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send project request email", e);
-            throw new Exception(
-                    "Failed to notify CeR staff about the new project request");
+            throw new Exception("Failed to notify CeR staff about the new project request");
         }
     }
 
-    public void sendProjectRequestWithSuperviserEmail(Project p,
-            ProjectRequest pr, Researcher superviser, String researcherName,
+    public void sendProjectRequestWithSuperviserEmail(
+            Project p,
+            ProjectRequest pr,
+            Researcher superviser,
+            String researcherName,
             String researcherEmail) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
@@ -158,35 +191,22 @@ public class EmailUtil {
             templateParams.put("__SUPERVISER_NAME__", superviser.getFullName());
             templateParams.put("__SUPERVISER_EMAIL__", superviser.getEmail());
             templateParams.put("__SUPERVISER_PHONE__", superviser.getPhone());
-            templateParams.put("__SUPERVISER_INSTITUTION__",
-                    superviser.getInstitution());
-            templateParams.put("__SUPERVISER_DIVISION__",
-                    superviser.getDivision());
-            templateParams.put("__SUPERVISER_DEPARTMENT__",
-                    superviser.getDepartment());
+            templateParams.put("__SUPERVISER_INSTITUTION__", superviser.getInstitution());
+            templateParams.put("__SUPERVISER_DIVISION__", superviser.getDivision());
+            templateParams.put("__SUPERVISER_DEPARTMENT__", superviser.getDepartment());
         } else {
             templateParams.put("__SUPERVISER_NAME__", pr.getSuperviserName());
             templateParams.put("__SUPERVISER_EMAIL__", pr.getSuperviserEmail());
             templateParams.put("__SUPERVISER_PHONE__", pr.getSuperviserPhone());
-            boolean otherAffil = pr.getSuperviserAffiliation().toLowerCase()
-                    .equals("other");
-            templateParams.put(
-                    "__SUPERVISER_INSTITUTION__",
-                    otherAffil ? pr.getSuperviserOtherInstitution()
-                            : this.affUtil
-                                    .getInstitutionFromAffiliationString(pr
-                                            .getSuperviserAffiliation()));
+            boolean otherAffil = pr.getSuperviserAffiliation().toLowerCase().equals("other");
+            templateParams.put("__SUPERVISER_INSTITUTION__", otherAffil ? pr.getSuperviserOtherInstitution()
+                    : this.affUtil.getInstitutionFromAffiliationString(pr.getSuperviserAffiliation()));
             templateParams.put(
                     "__SUPERVISER_DIVISION__",
-                    otherAffil ? pr.getSuperviserOtherDivision() : this.affUtil
-                            .getDivisionFromAffiliationString(pr
-                                    .getSuperviserAffiliation()));
-            templateParams.put(
-                    "__SUPERVISER_DEPARTMENT__",
-                    otherAffil ? pr.getSuperviserOtherDepartment()
-                            : this.affUtil
-                                    .getDepartmentFromAffiliationString(pr
-                                            .getSuperviserAffiliation()));
+                    otherAffil ? pr.getSuperviserOtherDivision() : this.affUtil.getDivisionFromAffiliationString(pr
+                            .getSuperviserAffiliation()));
+            templateParams.put("__SUPERVISER_DEPARTMENT__", otherAffil ? pr.getSuperviserOtherDepartment()
+                    : this.affUtil.getDepartmentFromAffiliationString(pr.getSuperviserAffiliation()));
         }
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
@@ -196,30 +216,28 @@ public class EmailUtil {
         templateParams.put("__SUPERVISER_EXTRA_INFOS__", extraInfos);
 
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-                    null, null, this.projectRequestEmailSubject,
-                    this.projectRequestWithSuperviserEmailBodyResource,
-                    templateParams);
+            this.templateEmail
+                    .sendFromResource(this.emailFrom, this.emailTo, null, null, this.projectRequestEmailSubject,
+                            this.projectRequestWithSuperviserEmailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send project request email", e);
-            throw new Exception(
-                    "Failed to notify CeR staff about the new project request");
+            throw new Exception("Failed to notify CeR staff about the new project request");
         }
     }
 
-    public void sendSurveyEmail(String researcherName, String researcherEmail,
-            ProjectWrapper pw, Survey survey) throws Exception {
+    public void sendSurveyEmail(
+            String researcherName,
+            String researcherEmail,
+            ProjectWrapper pw,
+            Survey survey) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__RESEARCHER_NAME__", researcherName);
         templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
-        templateParams
-                .put("__PROJECT_CODE__", pw.getProject().getProjectCode());
+        templateParams.put("__PROJECT_CODE__", pw.getProject().getProjectCode());
         templateParams.put("__PROJECT_TITLE__", pw.getProject().getName());
-        templateParams.put("__PROJECT_DESCRIPTION__", pw.getProject()
-                .getDescription());
-        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl
-                + pw.getProject().getId());
+        templateParams.put("__PROJECT_DESCRIPTION__", pw.getProject().getDescription());
+        templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + pw.getProject().getId());
         String perfImp = "";
         Faster faster = survey.getFaster();
         Bigger bigger = survey.getBigger();
@@ -238,20 +256,15 @@ public class EmailUtil {
             }
         }
         templateParams.put("__PERFORMANCE_IMPROVEMENTS__", perfImp);
-        templateParams.put("__FUTURE_NEEDS__", survey.getFutureNeeds()
-                .toString());
+        templateParams.put("__FUTURE_NEEDS__", survey.getFutureNeeds().toString());
         String tmp = "";
-        Integer noResearchOutput = survey.getResearchOutcome()
-                .getNoResearchOutput();
+        Integer noResearchOutput = survey.getResearchOutcome().getNoResearchOutput();
         if (noResearchOutput != null && noResearchOutput > 0) {
             tmp = "N/A";
         } else {
-            for (ResearchOutput ro : survey.getResearchOutcome()
-                    .getResearchOutputs()) {
-                if (ro.getDescription() != null
-                        && !ro.getDescription().trim().isEmpty()) {
-                    tmp += ro.getDescription()
-                            + System.getProperty("line.separator")
+            for (ResearchOutput ro : survey.getResearchOutcome().getResearchOutputs()) {
+                if (ro.getDescription() != null && !ro.getDescription().trim().isEmpty()) {
+                    tmp += ro.getDescription() + System.getProperty("line.separator")
                             + System.getProperty("line.separator");
                 }
             }
@@ -260,22 +273,22 @@ public class EmailUtil {
         templateParams.put("__FEEDBACK__", survey.getFeedback().toString());
 
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-                    null, null, this.surveyNoticeEmailSubject,
-                    this.surveyNoticeBodyResource, templateParams);
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.surveyNoticeEmailSubject, this.surveyNoticeBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send survey email.", e);
-            throw new Exception(
-                    "Failed to notify CeR staff about your survey response.");
+            throw new Exception("Failed to notify CeR staff about your survey response.");
         }
     }
 
-    public void setEmailFrom(String emailFrom) {
+    public void setEmailFrom(
+            String emailFrom) {
 
         this.emailFrom = emailFrom;
     }
 
-    public void setEmailTo(String emailTo) {
+    public void setEmailTo(
+            String emailTo) {
 
         this.emailTo = emailTo;
     }
@@ -298,7 +311,8 @@ public class EmailUtil {
         this.newFollowUpEmailBodyResource = newFollowUpEmailBodyResource;
     }
 
-    public void setNewFollowUpEmailSubject(String newFollowUpEmailSubject) {
+    public void setNewFollowUpEmailSubject(
+            String newFollowUpEmailSubject) {
 
         this.newFollowUpEmailSubject = newFollowUpEmailSubject;
     }
@@ -327,7 +341,8 @@ public class EmailUtil {
         this.otherAffiliationEmailSubject = otherAffiliationEmailSubject;
     }
 
-    public void setProjectBaseUrl(String projectBaseUrl) {
+    public void setProjectBaseUrl(
+            String projectBaseUrl) {
 
         this.projectBaseUrl = projectBaseUrl;
     }
@@ -338,7 +353,8 @@ public class EmailUtil {
         this.projectRequestEmailBodyResource = projectRequestEmailBodyResource;
     }
 
-    public void setProjectRequestEmailSubject(String projectRequestEmailSubject) {
+    public void setProjectRequestEmailSubject(
+            String projectRequestEmailSubject) {
 
         this.projectRequestEmailSubject = projectRequestEmailSubject;
     }
@@ -349,19 +365,45 @@ public class EmailUtil {
         this.projectRequestWithSuperviserEmailBodyResource = projectRequestWithSuperviserEmailBodyResource;
     }
 
-    public void setReplyTo(String replyTo) {
+    public void setReplyTo(
+            String replyTo) {
 
         this.replyTo = replyTo;
     }
 
-    public void setSurveyNoticeBodyResource(Resource surveyNoticeBodyResource) {
+    public void setSurveyNoticeBodyResource(
+            Resource surveyNoticeBodyResource) {
 
         this.surveyNoticeBodyResource = surveyNoticeBodyResource;
     }
 
-    public void setSurveyNoticeEmailSubject(String surveyNoticeEmailSubject) {
+    public void setSurveyNoticeEmailSubject(
+            String surveyNoticeEmailSubject) {
 
         this.surveyNoticeEmailSubject = surveyNoticeEmailSubject;
     }
 
+    public void setMembershipRequestProblemEmailBodyResource(
+            Resource membershipRequestProblemEmailBodyResource) {
+
+        this.membershipRequestProblemEmailBodyResource = membershipRequestProblemEmailBodyResource;
+    }
+
+    private Researcher getProjectOwner(
+            ProjectWrapper pw) {
+
+        Researcher r = null;
+        if (pw != null) {
+            List<RPLink> rpLinks = pw.getRpLinks();
+            if (rpLinks != null && rpLinks.size() > 0) {
+                for (RPLink tmp : rpLinks) {
+                    if (tmp.getResearcherRoleId() == 1) {
+                        r = tmp.getResearcher();
+                        break;
+                    }
+                }
+            }
+        }
+        return r;
+    }
 }

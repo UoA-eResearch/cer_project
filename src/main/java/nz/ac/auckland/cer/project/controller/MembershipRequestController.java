@@ -32,16 +32,14 @@ import org.springframework.web.servlet.view.RedirectView;
 public class MembershipRequestController {
 
     private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
-    @Autowired
-    private EmailUtil emailUtil;
-    private final Logger log = Logger.getLogger(ProjectRequestController.class
-            .getName());
-    @Autowired
-    private ProjectDatabaseDao projectDao;
+    @Autowired private EmailUtil emailUtil;
+    private final Logger log = Logger.getLogger(ProjectRequestController.class.getName());
+    @Autowired private ProjectDatabaseDao projectDao;
     private String redirectIfNoAccount;
 
-    private void addResearcherToProject(Integer researcherDatabaseId, Project p)
-            throws Exception {
+    private void addResearcherToProject(
+            Integer researcherDatabaseId,
+            Project p) throws Exception {
 
         try {
             // TODO: configure status pending rather than hard-coding it with 5
@@ -60,7 +58,8 @@ public class MembershipRequestController {
      * Configure validator for cluster project and membership request form
      */
     @InitBinder
-    protected void initBinder(WebDataBinder binder) {
+    protected void initBinder(
+            WebDataBinder binder) {
 
         binder.addValidators(new MembershipRequestValidator());
     }
@@ -68,7 +67,8 @@ public class MembershipRequestController {
     @RequestMapping(value = "request_membership", method = RequestMethod.POST)
     public ModelAndView processMembershipRequestForm(
             @Valid @ModelAttribute("membershiprequest") MembershipRequest mr,
-            BindingResult bResult, HttpServletRequest request) throws Exception {
+            BindingResult bResult,
+            HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("request_membership");
         if (bResult.hasErrors()) {
@@ -78,43 +78,40 @@ public class MembershipRequestController {
         try {
             Person person = (Person) request.getAttribute("person");
             if (person == null) {
-                return new ModelAndView(new RedirectView(redirectIfNoAccount,
-                        false));
+                return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
             } else if (!person.isResearcher()) {
                 Map<String, Object> m = new HashMap<String, Object>();
                 m.put("error_message", adviserWarning);
                 return new ModelAndView("request_membership_response", m);
             }
-            ProjectWrapper pw = projectDao.getProjectForIdOrCode(mr
-                    .getProjectCode());
+            ProjectWrapper pw = projectDao.getProjectForIdOrCode(mr.getProjectCode());
             this.addResearcherToProject(person.getId(), pw.getProject());
-            // TODO: send e-mail to superviser, cc = zendesk, replyto = zendesk
-            this.emailUtil.sendMembershipRequestRequestEmail(pw.getProject(),
-                    person.getFullName(), person.getEmail());
+            // TODO: send e-mail to zendesk, cc = superviser, replyto = zendesk
+            //pw.getRpLinks();
+            this.emailUtil.sendMembershipRequestRequestEmail(pw, person.getFullName(), person.getEmail());
             return new ModelAndView("request_membership_response");
         } catch (Exception e) {
             log.error("Failed to create project membership request", e);
-            bResult.addError(new ObjectError(bResult.getObjectName(), e
-                    .getMessage()));
+            bResult.addError(new ObjectError(bResult.getObjectName(), e.getMessage()));
             return new ModelAndView("request_membership");
         }
     }
 
-    public void setRedirectIfNoAccount(String redirectIfNoAccount) {
+    public void setRedirectIfNoAccount(
+            String redirectIfNoAccount) {
 
         this.redirectIfNoAccount = redirectIfNoAccount;
     }
 
     @RequestMapping(value = "request_membership", method = RequestMethod.GET)
-    public ModelAndView showMembershipRequestForm(HttpServletRequest request)
-            throws Exception {
+    public ModelAndView showMembershipRequestForm(
+            HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("request_membership");
         MembershipRequest mr = new MembershipRequest();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
-            return new ModelAndView(
-                    new RedirectView(redirectIfNoAccount, false));
+            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
             Map<String, Object> m = new HashMap<String, Object>();
             m.put("error_message", adviserWarning);

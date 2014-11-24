@@ -69,7 +69,10 @@
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="host" value="${email.smtp.server}" />
+    <property name="port" value="${email.smtp.port}"/>
   </bean>
+
+  <bean id="templateUtil" class="nz.ac.auckland.cer.common.util.TemplateUtil" />
 
   <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
   
@@ -87,6 +90,7 @@
     <property name="projectRequestWithSuperviserEmailBodyResource" value="${project.request.with.superviser.email.template.path}"/>
     <property name="membershipRequestEmailSubject" value="${membership.request.email.subject}"/>
     <property name="membershipRequestEmailBodyResource" value="${membership.request.email.template.path}"/>
+    <property name="membershipRequestProblemEmailBodyResource" value="${membership.request.problem.email.template.path}"/>
     <property name="otherAffiliationEmailSubject" value="${other.affiliation.email.subject}"/>
     <property name="otherAffiliationEmailBodyResource" value="${other.affiliation.email.template.path}"/>
     <property name="newFollowUpEmailSubject" value="${project.new.followup.email.subject}"/>

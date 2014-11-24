@@ -1,8 +1,6 @@
 package nz.ac.auckland.cer.project.controller;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,9 +16,9 @@ import nz.ac.auckland.cer.project.pojo.ProjectProperty;
 import nz.ac.auckland.cer.project.pojo.ProjectRequest;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.util.EmailUtil;
 import nz.ac.auckland.cer.project.util.Person;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,13 +32,15 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetupTest;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:ProjectRequestControllerTest-context.xml", "classpath:root-context.xml" })
 @WebAppConfiguration
 public class ProjectRequestControllerErrorTest {
 
     private Affiliation[] affiliations;
-    @Autowired private EmailUtil emailUtil;
     private Limitations limitations;
     private MockMvc mockMvc;
     private Project p;
@@ -49,9 +49,13 @@ public class ProjectRequestControllerErrorTest {
     @Autowired private ProjectDatabaseDao projectDao;
     private Researcher[] researchers;
     @Autowired private WebApplicationContext wac;
+    private GreenMail smtpServer;
 
     @Before
     public void setup() throws Exception {
+
+        this.smtpServer = new GreenMail(ServerSetupTest.SMTP);
+        this.smtpServer.start();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         pr = new ProjectRequest();
@@ -89,6 +93,12 @@ public class ProjectRequestControllerErrorTest {
         this.researchers[0] = tmp;
     }
 
+    @After
+    public void tearDown() throws Exception {
+
+        this.smtpServer.stop();
+    }
+
     @Test
     public void testInvalidSuperviserEmail() throws Exception {
 
@@ -109,11 +119,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "superviserEmail"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -137,11 +143,7 @@ public class ProjectRequestControllerErrorTest {
                                 "limitations.concurrency"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -165,11 +167,7 @@ public class ProjectRequestControllerErrorTest {
                                 "limitations.memory", "limitations.concurrency"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -187,11 +185,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "projectDescription"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -209,11 +203,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "scienceStudyId"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -232,11 +222,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "motivation"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -256,11 +242,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "otherMotivation"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -283,11 +265,7 @@ public class ProjectRequestControllerErrorTest {
                                 "superviserPhone", "superviserAffiliation"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -308,11 +286,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "superviserId"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -334,11 +308,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "superviserOtherInstitution"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -357,11 +327,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "projectTitle"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
     @Test
@@ -381,11 +347,7 @@ public class ProjectRequestControllerErrorTest {
                 .andExpect(model().attributeHasFieldErrors("projectrequest", "projectDescription"));
         verify(projectDao, times(0)).createProject((ProjectWrapper) any());
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
-        verify(emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString(), anyString());
-        verify(emailUtil, times(0)).sendProjectRequestEmail((Project) any(), (ProjectRequest) any(),
-                eq(person.getFullName()), eq(person.getEmail()));
-        verify(emailUtil, times(0)).sendProjectRequestWithSuperviserEmail((Project) any(), (ProjectRequest) any(),
-                (Researcher) any(), eq(person.getFullName()), eq(person.getEmail()));
+        assert (this.smtpServer.getReceivedMessages().length == 0);
     }
 
 }

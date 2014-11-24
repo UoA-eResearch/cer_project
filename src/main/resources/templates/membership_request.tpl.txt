@@ -1,17 +1,17 @@
 #requester __RESEARCHER_EMAIL__
 #tags no_feedback no_initial_notification no_solved_notification
 
-__RESEARCHER_NAME__ requested membership to the following project.
+Hi __PROJECT_OWNER_FIRST_NAME__,
 
-Title:
+__RESEARCHER_NAME__ has requested to join project __PROJECT_CODE__. 
+Since you are the owner of this project we would like you to authorize or decline this amendment.
+Please reply to this e-mail to confirm or discard this request.
+
+Project title:
 __PROJECT_TITLE__
 
-Description:
+Project description:
 __PROJECT_DESCRIPTION__
 
-
-__RESEARCHER_NAME__ has been added to the project in the database in status "Pending"
-
-Link to project in database:
-__PROJECT_LINK__
-
+Best regards,
+The Centre for eResearch and NeSI@Auckland support team 
