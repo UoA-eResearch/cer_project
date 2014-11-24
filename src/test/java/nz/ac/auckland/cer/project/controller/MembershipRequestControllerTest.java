@@ -134,6 +134,21 @@ public class MembershipRequestControllerTest {
 
     @DirtiesContext
     @Test
+    public void testPostNonExistingProjectCode() throws Exception {
+
+        when(projectDao.getProjectForIdOrCode(anyString())).thenThrow(new Exception());
+        RequestBuilder rb = post("/request_membership").requestAttr("person", this.person).param("projectCode",
+                this.mr.getProjectCode());
+        ResultActions ra = this.mockMvc.perform(rb);
+        ra.andExpect(status().isOk()).andExpect(view().name("request_membership"))
+                .andExpect(model().attributeErrorCount("membershiprequest", 1));
+        verify(projectDao, times(1)).getProjectForIdOrCode(this.mr.getProjectCode());
+        assert(smtpServer.getReceivedMessages().length == 0);
+    }
+
+
+    @DirtiesContext
+    @Test
     public void testPostSuccess_noOwner() throws Exception {
 
         when(projectDao.getProjectForIdOrCode(anyString())).thenReturn(this.projectWrapper);
