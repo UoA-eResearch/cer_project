@@ -141,6 +141,12 @@ public class ProjectRequestController {
             p.setHostInstitution(inst);
         }
 
+        if (pr.getFunded()) {
+        	p.setNotes("Funding Source: " + pr.getFundingSource());
+        } else {
+        	p.setNotes("Funding Source: None");
+        }
+        	
         Calendar now = Calendar.getInstance();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         p.setStartDate(df.format(now.getTime()));
@@ -327,6 +333,7 @@ public class ProjectRequestController {
         ProjectRequest pr = new ProjectRequest();
         Person person = (Person) request.getAttribute("person");
         if (person == null) {
+        	System.err.println("person is null!");
             return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
         } else if (!person.isResearcher()) {
             Map<String, Object> m = new HashMap<String, Object>();

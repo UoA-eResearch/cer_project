@@ -154,7 +154,6 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return projects;
     }
 
-    @Override
     public Affiliation[] getAffiliations() throws Exception {
 
         Affiliation[] affiliations = new Affiliation[0];
@@ -197,7 +196,6 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return researchOutputTypes;
     }
 
-    @Override
     public InstitutionalRole[] getInstitutionalRoles() throws Exception {
 
         InstitutionalRole[] iRoles = new InstitutionalRole[0];
@@ -219,25 +217,21 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return iRoles;
     }
 
-    @Override
     public List<ScienceStudy> getScienceStudies() throws Exception {
        List<ScienceStudy> list = getSqlSession().selectList("getScienceStudies");
        return list;
     }
     
-    @Override
     public String getScienceStudyNameForId(
             String id) throws Exception {
         return getSqlSession().selectOne("getScienceStudyNameForId", id);
     }
 
-    @Override
     public String getScienceDomainNameForScienceStudyId(
             String id) throws Exception {
         return getSqlSession().selectOne("getScienceDomainNameForScienceStudyId", id);        
     }
     
-    @Override
     public Project createProject(
             ProjectWrapper pw) throws Exception {
 

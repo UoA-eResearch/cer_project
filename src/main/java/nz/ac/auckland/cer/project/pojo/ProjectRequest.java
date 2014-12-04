@@ -2,223 +2,224 @@ package nz.ac.auckland.cer.project.pojo;
 
 public class ProjectRequest {
 
-    private String projectTitle;
-    private String projectDescription;
-    private String scienceStudyId;
-    private String scienceStudyName;
-    private Boolean askForSuperviser;
-    // superviser
-    private Integer superviserId;
-    private String superviserAffiliation;
-    private String superviserName;
-    private String superviserEmail;
-    private String superviserPhone;
-    private String superviserOtherInstitution;
-    private String superviserOtherDivision;
-    private String superviserOtherDepartment;
-    // survey
-    private String motivation;
-    private String otherMotivation;
-    private String currentCompEnv;
-    private String otherCompEnv;
-    private Limitations limitations;
+	private String projectTitle;
+	private String projectDescription;
+	private String scienceStudyId;
+	private String scienceStudyName;
+	private Boolean askForSuperviser;
+	// superviser
+	private Integer superviserId;
+	private String superviserAffiliation;
+	private String superviserName;
+	private String superviserEmail;
+	private String superviserPhone;
+	private String superviserOtherInstitution;
+	private String superviserOtherDivision;
+	private String superviserOtherDepartment;
+	// survey
+	private String motivation;
+	private String otherMotivation;
+	private String currentCompEnv;
+	private String otherCompEnv;
+	private Limitations limitations;
+	// funding
+	private Boolean funded;
+	private String fundingSource;
 
-    public String getMotivation() {
+	public String getMotivation() {
 
-        return motivation;
-    }
+		return motivation;
+	}
 
-    public void setMotivation(
-            String motivation) {
+	public void setMotivation(String motivation) {
 
-        this.motivation = motivation;
-    }
+		this.motivation = motivation;
+	}
 
-    public Limitations getLimitations() {
+	public Limitations getLimitations() {
 
-        return limitations;
-    }
+		return limitations;
+	}
 
-    public void setLimitations(
-            Limitations limitations) {
+	public void setLimitations(Limitations limitations) {
 
-        this.limitations = limitations;
-    }
+		this.limitations = limitations;
+	}
 
-    public String getCurrentCompEnv() {
+	public String getCurrentCompEnv() {
 
-        return currentCompEnv;
-    }
+		return currentCompEnv;
+	}
 
-    public void setCurrentCompEnv(
-            String currentCompEnv) {
+	public void setCurrentCompEnv(String currentCompEnv) {
 
-        this.currentCompEnv = currentCompEnv;
-    }
+		this.currentCompEnv = currentCompEnv;
+	}
 
-    public String getSuperviserName() {
+	public String getSuperviserName() {
 
-        return superviserName;
-    }
+		return superviserName;
+	}
 
-    public void setSuperviserName(
-            String superviserName) {
+	public void setSuperviserName(String superviserName) {
 
-        this.superviserName = superviserName;
-    }
+		this.superviserName = superviserName;
+	}
 
-    public String getSuperviserEmail() {
+	public String getSuperviserEmail() {
 
-        return superviserEmail;
-    }
+		return superviserEmail;
+	}
 
-    public void setSuperviserEmail(
-            String superviserEmail) {
+	public void setSuperviserEmail(String superviserEmail) {
 
-        this.superviserEmail = superviserEmail;
-    }
+		this.superviserEmail = superviserEmail;
+	}
 
-    public String getSuperviserPhone() {
+	public String getSuperviserPhone() {
 
-        return superviserPhone;
-    }
+		return superviserPhone;
+	}
 
-    public void setSuperviserPhone(
-            String superviserPhone) {
+	public void setSuperviserPhone(String superviserPhone) {
 
-        this.superviserPhone = superviserPhone;
-    }
+		this.superviserPhone = superviserPhone;
+	}
 
-    public String getProjectTitle() {
+	public String getProjectTitle() {
 
-        return projectTitle;
-    }
+		return projectTitle;
+	}
 
-    public void setProjectTitle(
-            String projectTitle) {
+	public void setProjectTitle(String projectTitle) {
 
-        this.projectTitle = projectTitle;
-    }
+		this.projectTitle = projectTitle;
+	}
 
-    public String getProjectDescription() {
+	public String getProjectDescription() {
 
-        return projectDescription;
-    }
+		return projectDescription;
+	}
 
-    public void setProjectDescription(
-            String projectDescription) {
+	public void setProjectDescription(String projectDescription) {
 
-        this.projectDescription = projectDescription;
-    }
+		this.projectDescription = projectDescription;
+	}
 
-    public Boolean getAskForSuperviser() {
+	public Boolean getAskForSuperviser() {
 
-        return askForSuperviser;
-    }
+		return askForSuperviser;
+	}
 
-    public void setAskForSuperviser(
-            Boolean askForSuperviser) {
+	public void setAskForSuperviser(Boolean askForSuperviser) {
 
-        this.askForSuperviser = askForSuperviser;
-    }
+		this.askForSuperviser = askForSuperviser;
+	}
 
-    public String getOtherMotivation() {
+	public String getOtherMotivation() {
 
-        return otherMotivation;
-    }
+		return otherMotivation;
+	}
 
-    public void setOtherMotivation(
-            String otherMotivation) {
+	public void setOtherMotivation(String otherMotivation) {
 
-        this.otherMotivation = otherMotivation;
-    }
+		this.otherMotivation = otherMotivation;
+	}
 
-    public Integer getSuperviserId() {
+	public Integer getSuperviserId() {
 
-        return superviserId;
-    }
+		return superviserId;
+	}
 
-    public void setSuperviserId(
-            Integer superviserId) {
+	public void setSuperviserId(Integer superviserId) {
 
-        this.superviserId = superviserId;
-    }
+		this.superviserId = superviserId;
+	}
 
-    public String getSuperviserAffiliation() {
+	public String getSuperviserAffiliation() {
 
-        return superviserAffiliation;
-    }
+		return superviserAffiliation;
+	}
 
-    public void setSuperviserAffiliation(
-            String superviserAffiliation) {
+	public void setSuperviserAffiliation(String superviserAffiliation) {
 
-        this.superviserAffiliation = superviserAffiliation;
-    }
+		this.superviserAffiliation = superviserAffiliation;
+	}
 
-    public String getSuperviserOtherInstitution() {
+	public String getSuperviserOtherInstitution() {
 
-        return superviserOtherInstitution;
-    }
+		return superviserOtherInstitution;
+	}
 
-    public void setSuperviserOtherInstitution(
-            String superviserOtherInstitution) {
+	public void setSuperviserOtherInstitution(String superviserOtherInstitution) {
 
-        this.superviserOtherInstitution = superviserOtherInstitution;
-    }
+		this.superviserOtherInstitution = superviserOtherInstitution;
+	}
 
-    public String getSuperviserOtherDivision() {
+	public String getSuperviserOtherDivision() {
 
-        return superviserOtherDivision;
-    }
+		return superviserOtherDivision;
+	}
 
-    public void setSuperviserOtherDivision(
-            String superviserOtherDivision) {
+	public void setSuperviserOtherDivision(String superviserOtherDivision) {
 
-        this.superviserOtherDivision = superviserOtherDivision;
-    }
+		this.superviserOtherDivision = superviserOtherDivision;
+	}
 
-    public String getSuperviserOtherDepartment() {
+	public String getSuperviserOtherDepartment() {
 
-        return superviserOtherDepartment;
-    }
+		return superviserOtherDepartment;
+	}
 
-    public void setSuperviserOtherDepartment(
-            String superviserOtherDepartment) {
+	public void setSuperviserOtherDepartment(String superviserOtherDepartment) {
 
-        this.superviserOtherDepartment = superviserOtherDepartment;
-    }
+		this.superviserOtherDepartment = superviserOtherDepartment;
+	}
 
-    public String getOtherCompEnv() {
+	public String getOtherCompEnv() {
 
-        return otherCompEnv;
-    }
+		return otherCompEnv;
+	}
 
-    public void setOtherCompEnv(
-            String otherCompEnv) {
+	public void setOtherCompEnv(String otherCompEnv) {
 
-        this.otherCompEnv = otherCompEnv;
-    }
+		this.otherCompEnv = otherCompEnv;
+	}
 
-    public String getScienceStudyId() {
+	public String getScienceStudyId() {
 
-        return scienceStudyId;
-    }
+		return scienceStudyId;
+	}
 
-    public void setScienceStudyId(
-            String scienceStudyId) {
+	public void setScienceStudyId(String scienceStudyId) {
 
-        this.scienceStudyId = scienceStudyId;
-    }
+		this.scienceStudyId = scienceStudyId;
+	}
 
-    public String getScienceStudyName() {
-    
-        return scienceStudyName;
-    }
+	public String getScienceStudyName() {
 
-    public void setScienceStudyName(
-            String scienceStudyName) {
-    
-        this.scienceStudyName = scienceStudyName;
-    }
+		return scienceStudyName;
+	}
+
+	public void setScienceStudyName(String scienceStudyName) {
+
+		this.scienceStudyName = scienceStudyName;
+	}
+
+	public String getFundingSource() {
+		return fundingSource;
+	}
+
+	public void setFundingSource(String fundingSource) {
+		this.fundingSource = fundingSource;
+	}
+
+	public Boolean getFunded() {
+		return funded;
+	}
+
+	public void setFunded(Boolean funded) {
+		this.funded = funded;
+	}
 
 }

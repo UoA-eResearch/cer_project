@@ -27,12 +27,10 @@ public class IdentityInterceptor implements Filter {
     private final Logger log = Logger.getLogger(IdentityInterceptor.class
             .getName());
 
-    @Override
     public void destroy() {
 
     }
 
-    @Override
     public void doFilter(ServletRequest req, ServletResponse resp,
             FilterChain filterChain) throws IOException, ServletException {
 
@@ -59,7 +57,6 @@ public class IdentityInterceptor implements Filter {
         filterChain.doFilter(req, resp);
     }
 
-    @Override
     public void init(FilterConfig arg0) throws ServletException {
 
     }

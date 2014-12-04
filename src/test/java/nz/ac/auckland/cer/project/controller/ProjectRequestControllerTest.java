@@ -83,6 +83,7 @@ public class ProjectRequestControllerTest {
         pr.setLimitations(limitations);
         pr.setMotivation("inadequate_computational_equipment");
         pr.setCurrentCompEnv("standard_computer");
+        pr.setFunded(new Boolean("false"));
 
         this.person = new Person();
         person.setIsResearcher(true);
@@ -132,7 +133,8 @@ public class ProjectRequestControllerTest {
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", "true").param("fundingSource", "Some funding source"); // with funding source
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
@@ -167,7 +169,8 @@ public class ProjectRequestControllerTest {
                 .param("superviserPhone", "123123213").param("superviserAffiliation", "Other")
                 .param("superviserOtherInstitution", "Some Uni").param("superviserOtherDivision", "Some Div")
                 .param("superviserOtherDepartment", "Some Dep").param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
@@ -208,7 +211,8 @@ public class ProjectRequestControllerTest {
                 .param("superviserName", "My superviser").param("superviserEmail", "superviser@company.org")
                 .param("superviserPhone", "123123213")
                 .param("superviserAffiliation", "Some University -- Some Division -- Some Department")
-                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));
@@ -240,7 +244,8 @@ public class ProjectRequestControllerTest {
                 .param("scienceStudyId", pr.getScienceStudyId())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "3")
                 .param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name(expectedRedirect))
                 .andExpect(model().attributeErrorCount("projectrequest", 0));

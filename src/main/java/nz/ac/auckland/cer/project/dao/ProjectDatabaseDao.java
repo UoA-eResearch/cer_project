@@ -45,7 +45,7 @@ public interface ProjectDatabaseDao {
 
     public String getScienceDomainNameForScienceStudyId(
             String id) throws Exception;
-
+    
     public Project createProject(
             ProjectWrapper pw) throws Exception;
 

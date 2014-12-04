@@ -54,6 +54,15 @@
             }         
       }
 
+      function show_hide_funding_source() {
+          var val = $("input[name='funded']:checked").val();
+          if (val == "true") {
+              $("#funding_source").css("display", "inline");
+            } else {
+              $("#funding_source").css("display", "none");
+            }         
+      }
+
       $(document).ready(function() {
         // on page load 
         show_hide_other_motivation();
@@ -61,12 +70,14 @@
         show_hide_other_superviser();
         show_hide_other_superviser_affiliation();
         show_hide_other_comp_env();
-      
+        show_hide_funding_source();
+        
         // on change events 
         $("input[name='motivation']").change(function() { show_hide_other_motivation(); });
         $("input[name='currentCompEnv']").change(function() { show_hide_limitations(); show_hide_other_comp_env(); });
         $("#superviserId").change(function() { show_hide_other_superviser(); });
         $("#superviserAffiliation").change(function() { show_hide_other_superviser_affiliation(); });
+        $("input[name='funded']").change(function() { show_hide_funding_source(); });
       });
     </script>
   </head>
@@ -195,7 +206,7 @@
             <td colspan="2"></td>
           </tr>
           <tr>
-            <td><h3>Motivation for using the cluster for this project:</h3></td>
+            <td><h3>Motivation for using the cluster for this project</h3></td>
           </tr>
           <tr>
             <td><form:radiobutton name="motivation" path="motivation" 
@@ -282,6 +293,28 @@
             </td>
           </tr>
         </tbody>
+
+        <tr>
+          <td>
+            <h3>Funding Information</h3>
+            Is this project funded through an external research grant?
+            (Projects funded by external sources may be eligible 
+            for higher priority on the cluster)
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <form:radiobutton name="funded" path="funded" value="true" label="Yes" />
+            <div id="funding_source" style="display: none;">
+              &nbsp;&nbsp; Please specify: <form:input path="fundingSource" type="text" size="80" maxlength="200"/>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <form:radiobutton name="funded" path="funded" value="false" label="No" />
+          </td>
+        </tr>
       </table>
       
       <br>

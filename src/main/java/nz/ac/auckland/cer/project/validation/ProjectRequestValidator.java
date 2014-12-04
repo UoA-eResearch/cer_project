@@ -9,14 +9,12 @@ import org.springframework.validation.Validator;
 
 public class ProjectRequestValidator implements Validator {
 
-    @Override
     public boolean supports(
             Class<?> clazz) {
 
         return ProjectRequest.class.isAssignableFrom(clazz);
     }
 
-    @Override
     public void validate(
             Object projectRequest,
             Errors errors) {
@@ -92,6 +90,12 @@ public class ProjectRequestValidator implements Validator {
                 ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.memory", "project.currentCompEnv.memory.required");
                 ValidationUtils.rejectIfEmptyOrWhitespace(errors, "limitations.concurrency", "project.currentCompEnv.concurrrency.required");
             }
+        }
+        
+        // TODO: validate funding
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "funded", "project.funded.required");
+        if (!errors.hasFieldErrors("funded") && pr.getFunded()) {
+        	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fundingSource", "project.fundingSource.required");
         }
     }
 

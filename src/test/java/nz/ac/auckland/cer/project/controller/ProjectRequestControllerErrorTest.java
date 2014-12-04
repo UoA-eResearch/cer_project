@@ -74,6 +74,7 @@ public class ProjectRequestControllerErrorTest {
         pr.setLimitations(limitations);
         pr.setMotivation("inadequate_computational_equipment");
         pr.setCurrentCompEnv("standard_computer");
+        pr.setFunded(new Boolean("false"));
 
         this.person = new Person();
         person.setIsResearcher(true);
@@ -111,7 +112,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("superviserId", "-1")
                 .param("superviserName", "My superviser").param("superviserEmail", "invalid e-mail address")
                 .param("superviserAffiliation", "Some University").param("superviserPhone", "123123213")
-                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -133,7 +135,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())
                 .andExpect(view().name("request_project"))
@@ -157,7 +160,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())
                 .andExpect(view().name("request_project"))
@@ -178,7 +182,8 @@ public class ProjectRequestControllerErrorTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("scienceStudyId", pr.getScienceStudyId())
                 .param("motivation", pr.getMotivation()).param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -196,7 +201,8 @@ public class ProjectRequestControllerErrorTest {
         RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("motivation", pr.getMotivation()).param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -215,7 +221,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -235,7 +242,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -255,7 +263,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId()).param("superviserId", "-1")
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())
                 .andExpect(view().name("request_project"))
@@ -278,7 +287,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId()).param("superviserId", "-2")
                 .param("askForSuperviser", pr.getAskForSuperviser().toString()).param("motivation", pr.getMotivation())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -301,7 +311,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("askForSuperviser", pr.getAskForSuperviser().toString())
                 .param("superviserName", "My superviser").param("superviserEmail", "a@b.org")
                 .param("superviserPhone", "123").param("superviserAffiliation", "OTHER")
-                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("motivation", pr.getMotivation()).param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -320,7 +331,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId()).param("motivation", pr.getMotivation())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -340,7 +352,8 @@ public class ProjectRequestControllerErrorTest {
                 .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
                 .param("scienceStudyId", pr.getScienceStudyId()).param("motivation", pr.getMotivation())
                 .param("askForSuperviser", pr.getAskForSuperviser().toString())
-                .param("currentCompEnv", pr.getCurrentCompEnv());
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", Boolean.toString(pr.getFunded()));
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
                 .andExpect(model().attributeErrorCount("projectrequest", 1))
@@ -349,5 +362,47 @@ public class ProjectRequestControllerErrorTest {
         verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
         assert (this.smtpServer.getReceivedMessages().length == 0);
     }
+
+    @Test
+    public void testMissingFundingInformation() throws Exception {
+
+        when(projectDao.getAffiliations()).thenReturn(this.affiliations);
+        when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
+        RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
+                .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
+                .param("projectDescription", pr.getProjectDescription())
+                .param("scienceStudyId", pr.getScienceStudyId()).param("motivation", pr.getMotivation())
+                .param("askForSuperviser", pr.getAskForSuperviser().toString())
+                .param("currentCompEnv", pr.getCurrentCompEnv());
+        ResultActions ra = this.mockMvc.perform(rb);
+        ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
+                .andExpect(model().attributeErrorCount("projectrequest", 1))
+                .andExpect(model().attributeHasFieldErrors("projectrequest", "funded"));
+        verify(projectDao, times(0)).createProject((ProjectWrapper) any());
+        verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        assert (this.smtpServer.getReceivedMessages().length == 0);
+    }
+
+    @Test
+    public void testMissingFundingSource() throws Exception {
+
+        when(projectDao.getAffiliations()).thenReturn(this.affiliations);
+        when(projectDao.getAllStaffOrPostDocs()).thenReturn(this.researchers);
+        RequestBuilder rb = post("/request_project").requestAttr("person", this.person)
+                .param("projectTitle", pr.getProjectTitle()).param("projectDescription", pr.getProjectDescription())
+                .param("projectDescription", pr.getProjectDescription())
+                .param("scienceStudyId", pr.getScienceStudyId()).param("motivation", pr.getMotivation())
+                .param("askForSuperviser", pr.getAskForSuperviser().toString())
+                .param("currentCompEnv", pr.getCurrentCompEnv())
+                .param("funded", "true");
+        ResultActions ra = this.mockMvc.perform(rb);
+        ra.andExpect(status().isOk()).andExpect(view().name("request_project"))
+                .andExpect(model().attributeErrorCount("projectrequest", 1))
+                .andExpect(model().attributeHasFieldErrors("projectrequest", "fundingSource"));
+        verify(projectDao, times(0)).createProject((ProjectWrapper) any());
+        verify(projectDao, times(0)).createProjectProperty((ProjectProperty) any());
+        assert (this.smtpServer.getReceivedMessages().length == 0);
+    }
+
 
 }
