@@ -296,7 +296,7 @@
 
         <tr>
           <td>
-            <h3>Funding Information</h3>
+            <h3>Priority Boost</h3>
             Is this project funded through an external research grant?
             (Projects funded by external sources may be eligible 
             for higher priority on the cluster)
