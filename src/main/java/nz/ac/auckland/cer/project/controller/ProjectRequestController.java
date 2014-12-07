@@ -46,305 +46,316 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 public class ProjectRequestController {
 
-    @Autowired private AffiliationUtil affilUtil;
-    @Autowired private EmailUtil emailUtil;
-    @Autowired private ProjectDatabaseDao projectDao;
-    private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
-    private String defaultHostInstitution;
-    private Integer initialResearcherRoleOnProject;
-    private final Logger log = Logger.getLogger(ProjectRequestController.class.getName());
-    private String redirectIfNoAccount;
+	@Autowired
+	private AffiliationUtil affilUtil;
+	@Autowired
+	private EmailUtil emailUtil;
+	@Autowired
+	private ProjectDatabaseDao projectDao;
+	private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
+	private String defaultHostInstitution;
+	private Integer initialResearcherRoleOnProject;
+	private final Logger log = Logger.getLogger(ProjectRequestController.class
+			.getName());
+	private String redirectIfNoAccount;
 
-    /**
-     * Check whether we need to ask for superviser information or not.
-     */
-    private boolean askForSuperviser(
-            Person p) throws Exception {
+	/**
+	 * Check whether we need to ask for superviser information or not.
+	 */
+	private boolean askForSuperviser(Person p) throws Exception {
 
-        return p.isResearcher() && (p.getInstitutionalRoleId() > 1);
-    }
+		return p.isResearcher() && (p.getInstitutionalRoleId() > 1);
+	}
 
-    private void augmentModel(
-            Map<String, Object> mav) {
+	private void augmentModel(Map<String, Object> mav) {
 
-        Affiliation[] afs = null;
-        Map<Integer, String> superviserMap = null;
-        Map<Integer, String> scienceStuyMap = null;
-        String errorMessage = "";
+		Affiliation[] afs = null;
+		Map<Integer, String> superviserMap = null;
+		Map<Integer, String> scienceStuyMap = null;
+		String errorMessage = "";
 
-        try {
-            afs = this.projectDao.getAffiliations();
-            if (afs == null || afs.length == 0) {
-                throw new Exception();
-            }
-            List<String> tmp = this.affilUtil.getAffiliationStrings(afs);
-            mav.put("affiliations", tmp);
-        } catch (Exception e) {
-            String error = "Failed to load affiliations.";
-            errorMessage += "Internal Error: " + error;
-            log.error(error, e);
-        }
+		try {
+			afs = this.projectDao.getAffiliations();
+			if (afs == null || afs.length == 0) {
+				throw new Exception();
+			}
+			List<String> tmp = this.affilUtil.getAffiliationStrings(afs);
+			mav.put("affiliations", tmp);
+		} catch (Exception e) {
+			String error = "Failed to load affiliations.";
+			errorMessage += "Internal Error: " + error;
+			log.error(error, e);
+		}
 
-        try {
-            superviserMap = this.getSortedSuperviserMap();
-            mav.put("superviserDropdownMap", superviserMap);
-        } catch (Exception e) {
-            String error = "Failed to load superviser map.";
-            errorMessage += "Internal Error: " + error;
-            log.error(error, e);
-        }
+		try {
+			superviserMap = this.getSortedSuperviserMap();
+			mav.put("superviserDropdownMap", superviserMap);
+		} catch (Exception e) {
+			String error = "Failed to load superviser map.";
+			errorMessage += "Internal Error: " + error;
+			log.error(error, e);
+		}
 
-        try {
-            scienceStuyMap = this.getScienceStudies();
-            mav.put("scienceStudies", scienceStuyMap);
-        } catch (Exception e) {
-            String error = "Failed to load science study map.";
-            errorMessage += "Internal Error: " + error;
-            log.error(error, e);
-        }
+		try {
+			scienceStuyMap = this.getScienceStudies();
+			mav.put("scienceStudies", scienceStuyMap);
+		} catch (Exception e) {
+			String error = "Failed to load science study map.";
+			errorMessage += "Internal Error: " + error;
+			log.error(error, e);
+		}
 
-        if (errorMessage.trim().length() > 0) {
-            mav.put("unexpected_error", errorMessage);
-        }
-    }
+		if (errorMessage.trim().length() > 0) {
+			mav.put("unexpected_error", errorMessage);
+		}
+	}
 
-    private Project createProject(
-            ProjectRequest pr,
-            Researcher superviser,
-            Person researcher) throws Exception {
+	private Project createProject(ProjectRequest pr, Researcher superviser,
+			Person researcher) throws Exception {
 
-        ProjectWrapper pw = new ProjectWrapper();
-        Project p = new Project();
-        List<RPLink> rpLinks = new LinkedList<RPLink>();
-        ProjectFacility pf = new ProjectFacility(1);
-        RPLink rpl = new RPLink();
-        rpl.setResearcherId(researcher.getId());
-        rpl.setResearcherRoleId(this.initialResearcherRoleOnProject);
-        rpLinks.add(rpl);
-        if (superviser != null) {
-            // TODO: replace 2 with configured value for "Superviser"
-            rpl = new RPLink();
-            rpl.setResearcherId(superviser.getId());
-            rpl.setResearcherRoleId(2);
-            rpLinks.add(rpl);
-        }
-        APLink apl = new APLink();
-        apl.setAdviserId(6);
-        apl.setAdviserRoleId(1);
+		ProjectWrapper pw = new ProjectWrapper();
+		Project p = new Project();
+		List<RPLink> rpLinks = new LinkedList<RPLink>();
+		ProjectFacility pf = new ProjectFacility(1);
+		RPLink rpl = new RPLink();
+		rpl.setResearcherId(researcher.getId());
+		rpl.setResearcherRoleId(this.initialResearcherRoleOnProject);
+		rpLinks.add(rpl);
+		if (superviser != null) {
+			// TODO: replace 2 with configured value for "Superviser"
+			rpl = new RPLink();
+			rpl.setResearcherId(superviser.getId());
+			rpl.setResearcherRoleId(2);
+			rpLinks.add(rpl);
+		}
+		APLink apl = new APLink();
+		apl.setAdviserId(6);
+		apl.setAdviserRoleId(1);
 
-        p.setName(pr.getProjectTitle());
-        p.setDescription(pr.getProjectDescription());
-        String inst = researcher.getInstitution();
-        if (inst == null || inst.trim().isEmpty()) {
-            p.setHostInstitution(this.defaultHostInstitution);
-        } else {
-            p.setHostInstitution(inst);
-        }
+		p.setName(pr.getProjectTitle());
+		p.setDescription(pr.getProjectDescription());
+		String inst = researcher.getInstitution();
+		if (inst == null || inst.trim().isEmpty()) {
+			p.setHostInstitution(this.defaultHostInstitution);
+		} else {
+			p.setHostInstitution(inst);
+		}
 
-        if (pr.getFunded()) {
-        	p.setNotes("Funding Source: " + pr.getFundingSource());
-        } else {
-        	p.setNotes("Funding Source: None");
-        }
-        	
-        Calendar now = Calendar.getInstance();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        p.setStartDate(df.format(now.getTime()));
-        now.add(Calendar.MONTH, 3);
-        p.setNextFollowUpDate(df.format(now.getTime()));
-        now.add(Calendar.MONTH, 9);
-        p.setNextReviewDate(df.format(now.getTime()));
+		if (pr.getFunded()) {
+			p.setNotes("Funding Source: " + pr.getFundingSource());
+		} else {
+			p.setNotes("Funding Source: None");
+		}
 
-        pw.setProject(p);
-        pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays.asList(pf)));
-        pw.setRpLinks(rpLinks);
-        pw.setApLinks(new LinkedList<APLink>(Arrays.asList(apl)));
+		Calendar now = Calendar.getInstance();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		p.setStartDate(df.format(now.getTime()));
+		now.add(Calendar.MONTH, 3);
+		p.setNextFollowUpDate(df.format(now.getTime()));
+		now.add(Calendar.MONTH, 9);
+		p.setNextReviewDate(df.format(now.getTime()));
 
-        return this.projectDao.createProject(pw);
-    }
+		pw.setProject(p);
+		pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays
+				.asList(pf)));
+		pw.setRpLinks(rpLinks);
+		pw.setApLinks(new LinkedList<APLink>(Arrays.asList(apl)));
 
-    private void createProjectProperties(
-            Project project,
-            ProjectRequest pr) throws Exception {
+		return this.projectDao.createProject(pw);
+	}
 
-        ProjectProperty pp = new ProjectProperty();
-        pp.setFacilityId(1);
-        pp.setProjectId(project.getId());
+	private void createProjectProperties(Project project, ProjectRequest pr)
+			throws Exception {
 
-        String scienceStudyId = pr.getScienceStudyId();
-        String scienceStudyName = "Other (Requires manual intervention. "
-                + "No science_domain and science_study project properties have been added to project database)";
-        if (Integer.valueOf(scienceStudyId) > 0) {
-            scienceStudyName = this.projectDao.getScienceStudyNameForId(scienceStudyId);
-            if (scienceStudyName != null && !scienceStudyName.isEmpty()) {
-                String scienceDomainName = this.projectDao.getScienceDomainNameForScienceStudyId(scienceStudyId);
-                if (scienceDomainName != null && !scienceDomainName.isEmpty()) {
-                    pp.setPropname("science_domain");
-                    pp.setPropvalue(scienceDomainName);
-                    this.projectDao.createProjectProperty(pp);
-                    pp.setPropname("science_study");
-                    pp.setPropvalue(scienceStudyName);
-                    this.projectDao.createProjectProperty(pp);
-                    pr.setScienceStudyName(scienceStudyName);
-                } else {
-                    this.log.warn("No science domain found for science study id " + pr.getScienceStudyId()
-                            + " (project id: " + project.getProjectId() + ")");
-                }
-            } else {
-                this.log.warn("No science study name found for id " + pr.getScienceStudyId() + " (project id: "
-                        + project.getProjectId() + ")");
-            }
-        }
-        pr.setScienceStudyName(scienceStudyName);
+		ProjectProperty pp = new ProjectProperty();
+		pp.setFacilityId(1);
+		pp.setProjectId(project.getId());
 
-        pp.setPropname("motivation_for_using_pan");
-        pp.setPropvalue(pr.getMotivation());
-        this.projectDao.createProjectProperty(pp);
+		String scienceStudyId = pr.getScienceStudyId();
+		String scienceStudyName = "Other (Requires manual intervention. "
+				+ "No science_domain and science_study project properties have been added to project database)";
+		if (Integer.valueOf(scienceStudyId) > 0) {
+			scienceStudyName = this.projectDao
+					.getScienceStudyNameForId(scienceStudyId);
+			if (scienceStudyName != null && !scienceStudyName.isEmpty()) {
+				String scienceDomainName = this.projectDao
+						.getScienceDomainNameForScienceStudyId(scienceStudyId);
+				if (scienceDomainName != null && !scienceDomainName.isEmpty()) {
+					pp.setPropname("science_domain");
+					pp.setPropvalue(scienceDomainName);
+					this.projectDao.createProjectProperty(pp);
+					pp.setPropname("science_study");
+					pp.setPropvalue(scienceStudyName);
+					this.projectDao.createProjectProperty(pp);
+					pr.setScienceStudyName(scienceStudyName);
+				} else {
+					this.log.warn("No science domain found for science study id "
+							+ pr.getScienceStudyId()
+							+ " (project id: "
+							+ project.getProjectId() + ")");
+				}
+			} else {
+				this.log.warn("No science study name found for id "
+						+ pr.getScienceStudyId() + " (project id: "
+						+ project.getProjectId() + ")");
+			}
+		}
+		pr.setScienceStudyName(scienceStudyName);
 
-        pp.setPropname("system_available_before_using_pan");
-        if (pr.getCurrentCompEnv().equals("OTHER")) {
-            pp.setPropvalue(pr.getOtherCompEnv());
-        } else {
-            pp.setPropvalue(pr.getCurrentCompEnv());
-        }
-        this.projectDao.createProjectProperty(pp);
+		pp.setPropname("motivation_for_using_pan");
+		pp.setPropvalue(pr.getMotivation());
+		this.projectDao.createProjectProperty(pp);
 
-        Limitations l = pr.getLimitations();
-        if (pr.getCurrentCompEnv().equals("standard_computer")) {
-            l = new Limitations();
-            l.setCpuCores("4");
-            l.setMemory("8GB");
-            l.setConcurrency("4");
-        }
+		pp.setPropname("system_available_before_using_pan");
+		if (pr.getCurrentCompEnv().equals("OTHER")) {
+			pp.setPropvalue(pr.getOtherCompEnv());
+		} else {
+			pp.setPropvalue(pr.getCurrentCompEnv());
+		}
+		this.projectDao.createProjectProperty(pp);
 
-        pp.setPropname("max_cpu_cores_before_using_pan");
-        pp.setPropvalue(l.getCpuCores());
-        this.projectDao.createProjectProperty(pp);
+		Limitations l = pr.getLimitations();
+		if (pr.getCurrentCompEnv().equals("standard_computer")) {
+			l = new Limitations();
+			l.setCpuCores("4");
+			l.setMemory("8GB");
+			l.setConcurrency("4");
+		}
 
-        pp.setPropname("max_memory_before_using_pan");
-        pp.setPropvalue(l.getMemory());
-        this.projectDao.createProjectProperty(pp);
+		pp.setPropname("max_cpu_cores_before_using_pan");
+		pp.setPropvalue(l.getCpuCores());
+		this.projectDao.createProjectProperty(pp);
 
-        pp.setPropname("max_concurrent_jobs_before_using_pan");
-        pp.setPropvalue(l.getConcurrency());
-        this.projectDao.createProjectProperty(pp);
-    }
+		pp.setPropname("max_memory_before_using_pan");
+		pp.setPropvalue(l.getMemory());
+		this.projectDao.createProjectProperty(pp);
 
-    private Map<Integer, String> getSortedSuperviserMap() throws Exception {
+		pp.setPropname("max_concurrent_jobs_before_using_pan");
+		pp.setPropvalue(l.getConcurrency());
+		this.projectDao.createProjectProperty(pp);
+	}
 
-        Map<Integer, String> superviserMap = new LinkedHashMap<Integer, String>();
-        Researcher[] staffOrPostDocs = this.projectDao.getAllStaffOrPostDocs();
-        for (Researcher r : staffOrPostDocs) {
-            String affilString = affilUtil.createAffiliationString(r.getInstitution(), r.getDivision(),
-                    r.getDepartment());
-            superviserMap.put(r.getId(), r.getFullName() + " (" + affilString + ")");
-        }
-        return superviserMap;
-    }
+	private Map<Integer, String> getSortedSuperviserMap() throws Exception {
 
-    private Map<Integer, String> getScienceStudies() throws Exception {
+		Map<Integer, String> superviserMap = new LinkedHashMap<Integer, String>();
+		Researcher[] staffOrPostDocs = this.projectDao.getAllStaffOrPostDocs();
+		for (Researcher r : staffOrPostDocs) {
+			String affilString = affilUtil.createAffiliationString(
+					r.getInstitution(), r.getDivision(), r.getDepartment());
+			superviserMap.put(r.getId(), r.getFullName() + " (" + affilString
+					+ ")");
+		}
+		return superviserMap;
+	}
 
-        Map<Integer, String> scienceStudyMap = new LinkedHashMap<Integer, String>();
-        List<ScienceStudy> scienceStudies = this.projectDao.getScienceStudies();
-        for (ScienceStudy ss : scienceStudies) {
-            scienceStudyMap.put(ss.getId(), ss.getName());
-        }
-        return scienceStudyMap;
-    }
+	private Map<Integer, String> getScienceStudies() throws Exception {
 
-    /**
-     * Configure validator for cluster project and membership request form
-     */
-    @InitBinder
-    protected void initBinder(
-            WebDataBinder binder) {
+		Map<Integer, String> scienceStudyMap = new LinkedHashMap<Integer, String>();
+		List<ScienceStudy> scienceStudies = this.projectDao.getScienceStudies();
+		for (ScienceStudy ss : scienceStudies) {
+			scienceStudyMap.put(ss.getId(), ss.getName());
+		}
+		return scienceStudyMap;
+	}
 
-        binder.addValidators(new ProjectRequestValidator());
-    }
+	/**
+	 * Configure validator for cluster project and membership request form
+	 */
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
 
-    @RequestMapping(value = "request_project", method = RequestMethod.POST)
-    public ModelAndView processProjectRequestForm(
-            @Valid @ModelAttribute("projectrequest") ProjectRequest pr,
-            BindingResult bResult,
-            HttpServletRequest request) throws Exception {
+		binder.addValidators(new ProjectRequestValidator());
+	}
 
-        Map<String, Object> m = new HashMap<String, Object>();
-        if (bResult.hasErrors()) {
-            m.put("projectrequest", pr);
-            this.augmentModel(m);
-            return new ModelAndView("request_project", m);
-        }
-        try {
-            Person person = (Person) request.getAttribute("person");
-            if (person == null) {
-                return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
-            } else if (!person.isResearcher()) {
-                m.put("error_message", adviserWarning);
-                return new ModelAndView("request_project_response", m);
-            }
-            Researcher superviser = null;
-            if (pr.getSuperviserId() != null && pr.getSuperviserId() > 0) {
-                superviser = this.projectDao.getResearcherForId(pr.getSuperviserId());
-            } else {
-                if (pr.getSuperviserAffiliation() != null
-                        && pr.getSuperviserAffiliation().toLowerCase().equals("other")) {
-                    this.emailUtil.sendOtherAffiliationEmail(pr.getSuperviserOtherInstitution(),
-                            pr.getSuperviserOtherDivision(), pr.getSuperviserOtherDepartment(), person.getEmail());
-                }
-            }
-            Project p = this.createProject(pr, superviser, person);
-            this.createProjectProperties(p, pr);
-            if (this.askForSuperviser(person)) {
-                this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr, superviser, person.getFullName(),
-                        person.getEmail());
-            } else {
-                this.emailUtil.sendProjectRequestEmail(p, pr, person.getFullName(), person.getEmail());
-            }
-            return new ModelAndView("request_project_response");
-        } catch (Exception e) {
-            log.error("Failed to create project", e);
-            bResult.addError(new ObjectError(bResult.getObjectName(), e.getMessage()));
-            return new ModelAndView("request_project");
-        }
-    }
+	@RequestMapping(value = "request_project", method = RequestMethod.POST)
+	public ModelAndView processProjectRequestForm(
+			@Valid @ModelAttribute("projectrequest") ProjectRequest pr,
+			BindingResult bResult, HttpServletRequest request) throws Exception {
 
-    public void setDefaultHostInstitution(
-            String defaultHostInstitution) {
+		Map<String, Object> m = new HashMap<String, Object>();
+		if (bResult.hasErrors()) {
+			m.put("projectrequest", pr);
+			this.augmentModel(m);
+			return new ModelAndView("request_project", m);
+		}
+		try {
+			Person person = (Person) request.getAttribute("person");
+			if (person == null) {
+				return new ModelAndView(new RedirectView(redirectIfNoAccount,
+						false));
+			} else if (!person.isResearcher()) {
+				m.put("error_message", adviserWarning);
+				return new ModelAndView("request_project_response", m);
+			}
+			Researcher superviser = null;
+			if (pr.getSuperviserId() != null && pr.getSuperviserId() > 0) {
+				superviser = this.projectDao.getResearcherForId(pr
+						.getSuperviserId());
+			} else {
+				if (pr.getSuperviserAffiliation() != null
+						&& pr.getSuperviserAffiliation().toLowerCase()
+								.equals("other")) {
+					this.emailUtil.sendOtherAffiliationEmail(
+							pr.getSuperviserOtherInstitution(),
+							pr.getSuperviserOtherDivision(),
+							pr.getSuperviserOtherDepartment(),
+							person.getEmail());
+				}
+			}
+			Project p = this.createProject(pr, superviser, person);
+			this.createProjectProperties(p, pr);
+			if (this.askForSuperviser(person)) {
+				this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr,
+						superviser, person.getFullName());
+			} else {
+				this.emailUtil.sendProjectRequestEmail(p, pr,
+						person.getFullName());
+			}
+			return new ModelAndView("request_project_response");
+		} catch (Exception e) {
+			log.error("Failed to create project", e);
+			bResult.addError(new ObjectError(bResult.getObjectName(), e
+					.getMessage()));
+			return new ModelAndView("request_project");
+		}
+	}
 
-        this.defaultHostInstitution = defaultHostInstitution;
-    }
+	public void setDefaultHostInstitution(String defaultHostInstitution) {
 
-    public void setInitialResearcherRoleOnProject(
-            Integer initialResearcherRoleOnProject) {
+		this.defaultHostInstitution = defaultHostInstitution;
+	}
 
-        this.initialResearcherRoleOnProject = initialResearcherRoleOnProject;
-    }
+	public void setInitialResearcherRoleOnProject(
+			Integer initialResearcherRoleOnProject) {
 
-    public void setRedirectIfNoAccount(
-            String redirectIfNoAccount) {
+		this.initialResearcherRoleOnProject = initialResearcherRoleOnProject;
+	}
 
-        this.redirectIfNoAccount = redirectIfNoAccount;
-    }
+	public void setRedirectIfNoAccount(String redirectIfNoAccount) {
 
-    @RequestMapping(value = "request_project", method = RequestMethod.GET)
-    public ModelAndView showProjectRequestForm(
-            HttpServletRequest request) throws Exception {
+		this.redirectIfNoAccount = redirectIfNoAccount;
+	}
 
-        ProjectRequest pr = new ProjectRequest();
-        Person person = (Person) request.getAttribute("person");
-        if (person == null) {
-        	System.err.println("person is null!");
-            return new ModelAndView(new RedirectView(redirectIfNoAccount, false));
-        } else if (!person.isResearcher()) {
-            Map<String, Object> m = new HashMap<String, Object>();
-            m.put("error_message", adviserWarning);
-            return new ModelAndView("request_project_response", m);
-        }
-        pr.setAskForSuperviser(this.askForSuperviser(person));
-        ModelAndView mav = new ModelAndView("request_project");
-        mav.addObject("projectrequest", pr);
-        this.augmentModel(mav.getModel());
-        return mav;
-    }
+	@RequestMapping(value = "request_project", method = RequestMethod.GET)
+	public ModelAndView showProjectRequestForm(HttpServletRequest request)
+			throws Exception {
+
+		ProjectRequest pr = new ProjectRequest();
+		Person person = (Person) request.getAttribute("person");
+		if (person == null) {
+			System.err.println("person is null!");
+			return new ModelAndView(
+					new RedirectView(redirectIfNoAccount, false));
+		} else if (!person.isResearcher()) {
+			Map<String, Object> m = new HashMap<String, Object>();
+			m.put("error_message", adviserWarning);
+			return new ModelAndView("request_project_response", m);
+		}
+		pr.setAskForSuperviser(this.askForSuperviser(person));
+		ModelAndView mav = new ModelAndView("request_project");
+		mav.addObject("projectrequest", pr);
+		this.augmentModel(mav.getModel());
+		return mav;
+	}
 
 }

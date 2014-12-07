@@ -1,5 +1,3 @@
-#requester __RESEARCHER_EMAIL__
-
 __RESEARCHER_NAME__ requested a new project to be created.
 
 Title:

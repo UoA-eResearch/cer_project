@@ -158,12 +158,10 @@ public class EmailUtil {
     public void sendProjectRequestEmail(
             Project p,
             ProjectRequest pr,
-            String researcherName,
-            String researcherEmail) throws Exception {
+            String researcherName) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__RESEARCHER_NAME__", researcherName);
-        templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
         templateParams.put("__SCIENCE_STUDY__", pr.getScienceStudyName());
@@ -181,8 +179,7 @@ public class EmailUtil {
             Project p,
             ProjectRequest pr,
             Researcher superviser,
-            String researcherName,
-            String researcherEmail) throws Exception {
+            String researcherName) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         String extraInfos = "The supervisor does not yet exist in the database.";
@@ -209,7 +206,6 @@ public class EmailUtil {
                     : this.affUtil.getDepartmentFromAffiliationString(pr.getSuperviserAffiliation()));
         }
         templateParams.put("__RESEARCHER_NAME__", researcherName);
-        templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
         templateParams.put("__PROJECT_TITLE__", p.getName());
         templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
         templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getId());
