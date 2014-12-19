@@ -17,6 +17,14 @@
   <context:annotation-config/>
   <mvc:annotation-driven />
 
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:configuration.properties.test</value>
+      </list>
+    </property>
+  </bean>
+
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="host" value="localhost" />
     <property name="port" value="3025"/> <!--  greenmail host and port -->
@@ -27,18 +35,24 @@
   <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
   <bean id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
   <bean id="emailUtil" class="nz.ac.auckland.cer.project.util.EmailUtil">
-    <property name="emailFrom" value="sender@test.cer.auckland.ac.nz"/>
-    <property name="emailTo" value="to@test.cer.auckland.ac.nz"/>
-    <property name="replyTo" value="replyto@test.cer.auckland.ac.nz"/>
-    <property name="projectBaseUrl" value="http://test.cer.projects.auckland.ac.nz/"/>
-    <property name="membershipRequestEmailSubject" value="New Pan cluster project membership request"/>
-    <property name="membershipRequestEmailBodyResource" value="classpath:templates/membership_request.tpl.txt"/>
-    <property name="membershipRequestProblemEmailBodyResource" value="classpath:templates/membership_request_problem.tpl.txt"/>
-    <property name="projectRequestEmailSubject" value="New Pan cluster project request"/>
-    <property name="projectRequestEmailBodyResource" value="classpath:templates/project_request.tpl.txt"/>
-    <property name="projectRequestWithSuperviserEmailBodyResource" value="classpath:templates/project_request_with_superviser.tpl.txt"/>
-    <property name="otherAffiliationEmailSubject" value="New and yet unknown affiliation in researcher profile"/>
-    <property name="otherAffiliationEmailBodyResource" value="classpath:templates/other_affiliation.tpl.txt"/>
+    <property name="emailFrom" value="${email.from}"/>
+    <property name="emailTo" value="${email.to}"/>
+    <property name="replyTo" value="${email.replyto}"/>
+    <property name="projectBaseUrl" value="${project.html.project.baseurl}"/>
+    <property name="projectRequestEmailSubject" value="${project.request.email.subject}"/>
+    <property name="projectRequestEmailBodyResource" value="${project.request.email.template.path}"/>
+    <property name="projectRequestWithSuperviserEmailBodyResource" value="${project.request.with.superviser.email.template.path}"/>
+    <property name="membershipRequestEmailSubject" value="${membership.request.email.subject}"/>
+    <property name="membershipRequestEmailBodyResource" value="${membership.request.email.template.path}"/>
+    <property name="membershipRequestProblemEmailBodyResource" value="${membership.request.problem.email.template.path}"/>
+    <property name="otherAffiliationEmailSubject" value="${other.affiliation.email.subject}"/>
+    <property name="otherAffiliationEmailBodyResource" value="${other.affiliation.email.template.path}"/>
+    <property name="newFollowUpEmailSubject" value="${project.new.followup.email.subject}"/>
+    <property name="newFollowUpEmailBodyResource" value="${project.new.followup.email.template.path}"/>
+    <property name="newResearchOutputEmailSubject" value="${project.new.researchOutput.email.subject}"/>
+    <property name="newResearchOutputEmailBodyResource" value="${project.new.researchOutput.email.template.path}"/>
+    <property name="surveyNoticeEmailSubject" value="${survey.notice.email.subject}"/>
+    <property name="surveyNoticeBodyResource" value="${survey.notice.email.template.path}"/>
   </bean>
 
   <mockito:mock id="projectDao" class="nz.ac.auckland.cer.project.dao.ProjectDatabaseDao" />

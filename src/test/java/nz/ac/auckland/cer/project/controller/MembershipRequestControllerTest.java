@@ -218,12 +218,13 @@ public class MembershipRequestControllerTest {
 
         when(projectDao.getProjectForIdOrCode(anyString())).thenReturn(this.projectWrapper);
         // add project owner but no e-mail address
+        String cc = "cc@test.cer.auckland.ac.nz";
         this.projectWrapper.setRpLinks(new LinkedList<RPLink>());
         this.projectWrapper.getRpLinks().add(new RPLink());
         this.projectWrapper.getRpLinks().get(0).setResearcherRoleId(1);
         this.projectWrapper.getRpLinks().get(0).setResearcher(new Researcher());
         this.projectWrapper.getRpLinks().get(0).getResearcher().setFullName("John Peter Doe");
-        this.projectWrapper.getRpLinks().get(0).getResearcher().setEmail("cc@test.cer.auckland.ac.nz");
+        this.projectWrapper.getRpLinks().get(0).getResearcher().setEmail(cc);
 
         RequestBuilder rb = post("/request_membership").requestAttr("person", this.person).param("projectCode",
                 mr.getProjectCode());
@@ -234,12 +235,11 @@ public class MembershipRequestControllerTest {
         assert(smtpServer.getReceivedMessages().length > 0);
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
-        assert ("sender@test.cer.auckland.ac.nz".equals(((InternetAddress) m.getFrom()[0]).toString()));
-        assert ("to@test.cer.auckland.ac.nz"
-                .equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
-        assert("cc@test.cer.auckland.ac.nz".equals(((InternetAddress) m.getRecipients(RecipientType.CC)[0]).toString()));
-        assert("replyto@test.cer.auckland.ac.nz".equals(((InternetAddress) m.getReplyTo()[0]).toString()));
-        assert("New Pan cluster project membership request".equals(m.getSubject()));
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert(cc.equals(((InternetAddress) m.getRecipients(RecipientType.CC)[0]).toString()));
+        assert(this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
+        assert(this.eu.getMembershipRequestEmailSubject().equals(m.getSubject()));
         assert(body.contains("Hi John"));
         assert(body.contains(this.project.getProjectCode()));
         assert(body.contains(this.project.getName()));
