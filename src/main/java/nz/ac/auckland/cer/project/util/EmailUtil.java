@@ -108,7 +108,7 @@ public class EmailUtil {
 		templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + projectId);
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-					null, null, this.newFollowUpEmailSubject,
+					null, this.replyTo, this.newFollowUpEmailSubject,
 					this.newFollowUpEmailBodyResource, templateParams);
 		} catch (Exception e) {
 			log.error("Failed to send new followup email.", e);
@@ -131,7 +131,7 @@ public class EmailUtil {
 		templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + projectId);
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-					null, null, this.newResearchOutputEmailSubject,
+					null, this.replyTo, this.newResearchOutputEmailSubject,
 					this.newResearchOutputEmailBodyResource, templateParams);
 		} catch (Exception e) {
 			log.error("Failed to send new followup email.", e);
@@ -150,7 +150,7 @@ public class EmailUtil {
 		templateParams.put("__RESEARCHER_EMAIL__", researcherEmail);
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-					null, null, this.otherAffiliationEmailSubject,
+					null, this.replyTo, this.otherAffiliationEmailSubject,
 					this.otherAffiliationEmailBodyResource, templateParams);
 		} catch (Exception e) {
 			log.error("Failed to send other institution email.", e);
@@ -171,7 +171,7 @@ public class EmailUtil {
 				this.projectBaseUrl + p.getProjectId());
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-					null, null, this.projectRequestEmailSubject,
+					null, this.replyTo, this.projectRequestEmailSubject,
 					this.projectRequestEmailBodyResource, templateParams);
 		} catch (Exception e) {
 			log.error("Failed to send project request email", e);
@@ -229,7 +229,7 @@ public class EmailUtil {
 
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-					null, null, this.projectRequestEmailSubject,
+					null, this.replyTo, this.projectRequestEmailSubject,
 					this.projectRequestWithSuperviserEmailBodyResource,
 					templateParams);
 		} catch (Exception e) {
@@ -293,7 +293,7 @@ public class EmailUtil {
 
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-					null, null, this.surveyNoticeEmailSubject,
+					null, this.replyTo, this.surveyNoticeEmailSubject,
 					this.surveyNoticeBodyResource, templateParams);
 		} catch (Exception e) {
 			log.error("Failed to send survey email.", e);
