@@ -23,6 +23,7 @@ import nz.ac.auckland.cer.project.pojo.Project;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.RPLink;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.util.EmailUtil;
 import nz.ac.auckland.cer.project.util.Person;
 
 import org.junit.After;
@@ -58,6 +59,7 @@ public class MembershipRequestControllerTest {
     @Autowired private ProjectDatabaseDao projectDao;
     private ProjectWrapper projectWrapper;
     @Autowired private WebApplicationContext wac;
+    @Autowired private EmailUtil eu;
     private GreenMail smtpServer;
 
     @BeforeClass
@@ -161,12 +163,11 @@ public class MembershipRequestControllerTest {
         assert(smtpServer.getReceivedMessages().length == 1);
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
-        assert ("sender@test.cer.auckland.ac.nz".equals(((InternetAddress) m.getFrom()[0]).toString()));
-        assert ("to@test.cer.auckland.ac.nz"
-                .equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
-        assert ("replyto@test.cer.auckland.ac.nz".equals(((InternetAddress) m.getReplyTo()[0]).toString()));
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
         assert (m.getRecipients(RecipientType.CC) == null);
-        assert ("New Pan cluster project membership request".equals(m.getSubject()));
+        assert (this.eu.getMembershipRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains(this.project.getProjectCode()));
         assert (body.contains(this.project.getName()));
         assert (body.contains(this.project.getDescription()));
@@ -197,12 +198,11 @@ public class MembershipRequestControllerTest {
         assert(smtpServer.getReceivedMessages().length == 1);
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
-        assert ("sender@test.cer.auckland.ac.nz".equals(((InternetAddress) m.getFrom()[0]).toString()));
-        assert ("to@test.cer.auckland.ac.nz"
-                .equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
-        assert ("replyto@test.cer.auckland.ac.nz".equals(((InternetAddress) m.getReplyTo()[0]).toString()));
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
         assert (m.getRecipients(RecipientType.CC) == null);
-        assert ("New Pan cluster project membership request".equals(m.getSubject()));
+        assert (this.eu.getMembershipRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains(this.project.getProjectCode()));
         assert (body.contains(this.project.getName()));
         assert (body.contains(this.project.getDescription()));

@@ -21,6 +21,7 @@ import nz.ac.auckland.cer.project.pojo.ProjectProperty;
 import nz.ac.auckland.cer.project.pojo.ProjectRequest;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.util.EmailUtil;
 import nz.ac.auckland.cer.project.util.Person;
 
 import org.junit.After;
@@ -58,6 +59,7 @@ public class ProjectRequestControllerTest {
     @Autowired private ProjectDatabaseDao projectDao;
     private Researcher[] researchers;
     @Autowired private WebApplicationContext wac;
+    @Autowired private EmailUtil eu;
     private GreenMail smtpServer;
 
     @Before
@@ -181,13 +183,13 @@ public class ProjectRequestControllerTest {
 
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
-        assert ("New and yet unknown affiliation in researcher profile".equals(m.getSubject()));
+        assert (this.eu.getOtherAffiliationEmailSubject().equals(m.getSubject()));
         assert (!body.contains("__"));
         assert (!body.contains("N/A"));
 
         m = smtpServer.getReceivedMessages()[1];
         body = GreenMailUtil.getBody(m);
-        assert ("New Pan cluster project request".equals(m.getSubject()));
+        assert (this.eu.getProjectRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains("Supervisor information:"));
         assert (!body.contains("__"));
         assert (!body.contains("N/A"));
@@ -221,7 +223,7 @@ public class ProjectRequestControllerTest {
         assert (smtpServer.getReceivedMessages().length == 1);
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
-        assert ("New Pan cluster project request".equals(m.getSubject()));
+        assert (this.eu.getProjectRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains("Supervisor information:"));
         assert (body.contains("The supervisor does not yet exist in the database."));
         assert (!body.contains("__"));
@@ -255,7 +257,7 @@ public class ProjectRequestControllerTest {
         assert (smtpServer.getReceivedMessages().length == 1);
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
-        assert ("New Pan cluster project request".equals(m.getSubject()));
+        assert (this.eu.getProjectRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains("Supervisor information:"));
         assert (body.contains("The supervisor already exists in the database."));
         assert (!body.contains("__"));
