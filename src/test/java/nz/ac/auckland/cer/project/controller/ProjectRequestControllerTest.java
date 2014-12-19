@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
 
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
@@ -145,6 +147,9 @@ public class ProjectRequestControllerTest {
         
         assert (smtpServer.getReceivedMessages().length == 1);
         Message m = smtpServer.getReceivedMessages()[0];
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
         assert ("New Pan cluster project request".equals(m.getSubject()));
         String body = GreenMailUtil.getBody(m);
         assert (!body.contains("__"));
@@ -183,12 +188,18 @@ public class ProjectRequestControllerTest {
 
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
         assert (this.eu.getOtherAffiliationEmailSubject().equals(m.getSubject()));
         assert (!body.contains("__"));
         assert (!body.contains("N/A"));
 
         m = smtpServer.getReceivedMessages()[1];
         body = GreenMailUtil.getBody(m);
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
         assert (this.eu.getProjectRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains("Supervisor information:"));
         assert (!body.contains("__"));
@@ -223,6 +234,9 @@ public class ProjectRequestControllerTest {
         assert (smtpServer.getReceivedMessages().length == 1);
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
         assert (this.eu.getProjectRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains("Supervisor information:"));
         assert (body.contains("The supervisor does not yet exist in the database."));
@@ -257,6 +271,9 @@ public class ProjectRequestControllerTest {
         assert (smtpServer.getReceivedMessages().length == 1);
         Message m = smtpServer.getReceivedMessages()[0];
         String body = GreenMailUtil.getBody(m);
+        assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
+        assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
+        assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
         assert (this.eu.getProjectRequestEmailSubject().equals(m.getSubject()));
         assert (body.contains("Supervisor information:"));
         assert (body.contains("The supervisor already exists in the database."));
