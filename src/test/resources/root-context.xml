@@ -26,8 +26,8 @@
   </bean>
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-    <property name="host" value="localhost" />
-    <property name="port" value="3025"/> <!--  greenmail host and port -->
+    <property name="host" value="${email.smtp.server}"/>
+    <property name="port" value="${email.smtp.port}"/> <!--  greenmail host and port -->
   </bean>
   
   <bean id="affUtil" class="nz.ac.auckland.cer.project.util.AffiliationUtil"/>
