@@ -1,0 +1,37 @@
+# project management configuration
+project.rest.baseurl=https://projects.test.nesi.org.nz:443/projectdb/rest/
+project.html.project.baseurl=https://projects.test.nesi.org.nz/nesi-config/project/
+project.researcher.initial.role.on.project.id=1
+project.rest.authz.header.value=Basic bWFydGluOmZkYXRhYmFzZQ==
+project.rest.remoteuser.header.name=RemoteUser
+project.rest.remoteuser.header.value=mfel395@auckland.ac.nz
+project.default.hostinstitution=University of Auckland
+project.jdbc.driver.className=com.mysql.jdbc.Driver
+project.jdbc.url=jdbc:mysql://projects.test.nesi.org.nz:3306/projectdb
+project.jdbc.username=certest
+project.jdbc.password=c3ntr3f0r3r3s3arch
+project.request.url=/portal/auth/project/request
+
+# email configuration
+email.smtp.server=localhost
+email.smtp.port=3025
+email.from=from@auckland.ac.nz
+email.to=to@auckland.ac.nz
+email.replyto=replyto@auckland.ac.nz
+no.account.redirect=/ceraccount/html/request_account_info
+project.request.email.subject=New Pan cluster project request
+project.request.email.template.path=classpath:templates/project_request.tpl.txt
+project.request.with.superviser.email.template.path=classpath:templates/project_request_with_superviser.tpl.txt
+project.new.followup.email.subject=New feedback of researcher on project
+project.new.followup.email.template.path=classpath:templates/new_followup.tpl.txt
+project.new.researchOutput.email.subject=New research output on project
+project.new.researchOutput.email.template.path=classpath:templates/new_research_output.tpl.txt
+membership.request.email.subject=New Pan cluster project membership request
+membership.request.email.template.path=classpath:templates/membership_request.tpl.txt
+membership.request.problem.email.template.path=classpath:templates/membership_request_problem.tpl.txt
+other.affiliation.email.subject=New and yet unknown affiliation in researcher profile
+other.affiliation.email.template.path=classpath:templates/other_affiliation.tpl.txt
+survey.notice.email.subject=Survey reply
+survey.notice.email.template.path=classpath:templates/survey_notice.tpl.txt
+
+test.identity.properties.path=file:/etc/cer_portal_test_identity.properties

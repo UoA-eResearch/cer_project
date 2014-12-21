@@ -20,7 +20,7 @@
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
       <list>
-        <value>classpath:configuration.properties.test</value>
+        <value>classpath:configuration.properties.unittest</value>
       </list>
     </property>
   </bean>
