@@ -217,7 +217,7 @@ public class MembershipRequestControllerTest {
     public void testPostSuccess() throws Exception {
 
         when(projectDao.getProjectForIdOrCode(anyString())).thenReturn(this.projectWrapper);
-        // add project owner but no e-mail address
+        // add project owner
         String cc = "cc@test.cer.auckland.ac.nz";
         this.projectWrapper.setRpLinks(new LinkedList<RPLink>());
         this.projectWrapper.getRpLinks().add(new RPLink());
