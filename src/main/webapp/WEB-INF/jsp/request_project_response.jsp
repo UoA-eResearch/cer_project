@@ -16,8 +16,10 @@
         </c:when>
         <c:otherwise>
           <p>
-            Your project request has been received and will be processed shortly.<br>
-            If we need more information, a member of our team will be in touch with you.
+            <div class="infoblock">
+              Your project request has been received and will be processed shortly.<br>
+              If we need more information, a member of our team will be in touch with you.
+            </div>
           </p>
         </c:otherwise>
       </c:choose>
