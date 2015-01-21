@@ -25,7 +25,7 @@
                   Please specify the project code of the project you want to join.
                   If in doubt, please contact the person who asked you to join.
                 </p>
-                Project code:<br><form:input path="projectCode" type="text" />
+                Project code:<br><form:input id="projectCode" path="projectCode" type="text" />
               </td>
             </tr>
           </tbody>

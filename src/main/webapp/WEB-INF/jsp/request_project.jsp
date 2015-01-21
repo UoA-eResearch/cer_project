@@ -96,19 +96,19 @@
           <tr>
             <td>
               Project title (max 160 characters):<br>
-              <form:input path="projectTitle" type="text" size="100" maxlength="160"/>
+              <form:input id="projectTitle" path="projectTitle" type="text" size="100" maxlength="160"/>
             </td>
           </tr>
           <tr>
             <td>
               Project description (500 - 2500 characters):<br>
-              <form:textarea path="projectDescription" type="text" cols="88" rows="20"/>
+              <form:textarea id="projectDescription" path="projectDescription" type="text" cols="88" rows="20"/>
             </td>
           </tr>
           <tr>
             <td>
               Field of science:<br>
-              <form:select path="scienceStudyId">
+              <form:select id="scienceStudyId" path="scienceStudyId">
                 <form:option value="-1" label="Please select"></form:option>
                 <form:options items="${scienceStudies}"/>
                 <form:option value="0" label="Other"></form:option>
@@ -131,7 +131,7 @@
             <td colspan="2">
               Please select your supervisor:<br>
               <form:hidden path="askForSuperviser" value="${projectrequest.askForSuperviser}"/>
-              <form:select path="superviserId">
+              <form:select id="superviserId" path="superviserId">
                 <form:option value="-2" label="Please select"></form:option>
                 <form:options items="${superviserDropdownMap}"/>
                 <form:option value="-1" label="Other"/>
@@ -150,25 +150,25 @@
                   <tr>
                     <td>
                       Name:<br>
-                      <form:input path="superviserName" type="text" size="50" maxlength="50"/>
+                      <form:input id="superviserName" path="superviserName" type="text" size="50" maxlength="50"/>
                     </td>
                   </tr>
                   <tr>
                     <td>
                       E-mail:<br>
-                      <form:input path="superviserEmail" type="text" size="50" maxlength="50"/>
+                      <form:input id="superviserEmail" path="superviserEmail" type="text" size="50" maxlength="50"/>
                     </td>
                   </tr>
                   <tr>
                     <td>
                       Phone:<br>
-                      <form:input path="superviserPhone" type="text" size="50" maxlength="50"/>
+                      <form:input id="superviserPhone" path="superviserPhone" type="text" size="50" maxlength="50"/>
                     </td>
                   </tr>
                   <tr>
                     <td>
                       Affiliation:<br>
-                      <form:select path="superviserAffiliation">
+                      <form:select id="superviserAffiliation" path="superviserAffiliation">
                         <form:option value="" label="Please select"></form:option>
                         <form:options items="${affiliations}"/>
                       </form:select>
@@ -181,15 +181,15 @@
                          <table cellpadding="5">
                           <tr>
                             <td>Institution:</td>
-                            <td><form:input path="superviserOtherInstitution"/></td>
+                            <td><form:input id="superviserOtherInstitution" path="superviserOtherInstitution"/></td>
                           </tr>
                           <tr>
                             <td>Division or Faculty:</td>
-                            <td><form:input path="superviserOtherDivision" /></td>
+                            <td><form:input id="superviserOtherDivision" path="superviserOtherDivision" /></td>
                           </tr>
                           <tr>
                             <td>Department:</td>
-                            <td><form:input path="superviserOtherDepartment" /></td>
+                            <td><form:input id="superviserOtherDepartment" path="superviserOtherDepartment" /></td>
                           </tr>
                         </table>
                       </div>
@@ -266,24 +266,24 @@
             <td>
               <div id="other_comp_env" style="display: none;">
                 Please specify:<br>
-                <form:input path="otherCompEnv" type="text" size="100" maxlength="100" />           
+                <form:input id="otherCompEnv" path="otherCompEnv" type="text" size="100" maxlength="100" />           
               </div>
               <div id="limitations" style="display: none;">
                 <p>Please specify your current job submission characteristics:</p>
                 <table>
                   <tbody>
                     <tr>
-                      <td valign="top">I can currently run jobs using max <form:input path="limitations.cpuCores"
+                      <td valign="top">I can currently run jobs using max <form:input id="limitations.cpuCores" path="limitations.cpuCores"
                           size="4" maxlength="4" /> CPU cores.
                       </td>
                     </tr>
                     <tr>
-                      <td valign="top">I can currently run jobs using max <form:input path="limitations.memory"
+                      <td valign="top">I can currently run jobs using max <form:input id="limitations.memory" path="limitations.memory"
                           size="4" maxlength="4" /> GB memory.
                       </td>
                     </tr>
                     <tr>
-                      <td valign="top">I can currently run max <form:input path="limitations.concurrency" size="4"
+                      <td valign="top">I can currently run max <form:input id="limitations.concurrency" path="limitations.concurrency" size="4"
                           maxlength="4" /> jobs concurrently.
                       </td>
                     </tr>
@@ -306,7 +306,7 @@
           <td valign="top">
             <form:radiobutton name="funded" path="funded" value="true" label="Yes" />
             <div id="funding_source" style="display: none;">
-              &nbsp;&nbsp; Please specify: <form:input path="fundingSource" type="text" size="80" maxlength="200"/>
+              &nbsp;&nbsp; Please specify: <form:input id="fundingSource" path="fundingSource" type="text" size="80" maxlength="200"/>
             </div>
           </td>
         </tr>
