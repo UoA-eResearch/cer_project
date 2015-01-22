@@ -16,8 +16,10 @@
         </c:when>
         <c:otherwise>
           <p>
-            Your project membership request has been received.<br>
-            A staff member of the Centre for eResearch will process the request soon.
+            <div class="infoblock">
+              Your project membership request has been received.<br>
+              A staff member of the Centre for eResearch will process the request soon.
+            </div>
           </p>
         </c:otherwise>
       </c:choose>
