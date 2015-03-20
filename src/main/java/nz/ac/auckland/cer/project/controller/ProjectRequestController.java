@@ -153,7 +153,9 @@ public class ProjectRequestController {
 		now.add(Calendar.MONTH, 3);
 		p.setNextFollowUpDate(df.format(now.getTime()));
 		now.add(Calendar.MONTH, 9);
-		p.setNextReviewDate(df.format(now.getTime()));
+		String tmpDate = df.format(now.getTime());
+		p.setNextReviewDate(tmpDate);
+		p.setEndDate(tmpDate);
 
 		pw.setProject(p);
 		pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays
