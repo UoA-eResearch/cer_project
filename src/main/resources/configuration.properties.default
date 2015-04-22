@@ -22,6 +22,7 @@ no.account.redirect=
 project.request.email.subject=
 project.request.email.template.path=
 project.request.with.superviser.email.template.path=
+project.request.superviser.notice.email.template.path=
 project.new.followup.email.subject=
 project.new.followup.email.template.path=
 project.new.researchOutput.email.subject=

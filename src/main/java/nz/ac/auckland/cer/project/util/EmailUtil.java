@@ -40,6 +40,7 @@ public class EmailUtil {
 	private Resource projectRequestEmailBodyResource;
 	private String projectRequestEmailSubject;
 	private Resource projectRequestWithSuperviserEmailBodyResource;
+	private Resource projectRequestSuperviserNoticeEmailBodyResource;
 	private String replyTo;
 	private Resource surveyNoticeBodyResource;
 	private String surveyNoticeEmailSubject;
@@ -228,6 +229,18 @@ public class EmailUtil {
 		templateParams.put("__SUPERVISER_EXTRA_INFOS__", extraInfos);
 
 		try {
+			this.templateEmail.sendFromResource(this.emailFrom,
+					templateParams.get("__SUPERVISER_EMAIL__"), null,
+					this.replyTo, this.projectRequestEmailSubject,
+					this.projectRequestSuperviserNoticeEmailBodyResource,
+					templateParams);
+			templateParams.put("__SUPERVISER_NOTIFICATION_STATUS__", "success");
+		} catch (Exception e) {
+			log.error("Failed to notify supervisor about project", e);
+			templateParams.put("__SUPERVISER_NOTIFICATION_STATUS__", "failure");
+		}
+
+		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
 					null, this.replyTo, this.projectRequestEmailSubject,
 					this.projectRequestWithSuperviserEmailBodyResource,
@@ -373,6 +386,11 @@ public class EmailUtil {
 	public void setProjectRequestEmailSubject(String projectRequestEmailSubject) {
 
 		this.projectRequestEmailSubject = projectRequestEmailSubject;
+	}
+
+	public void setProjectRequestSuperviserNoticeEmailBodyResource(
+			Resource projectRequestSuperviserNoticeEmailBodyResource) {
+		this.projectRequestSuperviserNoticeEmailBodyResource = projectRequestSuperviserNoticeEmailBodyResource;
 	}
 
 	public void setProjectRequestWithSuperviserEmailBodyResource(

@@ -1,15 +1,12 @@
-__RESEARCHER_NAME__ requested a new project to be created.
+Dear __SUPERVISER_NAME__,
+
+__RESEARCHER_NAME__ requested a new project to be created, and listed you as their supervisor.
 
 Title:
 __PROJECT_TITLE__
 
 Description:
 __PROJECT_DESCRIPTION__
-
-
-Link to newly created project in database:
-__PROJECT_LINK__
-
 
 Supervisor information:
 
@@ -22,4 +19,8 @@ Phone       : __SUPERVISER_PHONE__
 
 __SUPERVISER_EXTRA_INFOS__
 
-Supervisor notification: __SUPERVISER_NOTIFICATION_STATUS__
+If everything is in order, please ignore this email. If not, please reply to this email.
+
+Thanks,
+
+The Centre for eResearch and NeSI@Auckland support team

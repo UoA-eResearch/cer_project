@@ -42,6 +42,7 @@
     <property name="projectRequestEmailSubject" value="${project.request.email.subject}"/>
     <property name="projectRequestEmailBodyResource" value="${project.request.email.template.path}"/>
     <property name="projectRequestWithSuperviserEmailBodyResource" value="${project.request.with.superviser.email.template.path}"/>
+    <property name="projectRequestSuperviserNoticeEmailBodyResource" value="${project.request.superviser.notice.email.template.path}" />
     <property name="membershipRequestEmailSubject" value="${membership.request.email.subject}"/>
     <property name="membershipRequestEmailBodyResource" value="${membership.request.email.template.path}"/>
     <property name="membershipRequestProblemEmailBodyResource" value="${membership.request.problem.email.template.path}"/>
