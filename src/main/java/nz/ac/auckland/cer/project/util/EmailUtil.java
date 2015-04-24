@@ -40,7 +40,8 @@ public class EmailUtil {
 	private Resource projectRequestEmailBodyResource;
 	private String projectRequestEmailSubject;
 	private Resource projectRequestWithSuperviserEmailBodyResource;
-	private Resource projectRequestSuperviserNoticeEmailBodyResource;
+	private Resource projectRequestPhdSuperviserNoticeEmailBodyResource;
+	private Resource projectRequestNonPhdSuperviserNoticeEmailBodyResource;
 	private String replyTo;
 	private Resource surveyNoticeBodyResource;
 	private String surveyNoticeEmailSubject;
@@ -182,7 +183,7 @@ public class EmailUtil {
 	}
 
 	public void sendProjectRequestWithSuperviserEmail(Project p,
-			ProjectRequest pr, Researcher superviser, String researcherName)
+			ProjectRequest pr, Researcher superviser, Person r)
 			throws Exception {
 
 		Map<String, String> templateParams = new HashMap<String, String>();
@@ -222,17 +223,23 @@ public class EmailUtil {
 									.getDepartmentFromAffiliationString(pr
 											.getSuperviserAffiliation()));
 		}
-		templateParams.put("__RESEARCHER_NAME__", researcherName);
+		templateParams.put("__RESEARCHER_NAME__", r.getFullName());
 		templateParams.put("__PROJECT_TITLE__", p.getName());
 		templateParams.put("__PROJECT_DESCRIPTION__", p.getDescription());
 		templateParams.put("__PROJECT_LINK__", this.projectBaseUrl + p.getId());
 		templateParams.put("__SUPERVISER_EXTRA_INFOS__", extraInfos);
+		
+		Resource superviserNotice = this.projectRequestNonPhdSuperviserNoticeEmailBodyResource;
+
+		if (r.getInstitutionalRoleId().equals(2)) {
+			superviserNotice = this.projectRequestPhdSuperviserNoticeEmailBodyResource;
+		}
 
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom,
 					templateParams.get("__SUPERVISER_EMAIL__"), null,
 					this.replyTo, this.projectRequestEmailSubject,
-					this.projectRequestSuperviserNoticeEmailBodyResource,
+					superviserNotice,
 					templateParams);
 			templateParams.put("__SUPERVISER_NOTIFICATION_STATUS__", "success");
 		} catch (Exception e) {
@@ -388,15 +395,20 @@ public class EmailUtil {
 		this.projectRequestEmailSubject = projectRequestEmailSubject;
 	}
 
-	public void setProjectRequestSuperviserNoticeEmailBodyResource(
-			Resource projectRequestSuperviserNoticeEmailBodyResource) {
-		this.projectRequestSuperviserNoticeEmailBodyResource = projectRequestSuperviserNoticeEmailBodyResource;
-	}
-
 	public void setProjectRequestWithSuperviserEmailBodyResource(
 			Resource projectRequestWithSuperviserEmailBodyResource) {
 
 		this.projectRequestWithSuperviserEmailBodyResource = projectRequestWithSuperviserEmailBodyResource;
+	}
+
+	public void setProjectRequestPhdSuperviserNoticeEmailBodyResource(
+			Resource projectRequestPhdSuperviserNoticeEmailBodyResource) {
+		this.projectRequestPhdSuperviserNoticeEmailBodyResource = projectRequestPhdSuperviserNoticeEmailBodyResource;
+	}
+
+	public void setProjectRequestNonPhdSuperviserNoticeEmailBodyResource(
+			Resource projectRequestNonPhdSuperviserNoticeEmailBodyResource) {
+		this.projectRequestNonPhdSuperviserNoticeEmailBodyResource = projectRequestNonPhdSuperviserNoticeEmailBodyResource;
 	}
 
 	public void setReplyTo(String replyTo) {

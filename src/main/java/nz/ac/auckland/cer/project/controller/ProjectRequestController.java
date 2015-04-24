@@ -308,7 +308,7 @@ public class ProjectRequestController {
 			this.createProjectProperties(p, pr);
 			if (this.askForSuperviser(person)) {
 				this.emailUtil.sendProjectRequestWithSuperviserEmail(p, pr,
-						superviser, person.getFullName());
+						superviser, person);
 			} else {
 				this.emailUtil.sendProjectRequestEmail(p, pr,
 						person.getFullName());

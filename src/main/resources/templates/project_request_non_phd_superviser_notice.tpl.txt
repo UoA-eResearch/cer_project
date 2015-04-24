@@ -1,0 +1,34 @@
+Dear __SUPERVISER_NAME__,
+
+__RESEARCHER_NAME__ has requested a new HPC project from us, and has listed you as his or her supervisor. According to our records, __RESEARCHER_NAME__ is neither a staff member nor a PhD student. We therefore require your consent as supervisor before we act on this request.
+
+Please note that if you approve the creation of this project, we will appoint you as the project owner. This means that you will be responsible for authorising people to join the project team, you may remove people from the project team or request to close the project at any time, and you will be our principal point of contact for project administration and reporting purposes.
+
+So that __RESEARCHER_NAME__’s research progress is not unnecessarily delayed, we would appreciate your approval (preferably by replying to this message) within one week.
+
+A summary of the project profile follows for your reference.
+
+Code:
+__PROJECT_CODE__
+
+Title:
+__PROJECT_TITLE__
+
+Description:
+__PROJECT_DESCRIPTION__
+
+Supervisor information:
+
+Name        : __SUPERVISER_NAME__
+Institution : __SUPERVISER_INSTITUTION__
+Division    : __SUPERVISER_DIVISION__
+Department  : __SUPERVISER_DEPARTMENT__
+E-mail      : __SUPERVISER_EMAIL__
+Phone       : __SUPERVISER_PHONE__
+
+__SUPERVISER_EXTRA_INFOS__
+
+If you have any questions or concerns regarding this project, please feel free to contact us at support@nesi.org.nz. Otherwise, we look forward to being of service to you and __RESEARCHER_NAME__ as you pursue your research objectives.
+
+Best regards,
+The Centre for eResearch and NeSI@Auckland support team

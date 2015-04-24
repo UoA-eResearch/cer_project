@@ -1,0 +1,30 @@
+Dear __SUPERVISER_NAME__,
+
+We have created and activated a new HPC project for __RESEARCHER_NAME__, who listed you as his or her supervisor. If you have any concerns about the validity of this project, please contact us at support@nesi.org.nz.
+
+A summary of the project profile follows for your reference.
+
+Code:
+__PROJECT_CODE__
+
+Title:
+__PROJECT_TITLE__
+
+Description:
+__PROJECT_DESCRIPTION__
+
+Supervisor information:
+
+Name        : __SUPERVISER_NAME__
+Institution : __SUPERVISER_INSTITUTION__
+Division    : __SUPERVISER_DIVISION__
+Department  : __SUPERVISER_DEPARTMENT__
+E-mail      : __SUPERVISER_EMAIL__
+Phone       : __SUPERVISER_PHONE__
+
+__SUPERVISER_EXTRA_INFOS__
+
+If you have any questions or concerns regarding this project, please feel free to contact us at support@nesi.org.nz. Otherwise, we look forward to being of service to you and __RESEARCHER_NAME__ as you pursue your research objectives.
+
+Best regards,
+The Centre for eResearch and NeSI@Auckland support team
