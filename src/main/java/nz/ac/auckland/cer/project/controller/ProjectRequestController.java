@@ -150,12 +150,12 @@ public class ProjectRequestController {
 		Calendar now = Calendar.getInstance();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		p.setStartDate(df.format(now.getTime()));
-		now.add(Calendar.MONTH, 3);
-		p.setNextFollowUpDate(df.format(now.getTime()));
-		now.add(Calendar.MONTH, 9);
+		now.add(Calendar.YEAR, 1);
 		String tmpDate = df.format(now.getTime());
 		p.setNextReviewDate(tmpDate);
 		p.setEndDate(tmpDate);
+		now.add(Calendar.MONTH, -9);
+		p.setNextFollowUpDate(df.format(now.getTime()));
 
 		pw.setProject(p);
 		pw.setProjectFacilities(new LinkedList<ProjectFacility>(Arrays
