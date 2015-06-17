@@ -8,7 +8,7 @@
   <description>Web-based interface to manage projects on the Auckland NeSI cluster.</description>
   <packaging>war</packaging>
   <properties>
-    <spring.version>3.2.8.RELEASE</spring.version>
+    <spring.version>4.1.6.RELEASE</spring.version>
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.source>1.6</maven.compiler.source>
   </properties>
@@ -132,8 +132,8 @@
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
       <type>jar</type>
     </dependency>
     <dependency>
