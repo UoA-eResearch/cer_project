@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:mockito="http://www.mockito.org/spring/mockito"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.mockito.org/spring/mockito classpath:/schema/spring/mockito.xsd">
+
+  <!-- 
+    original location of mockito.xsd: http://www.mockito.org/spring/mockito https://bitbucket.org/kubek2k/springockito/raw/tip/springockito/src/main/resources/spring/mockito.xsd  
+    use local version, otherwise tests won't run without internet connection  
+  -->
+
+  <bean class="nz.ac.auckland.cer.project.controller.SurveyController"/>
+
+  <bean class="nz.ac.auckland.cer.project.util.SurveyUtil"/>
+  
+  <bean id="SurveyValidator" class="nz.ac.auckland.cer.project.validation.SurveyValidator" />
+
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/jsp/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+
+</beans>

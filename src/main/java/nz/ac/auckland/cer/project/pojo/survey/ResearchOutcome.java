@@ -8,19 +8,7 @@ import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 public class ResearchOutcome {
 
     private List<ResearchOutput> researchOutputs = new LinkedList<ResearchOutput>();
-    private Integer addResearchOutputRow = 0;
     private Integer noResearchOutput = 0;
-
-    public Integer getAddResearchOutputRow() {
-
-        return addResearchOutputRow;
-    }
-
-    public void setAddResearchOutputRow(
-            Integer addResearchOutputRow) {
-
-        this.addResearchOutputRow = addResearchOutputRow;
-    }
 
     public List<ResearchOutput> getResearchOutputs() {
 

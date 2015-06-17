@@ -2,81 +2,144 @@ package nz.ac.auckland.cer.project.pojo.survey;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
-public class BiggerTest {
+public class BaseCategoryTest {
 
-    String factor;
-    List<String> reasons;
-    Bigger bigger;
+    BaseCategory bc;
+    String templates[] = {
+        "BC n=__NUMBER__",
+        "BC n=__NUMBER__ f=__FACTOR__",
+        "BC n=__NUMBER__. __OPTIONS__",
+        "BC n=__NUMBER__ f=__FACTOR__. __OPTIONS__",
+        "__OPTIONS__",
+    };
 
     @Before
     public void setup() {
 
-        this.factor = "5";
-        this.bigger = new Bigger();
-        this.reasons = new ArrayList<String>();
-        bigger.setReasons(reasons);
-        bigger.setFactor(factor);
+    	this.bc = new BaseCategory();
     }
 
     @Test
-    public void testToString_noReason() {
+    public void testToString_noOption() {
 
-        assertNull(this.bigger.toString());
+    	bc.setTemplate(templates[0]);
+    	bc.setNumber("42");
+    	assertEquals("BC n=42.", bc.toString());
+
+    	bc.setTemplate(templates[1]);
+    	bc.setFactor("3");
+    	assertEquals("BC n=42 f=3.", bc.toString());
     }
 
     @Test
-    public void testToString_sharedMemPar() {
+    public void testToString_oneOption() {
 
-        reasons.add("moreMem");
-        assertEquals("I can run larger jobs now, up to " + factor + " times larger than before, thanks to: "
-                + bigger.moreMem + ".", bigger.toString());
+    	bc.setTemplate(templates[2]);
+    	bc.setNumber("42");
+    	bc.setOptions(new String[] { "O1" });
+    	assertEquals("BC n=42. O1.", bc.toString());
+
+    	bc.setTemplate(templates[3]);
+    	bc.setFactor("3");
+    	assertEquals("BC n=42 f=3. O1.", bc.toString());
     }
 
     @Test
-    public void testToString_distMemPar() {
+    public void testToString_twoOptions() {
 
-        reasons.add("distMemPar");
-        assertEquals("I can run larger jobs now, up to " + factor + " times larger than before, thanks to: "
-                + bigger.distMemPar + ".", bigger.toString());
+    	bc.setTemplate(templates[2]);
+    	bc.setNumber("42");
+    	bc.setOptions(new String[] { "O1", "O2" });
+    	assertEquals("BC n=42. O1. O2.", bc.toString());
+
+    	bc.setTemplate(templates[3]);
+    	bc.setFactor("3");
+    	assertEquals("BC n=42 f=3. O1. O2.", bc.toString());
     }
 
     @Test
-    public void testToString_moreDisk() {
+    public void testToString_otherOption() {
 
-        reasons.add("moreDisk");
-        assertEquals("I can run larger jobs now, up to " + factor + " times larger than before, thanks to: "
-                + bigger.moreDisk + ".", bigger.toString());
+    	bc.setTemplate(templates[2]);
+    	bc.setNumber("42");
+    	bc.setOtherReason("OR");
+    	assertEquals("BC n=42. Other: OR.", bc.toString());
+
+    	bc.setTemplate(templates[3]);
+    	bc.setFactor("3");
+    	assertEquals("BC n=42 f=3. Other: OR.", bc.toString());
     }
 
     @Test
-    public void testToString_dontKnow() {
+    public void testToString_twoOptionsAndOtherReason() {
 
-        reasons.add("dontKnow");
-        assertEquals("I can run larger jobs now, up to " + factor + " times larger than before, thanks to: "
-                + bigger.dontKnow + ".", bigger.toString());
+    	bc.setTemplate(templates[2]);
+    	bc.setNumber("42");
+    	bc.setOptions(new String[] { "O1", "O2" });
+    	bc.setOtherReason("OR");
+    	assertEquals("BC n=42. O1. O2. Other: OR.", bc.toString());
+
+    	bc.setTemplate(templates[3]);
+    	bc.setFactor("3");
+    	assertEquals("BC n=42 f=3. O1. O2. Other: OR.", bc.toString());
     }
 
     @Test
-    public void testToString_otherReason() {
-
-        bigger.setOther("because of John Doe");
-        assertEquals("I can run larger jobs now, up to " + factor
-                + " times larger than before, thanks to: because of John Doe", bigger.toString());
+    public void testToString_OptionsOnly() throws Exception {
+    	bc.setTemplate(templates[4]);
+    	bc.setFactor("3");
+    	bc.setNumber("42");
+    	bc.setOptions(new String[] { "O1", "O2" });
+    	assertEquals("O1. O2.", bc.toString());
+    	
+    	bc.setFactor(null);
+    	bc.setNumber(null);
+    	bc.setOtherReason("OR");
+    	assertEquals("O1. O2. Other: OR.", bc.toString());
     }
 
     @Test
-    public void testToString_2Reasons() {
+    public void testToString_BadReplacement() throws Exception {
+    	bc.setTemplate(templates[0]);
+    	bc.setFactor("3");
+    	assertNull(bc.toString());
+    	
+    	bc.setTemplate(templates[1]);
+    	bc.setFactor(null);
+    	bc.setNumber("42");
+    	assertNull(bc.toString());
 
-        reasons.add("moreMem");
-        reasons.add("distMemPar");
-        assertEquals("I can run larger jobs now, up to " + factor + " times larger than before, thanks to: "
-                + bigger.moreMem + ", " + bigger.distMemPar + ".", bigger.toString());
+    	bc.setTemplate(templates[4]);
+    	bc.setFactor("3");
+    	bc.setNumber("42");
+    	assertNull(bc.toString());
+    }
+
+    @Test
+    public void testHasOptions() throws Exception {
+    	bc.setOptions(null);
+    	assertFalse(bc.hasOptions());
+
+    	bc.setOptions(new String[] {});
+    	assertFalse(bc.hasOptions());
+    	
+    	bc.setOptions(new String[] { "O1" });
+    	assertTrue(bc.hasOptions());
+    	
+    	bc.setOptions(new String[] { "O1", "O2" });
+    	assertTrue(bc.hasOptions());
+    	
+    	bc.setOptions(null);
+    	assertFalse(bc.hasOptions());
+
+    	bc.setOtherReason("OR");
+    	assertTrue(bc.hasOptions());
+    	
+    	bc.setOptions(new String[] { "O1" });
+    	assertTrue(bc.hasOptions());
     }
 
 }

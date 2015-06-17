@@ -11,9 +11,9 @@ import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.RPLink;
 import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.pojo.survey.Bigger;
-import nz.ac.auckland.cer.project.pojo.survey.Faster;
-import nz.ac.auckland.cer.project.pojo.survey.More;
+import nz.ac.auckland.cer.project.pojo.survey.PerfImpBigger;
+import nz.ac.auckland.cer.project.pojo.survey.PerfImpFaster;
+import nz.ac.auckland.cer.project.pojo.survey.PerfImpMore;
 import nz.ac.auckland.cer.project.pojo.survey.Survey;
 
 import org.apache.log4j.Logger;
@@ -253,9 +253,9 @@ public class EmailUtil {
 		templateParams.put("__PROJECT_LINK__", this.projectBaseUrl
 				+ pw.getProject().getId());
 		String perfImp = "";
-		Faster faster = survey.getFaster();
-		Bigger bigger = survey.getBigger();
-		More more = survey.getMore();
+		PerfImpFaster faster = survey.getPerfImpFaster();
+		PerfImpBigger bigger = survey.getPerfImpBigger();
+		PerfImpMore more = survey.getPerfImpMore();
 		if (faster == null && bigger == null && more == null) {
 			perfImp = "N/A";
 		} else {

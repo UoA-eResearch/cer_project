@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nz.ac.auckland.cer.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.project.pojo.survey.PerfImpBigger;
+import nz.ac.auckland.cer.project.pojo.survey.PerfImpFaster;
+import nz.ac.auckland.cer.project.pojo.survey.ResearchOutcome;
 import nz.ac.auckland.cer.project.pojo.survey.Survey;
 
 import org.springframework.validation.Errors;
@@ -25,7 +28,7 @@ public class SurveyValidator implements Validator {
             Errors errors) {
 
         Survey survey = (Survey) surveyObject;
-        if (survey.getResearchOutcome().getAddResearchOutputRow() == 0) {
+        if (survey.getAddResearchOutputRow() == 0) {
             this.validatePerformanceSection(survey, surveyObject, errors);
             this.validateResearchOutcomeSection(survey, surveyObject, errors);
         }
@@ -35,35 +38,40 @@ public class SurveyValidator implements Validator {
             Survey survey,
             Object surveyObject,
             Errors errors) {
-
-        Integer noResearchOutput = survey.getResearchOutcome().getNoResearchOutput();
-        List<ResearchOutput> ros = survey.getResearchOutcome().getResearchOutputs();
-        List<ResearchOutput> tmpOutput = new LinkedList<ResearchOutput>();
-        for (ResearchOutput tmp : ros) {
-            if (tmp.getTypeId() > -1 || (tmp.getDescription() != null && tmp.getDescription().trim().length() > 0)) {
-                tmpOutput.add(tmp);
-            }
-        }
-
-        if (noResearchOutput == null || noResearchOutput == 0) {
-            if (ros == null || ros.size() == 0 || tmpOutput.size() == 0) {
-                errors.rejectValue("researchOutcome.researchOutputs", "project.survey.researchoutcome.required");
-            } else {
-                for (ResearchOutput tmp2 : tmpOutput) {
-                    if (tmp2.getTypeId() < 0) {
-                        errors.rejectValue("researchOutcome.researchOutputs",
-                                "project.survey.researchoutcome.typemissing");
-                    } else if (tmp2.getDescription() == null || tmp2.getDescription().trim().length() == 0) {
-                        errors.rejectValue("researchOutcome.researchOutputs",
-                                "project.survey.researchoutcome.descmissing");
-                    }
+    	
+    	ResearchOutcome ro = survey.getResearchOutcome();
+        if (ro == null) {
+        	errors.rejectValue("researchOutcome.researchOutputs", "project.survey.researchoutcome.required");
+        } else {
+            Integer noResearchOutput = ro.getNoResearchOutput();
+            List<ResearchOutput> ros = ro.getResearchOutputs();
+            List<ResearchOutput> tmpOutput = new LinkedList<ResearchOutput>();
+            for (ResearchOutput tmp : ros) {
+                if (tmp.getTypeId() > -1 || (tmp.getDescription() != null && tmp.getDescription().trim().length() > 0)) {
+                    tmpOutput.add(tmp);
                 }
             }
-        } else {
-            if (tmpOutput.size() > 0) {
-                errors.rejectValue("researchOutcome.researchOutputs",
-                        "project.survey.researchoutcome.ambiguous");
-            }
+
+            if (noResearchOutput == null || noResearchOutput == 0) {
+                if (ros == null || ros.size() == 0 || tmpOutput.size() == 0) {
+                    errors.rejectValue("researchOutcome.researchOutputs", "project.survey.researchoutcome.required");
+                } else {
+                    for (ResearchOutput tmp2 : tmpOutput) {
+                        if (tmp2.getTypeId() < 0) {
+                            errors.rejectValue("researchOutcome.researchOutputs",
+                                    "project.survey.researchoutcome.typemissing");
+                        } else if (tmp2.getDescription() == null || tmp2.getDescription().trim().length() == 0) {
+                            errors.rejectValue("researchOutcome.researchOutputs",
+                                    "project.survey.researchoutcome.descmissing");
+                        }
+                    }
+                }
+            } else {
+                if (tmpOutput.size() > 0) {
+                    errors.rejectValue("researchOutcome.researchOutputs",
+                            "project.survey.researchoutcome.ambiguous");
+                }
+            }        	
         }
     }
 
@@ -80,7 +88,7 @@ public class SurveyValidator implements Validator {
             } else {
                 for (String improv : survey.getImprovements()) {
                     if (improv.equals("faster")) {
-                        this.validatePerformanceFaster(survey, errors);
+                        this.validatePerfImpFaster(survey, errors);
                     } else if (improv.equals("bigger")) {
                         this.validatePerformanceBigger(survey, errors);
                     } else if (improv.equals("more")) {
@@ -94,17 +102,20 @@ public class SurveyValidator implements Validator {
     /*
      * Validate the "Faster" subsection of the Performance section of the survey
      */
-    private void validatePerformanceFaster(
+    private void validatePerfImpFaster(
             Survey survey,
             Errors errors) {
 
-        this.checkFloat("faster.factor", survey.getFaster().getFactor(),
+    	PerfImpFaster f = survey.getPerfImpFaster();
+    	if (f.getFactor().trim().isEmpty()) {
+    		errors.rejectValue("perfImpFaster.factor", "project.survey.improvements.faster.factor.required");
+    	} else {
+            this.checkFloat("perfImpFaster.factor", f.getFactor(),
                 "project.survey.improvements.faster.factor.required", "project.survey.improvements.faster.factor.nan",
-                errors);
-        String otherReason = survey.getFaster().getOther();
-        if (otherReason == null || otherReason.trim().length() == 0) {
-            ValidationUtils.rejectIfEmpty(errors, "faster.reasons",
-                    "project.survey.improvements.faster.reason.required");
+                errors);    		
+    	}
+        if (!f.hasOptions()) {
+        	errors.rejectValue("perfImpFaster.otherReason", "project.survey.improvements.faster.option.required");
         }
     }
 
@@ -115,13 +126,12 @@ public class SurveyValidator implements Validator {
             Survey survey,
             Errors errors) {
 
-        this.checkFloat("bigger.factor", survey.getBigger().getFactor(),
-                "project.survey.improvements.bigger.factor.required", "project.survey.improvements.bigger.factor.nan",
+    	PerfImpBigger b = survey.getPerfImpBigger();
+        this.checkFloat("perfImpBigger.factor", b.getFactor(),
+        		"project.survey.improvements.bigger.factor.required", "project.survey.improvements.bigger.factor.nan",
                 errors);
-        String otherReason = survey.getBigger().getOther();
-        if (otherReason == null || otherReason.trim().length() == 0) {
-            ValidationUtils.rejectIfEmpty(errors, "bigger.reasons",
-                    "project.survey.improvements.bigger.reason.required");
+        if (!b.hasOptions()) {
+        	errors.rejectValue("perfImpBigger.otherReason", "project.survey.improvements.bigger.option.required");
         }
     }
 
@@ -132,10 +142,10 @@ public class SurveyValidator implements Validator {
             Survey survey,
             Errors errors) {
 
-        this.checkInteger("more.number", survey.getMore().getNumber(),
+        this.checkInteger("perfImpMore.number", survey.getPerfImpMore().getNumber(),
                 "project.survey.improvements.more.number.required", "project.survey.improvements.more.number.nan",
                 errors);
-        this.checkFloat("more.factor", survey.getMore().getFactor(),
+        this.checkFloat("perfImpMore.factor", survey.getPerfImpMore().getFactor(),
                 "project.survey.improvements.more.factor.required", "project.survey.improvements.more.factor.nan",
                 errors);
     }

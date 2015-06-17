@@ -16,9 +16,11 @@
         </c:when>
         <c:otherwise>
           <p>
-            Thanks for taking the time to participate in our survey.<br>
-            The feedback you have provided has been received and will be processed shortly.<br>
-            If we need more information, a member of our team will be in touch with you.
+            <div class="infoblock">
+              Thanks for taking the time to participate in our survey.<br>
+              The feedback you have provided has been received and will be processed shortly.<br>
+              If we need more information, a member of our team will be in touch with you.
+            </div>
           </p>
         </c:otherwise>
       </c:choose>

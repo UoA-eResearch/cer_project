@@ -4,101 +4,107 @@ import java.util.List;
 
 public class Survey {
 
-    private String projectCode;
-    private List<String> improvements;
-    private Faster faster;
-    private Bigger bigger;
-    private More more;
-    private FutureNeeds futureNeeds;
-    private Feedback feedback;
-    private ResearchOutcome researchOutcome;
+	private Integer addResearchOutputRow = 0;
+	private String projectCode;
+	private List<String> improvements;
+	private PerfImpFaster perfImpFaster;
+	private PerfImpBigger perfImpBigger;
+	private PerfImpMore perfImpMore;
+	private FutureNeeds futureNeeds;
+	private Feedback feedback;
+	private ResearchOutcome researchOutcome;
 
-    public Faster getFaster() {
+	public Survey() {
+		this.perfImpBigger = new PerfImpBigger();
+		this.perfImpFaster = new PerfImpFaster();
+		this.perfImpMore = new PerfImpMore();
+		this.futureNeeds = new FutureNeeds();
+		this.feedback = new Feedback();
+		this.researchOutcome = new ResearchOutcome();
+	}
+	
+	public PerfImpFaster getPerfImpFaster() {
+		return perfImpFaster;
+	}
 
-        return faster;
-    }
+	public void setPerfImpFaster(PerfImpFaster perfImpFaster) {
+		this.perfImpFaster = perfImpFaster;
+	}
 
-    public void setFaster(
-            Faster faster) {
+	public PerfImpBigger getPerfImpBigger() {
+		return perfImpBigger;
+	}
 
-        this.faster = faster;
-    }
+	public void setPerfImpBigger(PerfImpBigger perfImpBigger) {
+		this.perfImpBigger = perfImpBigger;
+	}
 
-    public Bigger getBigger() {
+	public PerfImpMore getPerfImpMore() {
+		return perfImpMore;
+	}
 
-        return bigger;
-    }
+	public void setPerfImpMore(PerfImpMore perfImpMore) {
+		this.perfImpMore = perfImpMore;
+	}
 
-    public void setBigger(
-            Bigger bigger) {
+	public List<String> getImprovements() {
 
-        this.bigger = bigger;
-    }
+		return improvements;
+	}
 
-    public More getMore() {
+	public void setImprovements(List<String> improvements) {
 
-        return more;
-    }
+		this.improvements = improvements;
+	}
 
-    public void setMore(
-            More more) {
+	public String getProjectCode() {
 
-        this.more = more;
-    }
+		return projectCode;
+	}
 
-    public List<String> getImprovements() {
+	public void setProjectCode(String projectCode) {
 
-        return improvements;
-    }
+		this.projectCode = projectCode;
+	}
 
-    public void setImprovements(
-            List<String> improvements) {
+	public FutureNeeds getFutureNeeds() {
 
-        this.improvements = improvements;
-    }
+		return futureNeeds;
+	}
 
-    public String getProjectCode() {
+	public void setFutureNeeds(FutureNeeds futureNeeds) {
 
-        return projectCode;
-    }
+		this.futureNeeds = futureNeeds;
+	}
 
-    public void setProjectCode(
-            String projectCode) {
+	public Feedback getFeedback() {
 
-        this.projectCode = projectCode;
-    }
+		return feedback;
+	}
 
-    public FutureNeeds getFutureNeeds() {
+	public void setFeedback(Feedback feedback) {
 
-        return futureNeeds;
-    }
+		this.feedback = feedback;
+	}
 
-    public void setFutureNeeds(
-            FutureNeeds futureNeeds) {
+	public ResearchOutcome getResearchOutcome() {
 
-        this.futureNeeds = futureNeeds;
-    }
+		return researchOutcome;
+	}
 
-    public Feedback getFeedback() {
+	public void setResearchOutcome(ResearchOutcome researchOutcome) {
 
-        return feedback;
-    }
+		this.researchOutcome = researchOutcome;
+	}
 
-    public void setFeedback(
-            Feedback feedback) {
+	public Integer getAddResearchOutputRow() {
 
-        this.feedback = feedback;
-    }
+		return addResearchOutputRow;
+	}
 
-    public ResearchOutcome getResearchOutcome() {
+	public void setAddResearchOutputRow(Integer addResearchOutputRow) {
 
-        return researchOutcome;
-    }
-
-    public void setResearchOutcome(
-            ResearchOutcome researchOutcome) {
-
-        this.researchOutcome = researchOutcome;
-    }
+		this.addResearchOutputRow = addResearchOutputRow;
+	}
 
 }

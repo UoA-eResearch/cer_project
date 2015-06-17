@@ -44,6 +44,8 @@
     <property name="prefix" value="/WEB-INF/jsp/" />
     <property name="suffix" value=".jsp" />
   </bean>
+
+  <bean id="SurveyUtil" class="nz.ac.auckland.cer.project.util.SurveyUtil"/>
   
   <bean id="AdminFilter" class="nz.ac.auckland.cer.project.filter.AdminFilter"/>
   

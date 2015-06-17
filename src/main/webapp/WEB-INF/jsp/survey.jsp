@@ -17,12 +17,12 @@
         	if ($("#improv_" + prop).is(':checked')) {
                 $('#improv_same').removeAttr('checked');
                 $(div_name).fadeTo("fast",1.0);
-                $(div_name).find('input, textarea, select').prop("disabled", false);
+                $(div_name).find('textarea,:text,:checkbox').prop("disabled", false);
             } else {
-                $(div_name).fadeTo("fast",0.2);
-                $(div_name).find('input, textarea, select').prop("disabled", true);
-                $(div_name).find('input, textarea').val('');
-                $(div_name).find('input, textarea, select').removeAttr('checked');
+                $(div_name).fadeTo("fast", 0.2);
+                $(div_name).find('textarea,:text,:checkbox').prop("disabled", true);
+                $(div_name).find('textarea,:text').val('');
+                $(div_name).find(':checkbox').removeAttr('checked');
             }    	
         }
         
@@ -121,7 +121,7 @@
       
         <form:errors path="*" cssClass="errorblock" element="div" />
         <form:hidden path="projectCode"/>
-        <form:hidden id="addResearchOutputRow" path="researchOutcome.addResearchOutputRow"/>
+        <form:hidden id="addResearchOutputRow" path="addResearchOutputRow"/>
       
         <!-- Performance Improvements -->
         <div class="survey-section">
@@ -142,19 +142,17 @@
               <div id="faster_div">
                 <hr>
                 <p>
-                  My jobs run <form:input path="faster.factor" size="5" maxlength="5"/> times faster
+                  My jobs run <form:input path="perfImpFaster.factor" size="5" maxlength="5"/> times faster
                   than before, thanks to:
                 </p>
                 <p>
-                  <form:checkbox path="faster.reasons" value="sharedMemPar" label="Shared memory parallelisation"/><br/>
-                  <form:checkbox path="faster.reasons" value="distMemPar" label="Distributed memory parallelisation"/><br/>
-                  <form:checkbox path="faster.reasons" value="algorithmOptimisation" label="Algorithmic improvements to my software"/><br/>
-                  <form:checkbox path="faster.reasons" value="buildOptimisation" label="Compile-time optimization of my software"/><br/>
-                  <form:checkbox path="faster.reasons" value="dontKnow" label="I don't know and need help figuring out why"/><br/>
-                  <p>
-                    Other reason:<br/>
-                    <form:textarea path="faster.other" rows="3" cols="40"/>
-                  </p>
+                  <form:checkboxes items="${survey.perfImpFaster.optionStrings}" 
+                                   path="perfImpFaster.options" 
+                                   delimiter="<br/>"/>
+                </p>
+                <p>
+                  Other reason:<br/>
+                  <form:textarea path="perfImpFaster.otherReason" rows="3" cols="40"/>
                 </p>
               </div>
             </td>
@@ -164,18 +162,17 @@
               <div id="bigger_div">
                 <hr>
                 <p>
-                  I can run larger jobs now, up to <form:input path="bigger.factor" size="5" maxlength="5"/> times
+                  I can run larger jobs now, up to <form:input path="perfImpBigger.factor" size="5" maxlength="5"/> times
                   larger than before, thanks to:
                 </p>
                 <p>
-                  <form:checkbox path="bigger.reasons" value="moreMem" label="More memory available"/><br/>
-                  <form:checkbox path="bigger.reasons" value="distMemPar" label="Distributed memory parallelisation"/><br/>
-                  <form:checkbox path="bigger.reasons" value="moreDisk" label="More disk space"/><br/>
-                  <form:checkbox path="bigger.reasons" value="dontKnow" label="I don't know and need help figuring out why"/><br/>
-                  <p>
+                  <form:checkboxes items="${survey.perfImpBigger.optionStrings}" 
+                                   path="perfImpBigger.options" 
+                                   delimiter="<br/>"/>
+                </p>
+                <p>
                     Other reason:<br/>
-                    <form:textarea path="bigger.other" rows="3" cols="40"/>
-                  </p>
+                    <form:textarea path="perfImpBigger.otherReason" rows="3" cols="40"/>
                 </p>
               </div>
             </td>
@@ -185,13 +182,12 @@
               <div id="more_div">
                 <hr>
                 <p>
-                  I can run up to <form:input path="more.number" size="5" maxlength="5"/> jobs
-                  at the same time, which is <form:input path="more.factor" size="5" maxlength="5"/>
+                  I can run up to <form:input path="perfImpMore.number" size="5" maxlength="5"/> jobs
+                  at the same time, which is <form:input path="perfImpMore.factor" size="5" maxlength="5"/>
                   times more concurrent jobs than before
                 </p>
               </div>
             </td>
-      
           </tr>
       
           <tr>
@@ -233,7 +229,7 @@
           </c:forEach>
           <tr>
             <td colspan="2">
-              <form:input id="doAddResearchOutputRow" path="researchOutcome.addResearchOutputRow" type="submit" value="Add new blank row to add more research outputs"/>
+              <form:input id="doAddResearchOutputRow" path="addResearchOutputRow" type="submit" value="Add new blank row to add more research outputs"/>
             </td>
           </tr>
           <tr>
@@ -285,20 +281,13 @@
             <tr>
               <td valign="top">
                 <p>
-                  <form:checkbox path="futureNeeds.comments" value="moreCpus" label="More CPU cores per machine to run larger multi-threaded jobs"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="fastInterconnect" label="Fast interconnect between the machines for my MPI jobs"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="moreGpus" label="More GPUs"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="morePhis" label="More Intel Xeon Phi's"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="moreMemory" label="More memory per machine"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="moreDisk" label="More disk space"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="shorterWaitTimes" label="Shorter wait times"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="moreScalingAdvice" label="Advice on how to parallelise/scale/tune my software"/><br/>
-                  <form:checkbox path="futureNeeds.comments" value="moreSupport" label="More general support around the cluster"/>
+                  <form:checkboxes items="${survey.futureNeeds.optionStrings}"
+                                   path="futureNeeds.options"
+                                   delimiter="<br/>"/>
                 </p>
-            
                 <p>
                   Other:<br/>
-                  <form:textarea path="futureNeeds.other" rows="5" cols="100"/>
+                  <form:textarea path="futureNeeds.otherReason" rows="5" cols="100"/>
                 </p>
               </td>
             </tr>
