@@ -52,11 +52,12 @@ public class RequestLogger implements Filter {
 			BufferedResponseWrapper bufferedResponse = new BufferedResponseWrapper(
 					httpServletResponse);
 
+			String path = httpServletRequest.getPathInfo();
 			final StringBuilder logMessage = new StringBuilder(
 					"REST Request - ").append("[HTTP METHOD:")
 					.append(httpServletRequest.getMethod())
 					.append("] [PATH INFO:")
-					.append(httpServletRequest.getPathInfo())
+					.append(path)
 					.append("] [REQUEST PARAMETERS:").append(requestParams)
 					.append("] [REQUEST BODY:")
 					.append(bufferedReqest.getRequestBody())
@@ -64,7 +65,9 @@ public class RequestLogger implements Filter {
 					.append(httpServletRequest.getRemoteAddr()).append("]");
 
 			chain.doFilter(bufferedReqest, bufferedResponse);
-			logger.warn(logMessage);
+			if (path.contains("survey")) {
+				logger.warn(logMessage);				
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
