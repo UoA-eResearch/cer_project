@@ -9,11 +9,7 @@ import nz.ac.auckland.cer.project.pojo.Project;
 import nz.ac.auckland.cer.project.pojo.ProjectRequest;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.RPLink;
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.pojo.survey.PerfImpBigger;
-import nz.ac.auckland.cer.project.pojo.survey.PerfImpFaster;
-import nz.ac.auckland.cer.project.pojo.survey.PerfImpMore;
 import nz.ac.auckland.cer.project.pojo.survey.Survey;
 
 import org.apache.log4j.Logger;
@@ -24,6 +20,8 @@ public class EmailUtil {
 
 	@Autowired
 	private AffiliationUtil affUtil;
+	@Autowired
+	private SurveyUtil surveyUtil;
 	private String emailFrom;
 	private String emailTo;
 	private final Logger log = Logger.getLogger(EmailUtil.class.getName());
@@ -252,44 +250,10 @@ public class EmailUtil {
 				.getDescription());
 		templateParams.put("__PROJECT_LINK__", this.projectBaseUrl
 				+ pw.getProject().getId());
-		String perfImp = "";
-		PerfImpFaster faster = survey.getPerfImpFaster();
-		PerfImpBigger bigger = survey.getPerfImpBigger();
-		PerfImpMore more = survey.getPerfImpMore();
-		if (faster == null && bigger == null && more == null) {
-			perfImp = "N/A";
-		} else {
-			if (faster != null) {
-				perfImp += faster.toString() + " ";
-			}
-			if (bigger != null) {
-				perfImp += bigger.toString() + " ";
-			}
-			if (more != null) {
-				perfImp += more.toString();
-			}
-		}
-		templateParams.put("__PERFORMANCE_IMPROVEMENTS__", perfImp);
-		templateParams.put("__FUTURE_NEEDS__", survey.getFutureNeeds()
-				.toString());
-		String tmp = "";
-		Integer noResearchOutput = survey.getResearchOutcome()
-				.getNoResearchOutput();
-		if (noResearchOutput != null && noResearchOutput > 0) {
-			tmp = "N/A";
-		} else {
-			for (ResearchOutput ro : survey.getResearchOutcome()
-					.getResearchOutputs()) {
-				if (ro.getDescription() != null
-						&& !ro.getDescription().trim().isEmpty()) {
-					tmp += ro.getDescription()
-							+ System.getProperty("line.separator")
-							+ System.getProperty("line.separator");
-				}
-			}
-		}
-		templateParams.put("__RESEARCH_OUTCOME__", tmp.trim());
-		templateParams.put("__FEEDBACK__", survey.getFeedback().toString());
+
+		String surveyString = surveyUtil.createSurveyString(survey);
+	    surveyString = surveyString.replace("<br>", System.getProperty("line.separator"));
+		templateParams.put("__SURVEY_STRING__", surveyString);
 
 		try {
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,

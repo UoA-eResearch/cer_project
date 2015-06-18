@@ -1,11 +1,17 @@
 package nz.ac.auckland.cer.project.util;
 
 import static org.junit.Assert.*;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.survey.Feedback;
 import nz.ac.auckland.cer.project.pojo.survey.FutureNeeds;
 import nz.ac.auckland.cer.project.pojo.survey.PerfImpBigger;
 import nz.ac.auckland.cer.project.pojo.survey.PerfImpFaster;
 import nz.ac.auckland.cer.project.pojo.survey.PerfImpMore;
+import nz.ac.auckland.cer.project.pojo.survey.ResearchOutcome;
 import nz.ac.auckland.cer.project.pojo.survey.Survey;
 import nz.ac.auckland.cer.project.util.SurveyUtil;
 
@@ -14,7 +20,7 @@ import org.junit.Test;
 
 public class SurveyUtilTest {
 
-	String templates[] = {
+	String bcTemplates[] = {
 	    "BC n=__NUMBER__",
 	    "BC n=__NUMBER__ f=__FACTOR__",
 	    "BC n=__NUMBER__. __OPTIONS__",
@@ -28,9 +34,15 @@ public class SurveyUtilTest {
 	PerfImpMore pim;
 	Feedback fb;
 	FutureNeeds fn;
+	ResearchOutcome roc;
 	Survey s;
 	SurveyUtil su;
-	String template = "PI:<br>__PI__<br>FN:<br>__FN__<br>FB:<br>__FB__";
+	String piTemplate = "PI:<br>__PI__";
+	String fnTemplate = "FN:<br>__FN__";
+	String fbTemplate = "FB:<br>__FB__";
+	String roTemplate = "RO:<br>__RO__";
+	String fuTemplate = "__PI__<br>__FN__<br>__FB__";
+	String surveyTemplate = fuTemplate + "<br>__RO__";
 	
     @Before
     public void setup() {
@@ -40,92 +52,130 @@ public class SurveyUtilTest {
     	this.pim = new PerfImpMore();
     	this.fb = new Feedback();
     	this.fn = new FutureNeeds();
+    	this.roc = new ResearchOutcome();
         this.s = new Survey();
 		this.s.setPerfImpFaster(pif);
 		this.s.setPerfImpBigger(pib);
 		this.s.setPerfImpMore(pim);
         this.s.setFeedback(fb);
+        this.s.setResearchOutcome(roc);
         this.s.setFutureNeeds(fn);
         this.su = new SurveyUtil();
-        this.su.template = this.template;
+        this.su.piTemplate = piTemplate;
+        this.su.fnTemplate = fnTemplate;
+        this.su.fbTemplate = fbTemplate;
+        this.su.fuTemplate = fuTemplate;
+        this.su.roTemplate = roTemplate;
+        this.su.surveyTemplate = surveyTemplate;
     }
 
 	@Test
-	public void testGetFeedbackFromSurvey_null() throws Exception {
-		assertEquals(su.getFeedbackFromSurvey(null), "N/A");
-	}
-
-	@Test
-	public void testGetFeedbackFromSurvey_emptySurvey() throws Exception {
-		assertEquals("PI:<br>N/A<br>FN:<br>N/A<br>FB:<br>N/A",
-			su.getFeedbackFromSurvey(s));
-	}
-
-	@Test
-	public void testGetFeedbackFromSurvey_1BC() throws Exception {
-		pif.setTemplate(templates[2]);
+	public void testCreatePiString() throws Exception {
+		assertEquals("PI:<br>N/A", su.createPiString(null));
+		assertEquals("PI:<br>N/A", su.createPiString(s));
+		pif.setTemplate(bcTemplates[2]);
 		pif.setNumber("42");
 		pif.setOptions(new String[] {"O1"});
 		pif.setOtherReason("OR");
-		assertEquals("PI:<br>BC n=42. O1. Other: OR.<br>FN:<br>N/A<br>FB:<br>N/A", 
-				su.getFeedbackFromSurvey(s));
-	}
-
-	@Test
-	public void testGetFeedbackFromSurvey_2BC() throws Exception {
-		pif.setTemplate(templates[2]);
-		pif.setNumber("17");
-		pif.setOptions(new String[] { "O1" });
-		pif.setOtherReason("OR");
-		pim.setTemplate(templates[5]);
+		assertEquals("PI:<br>BC n=42. O1. Other: OR.", su.createPiString(s));
+		
+		pim.setTemplate(bcTemplates[5]);
 		pim.setNumber("42");
 		pim.setFactor("43");
-		assertEquals(
-				"PI:<br>BC n=17. O1. Other: OR. BC n=42 f=43.<br>FN:<br>N/A<br>FB:<br>N/A",
-				su.getFeedbackFromSurvey(s));
+		assertEquals("PI:<br>BC n=42. O1. Other: OR. BC n=42 f=43.", su.createPiString(s));
+
 	}
 
 	@Test
-	public void testGetFeedbackFromSurvey_3BC() throws Exception {
-		pif.setTemplate(templates[2]);
-		pif.setNumber("17");
-		pif.setOptions(new String[] { "O1" });
-		pif.setOtherReason("OR");
-		pib.setTemplate(templates[0]);
-		pib.setNumber("13");
-		pim.setTemplate(templates[5]);
-		pim.setNumber("42");
-		pim.setFactor("43");
-		assertEquals(
-				"PI:<br>BC n=17. O1. Other: OR. BC n=13. BC n=42 f=43.<br>FN:<br>N/A<br>FB:<br>N/A",
-				su.getFeedbackFromSurvey(s));
-	}
-
-	@Test
-	public void testGetFeedbackFromSurvey_Feedback() throws Exception {
-		fb.setFeedback("My feedback");
-		assertEquals("PI:<br>N/A<br>FN:<br>N/A<br>FB:<br>My feedback", 
-				su.getFeedbackFromSurvey(s));
-	}
-
-	@Test
-	public void testGetFeedbackFromSurvey_FutureNeeds() throws Exception {
+	public void testCreateFnString() throws Exception {
+		assertEquals("FN:<br>N/A", su.createFnString(null));
+		assertEquals("FN:<br>N/A", su.createFnString(s));
 		fn.setOptions(new String[] { "O1", "O2" });
 		fn.setOtherReason("OR");
-		assertEquals("PI:<br>N/A<br>FN:<br>O1. O2. Other: OR.<br>FB:<br>N/A", 
-				su.getFeedbackFromSurvey(s));
+		assertEquals("FN:<br>O1. O2. Other: OR.", su.createFnString(s));
 	}
 
 	@Test
-	public void testGetFeedbackFromSurvey_All() throws Exception {
-		pif.setTemplate(templates[2]);
-		pif.setNumber("17");
-		pif.setOptions(new String[] { "O1" });
-		pif.setOtherReason("OR");
+	public void testCreateFbString() throws Exception {
+		assertEquals("FB:<br>N/A", su.createFbString(null));
+		assertEquals("FB:<br>N/A", su.createFbString(s));
 		fb.setFeedback("My feedback");
+		assertEquals("FB:<br>My feedback", su.createFbString(s));
+	}
+
+	@Test
+	public void testCreateRoString() throws Exception {
+		assertEquals("RO:<br>N/A", su.createRoString(null));
+		assertEquals("RO:<br>N/A", su.createRoString(s));
+		List<ResearchOutput> ros = new LinkedList<ResearchOutput>();
+		roc.setResearchOutputs(ros);
+		assertEquals("RO:<br>N/A", su.createRoString(s));
+		ResearchOutput ro1 = new ResearchOutput();
+		ro1.setTypeId(1);
+		ro1.setDescription("My Book");
+		ros.add(ro1);
+		assertEquals("RO:<br>My Book (typeId=1)<br>", su.createRoString(s));
+		ResearchOutput ro2 = new ResearchOutput();
+		ro2.setTypeId(3);
+		ro2.setDescription("A poster");
+		ros.add(ro2);
+		assertEquals("RO:<br>My Book (typeId=1)<br>A poster (typeId=3)<br>", su.createRoString(s));
+	}
+
+	@Test
+	public void testCreateFollowUpString() throws Exception {
+		assertEquals("PI:<br>N/A<br>FN:<br>N/A<br>FB:<br>N/A", su.createFollowUpString(null));
+		assertEquals("PI:<br>N/A<br>FN:<br>N/A<br>FB:<br>N/A", su.createFollowUpString(s));
+		pim.setTemplate(bcTemplates[5]);
+		pim.setNumber("42");
+		pim.setFactor("43");
+		assertEquals("PI:<br>BC n=42 f=43.<br>FN:<br>N/A<br>FB:<br>N/A", 
+			su.createFollowUpString(s));
+		
 		fn.setOptions(new String[] { "O1", "O2" });
-		assertEquals("PI:<br>BC n=17. O1. Other: OR.<br>FN:<br>O1. O2.<br>FB:<br>My feedback",
-				su.getFeedbackFromSurvey(s));
+		fn.setOtherReason("OR");
+		assertEquals("PI:<br>BC n=42 f=43.<br>FN:<br>O1. O2. Other: OR.<br>FB:<br>N/A", 
+				su.createFollowUpString(s));
+
+		fb.setFeedback("My feedback");
+		assertEquals("PI:<br>BC n=42 f=43.<br>FN:<br>O1. O2. Other: OR.<br>FB:<br>My feedback", 
+				su.createFollowUpString(s));		
+	}
+	
+	@Test
+	public void testCreateSurveyString() throws Exception {
+		assertEquals("PI:<br>N/A<br>FN:<br>N/A<br>FB:<br>N/A<br>RO:<br>N/A",
+				su.createSurveyString(null));
+		assertEquals("PI:<br>N/A<br>FN:<br>N/A<br>FB:<br>N/A<br>RO:<br>N/A",
+				su.createSurveyString(s));
+		pim.setTemplate(bcTemplates[5]);
+		pim.setNumber("42");
+		pim.setFactor("43");
+		assertEquals("PI:<br>BC n=42 f=43.<br>FN:<br>N/A<br>FB:<br>N/A<br>RO:<br>N/A", 
+			su.createSurveyString(s));
+		
+		fn.setOptions(new String[] { "O1", "O2" });
+		fn.setOtherReason("OR");
+		assertEquals("PI:<br>BC n=42 f=43.<br>FN:<br>O1. O2. Other: OR.<br>FB:<br>N/A<br>RO:<br>N/A", 
+				su.createSurveyString(s));
+
+		fb.setFeedback("My feedback");
+		assertEquals("PI:<br>BC n=42 f=43.<br>FN:<br>O1. O2. Other: OR.<br>FB:<br>My feedback<br>RO:<br>N/A", 
+				su.createSurveyString(s));
+		
+		List<ResearchOutput> ros = new LinkedList<ResearchOutput>();
+		roc.setResearchOutputs(ros);
+		ResearchOutput ro1 = new ResearchOutput();
+		ResearchOutput ro2 = new ResearchOutput();
+		ro1.setTypeId(1);
+		ro1.setDescription("My Book");
+		ro2.setTypeId(null);
+		ro2.setDescription("A poster");
+		ros.add(ro1);
+		ros.add(ro2);
+		assertEquals("PI:<br>BC n=42 f=43.<br>FN:<br>O1. O2. Other: OR.<br>FB:<br>My feedback<br>" +
+				"RO:<br>My Book (typeId=1)<br>A poster (typeId=null)<br>",
+				su.createSurveyString(s));
 	}
 	
 }

@@ -14,7 +14,6 @@ import nz.ac.auckland.cer.project.pojo.FollowUp;
 import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
 import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
-import nz.ac.auckland.cer.project.pojo.survey.PerfImpBigger;
 import nz.ac.auckland.cer.project.pojo.survey.ResearchOutcome;
 import nz.ac.auckland.cer.project.pojo.survey.Survey;
 import nz.ac.auckland.cer.project.util.EmailUtil;
@@ -53,10 +52,10 @@ public class SurveyController {
 		String dateString = new SimpleDateFormat("yyyy-MM-dd")
 				.format(new Date());
 
-		String feedback = surveyUtil.getFeedbackFromSurvey(survey);
+		String notes = surveyUtil.createFollowUpString(survey);
 		FollowUp fu = new FollowUp();
 		fu.setResearcherId(person.getId());
-		fu.setNotes(feedback);
+		fu.setNotes(notes);
 		fu.setProjectId(pw.getProject().getId());
 		fu.setDate(dateString);
 		this.projectDao.addOrUpdateFollowUp(fu);

@@ -79,6 +79,8 @@
   <bean id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
 
   <bean id="auditUtil" class="nz.ac.auckland.cer.project.util.AuditUtil" />
+
+  <bean id="surveyUtil" class="nz.ac.auckland.cer.project.util.SurveyUtil" />
   
   <bean id="emailUtil" class="nz.ac.auckland.cer.project.util.EmailUtil">
     <property name="emailFrom" value="${email.from}"/>

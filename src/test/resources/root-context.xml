@@ -34,6 +34,7 @@
   <bean id="templateUtil" class="nz.ac.auckland.cer.common.util.TemplateUtil" />
   <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
   <bean id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
+  <bean id="surveyUtil" class="nz.ac.auckland.cer.project.util.SurveyUtil" />
   <bean id="emailUtil" class="nz.ac.auckland.cer.project.util.EmailUtil">
     <property name="emailFrom" value="${email.from}"/>
     <property name="emailTo" value="${email.to}"/>

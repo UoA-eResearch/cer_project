@@ -16,28 +16,7 @@ __PROJECT_DESCRIPTION__
 Survey:
 =======
 
-1. Performance Improvements:
-
-__PERFORMANCE_IMPROVEMENTS__
-
-
-
-2. Research Outcomes:
-
-__RESEARCH_OUTCOME__
-
-
-
-3. Anticipated Future Needs (optional):
-
-__FUTURE_NEEDS__
-
-
-
-4. Feedback (optional):
-
-__FEEDBACK__
-
+__SURVEY_STRING__
 
 
 Link to project in database:
