@@ -8,7 +8,7 @@ import nz.ac.auckland.cer.project.pojo.ResearchOutput;
 public class ResearchOutcome {
 
     private List<ResearchOutput> researchOutputs = new LinkedList<ResearchOutput>();
-    private Integer noResearchOutput = 0;
+    private Boolean hasNoResearchOutput = false;
 
     public List<ResearchOutput> getResearchOutputs() {
 
@@ -21,15 +21,15 @@ public class ResearchOutcome {
         this.researchOutputs = researchOutputs;
     }
 
-    public Integer getNoResearchOutput() {
+    public Boolean getHasNoResearchOutput() {
 
-        return noResearchOutput;
+        return hasNoResearchOutput;
     }
 
-    public void setNoResearchOutput(
-            Integer noResearchOutput) {
+    public void setHasNoResearchOutput(
+            Boolean hasNoResearchOutput) {
 
-        this.noResearchOutput = noResearchOutput;
+        this.hasNoResearchOutput = hasNoResearchOutput;
     }
 
 }

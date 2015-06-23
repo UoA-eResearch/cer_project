@@ -107,17 +107,17 @@ public class SurveyUtil {
 	public String createRoString(Survey s) {
 
 		StringBuilder sb = new StringBuilder();
-		if (s == null || s.getResearchOutcome() == null) {
+		if (s == null || s.getResearchOutcome() == null || s.getResearchOutcome().getHasNoResearchOutput()) {
 			sb.append("N/A");
 		} else {
 			ResearchOutcome roc = s.getResearchOutcome();
 			List<ResearchOutput> l = roc.getResearchOutputs();
-			if (l == null || l.isEmpty()) {
+			if (l == null || l.isEmpty() ) {
 				sb.append("N/A");
 			} else {
 				for (ResearchOutput ro: l) {
 					sb.append(ro.getDescription()).append(" (typeId=")
-					  .append(ro.getTypeId()).append(")<br>");
+					  .append(ro.getTypeId()).append(")<br>");						
 				}
 			}
 		}

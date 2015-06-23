@@ -43,7 +43,7 @@ public class SurveyValidator implements Validator {
         if (ro == null) {
         	errors.rejectValue("researchOutcome.researchOutputs", "project.survey.researchoutcome.required");
         } else {
-            Integer noResearchOutput = ro.getNoResearchOutput();
+            Boolean hasNoResearchOutput = ro.getHasNoResearchOutput();
             List<ResearchOutput> ros = ro.getResearchOutputs();
             List<ResearchOutput> tmpOutput = new LinkedList<ResearchOutput>();
             for (ResearchOutput tmp : ros) {
@@ -52,7 +52,7 @@ public class SurveyValidator implements Validator {
                 }
             }
 
-            if (noResearchOutput == null || noResearchOutput == 0) {
+            if (hasNoResearchOutput == null || !hasNoResearchOutput) {
                 if (ros == null || ros.size() == 0 || tmpOutput.size() == 0) {
                     errors.rejectValue("researchOutcome.researchOutputs", "project.survey.researchoutcome.required");
                 } else {

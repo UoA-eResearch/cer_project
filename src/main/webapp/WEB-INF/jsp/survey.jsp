@@ -235,7 +235,7 @@
           <tr>
             <td colspan="2">
               <br/>
-              <form:checkbox path="researchOutcome.noResearchOutput" value="1" label="There are no new research outputs to list for this project"/>
+              <form:checkbox path="researchOutcome.hasNoResearchOutput" value="true" label="There are no new research outputs to list for this project"/>
             </td>
           </tr>
         </table>
