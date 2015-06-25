@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import nz.ac.auckland.cer.project.util.AuditUtil;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.util.AuditUtil;
 import nz.ac.auckland.cer.project.util.Person;
 
 /*
@@ -38,17 +38,25 @@ public class AdminFilter implements Filter {
             HttpServletRequest request = (HttpServletRequest) req;
             String sharedToken = (String) request.getAttribute("shared-token");
             String cn = (String) request.getAttribute("cn");
-            flog.info(auditUtil.createAuditLogMessage(request, "cn=\"" + cn +"\" shared-token=" + sharedToken));
-            if (cn == null || sharedToken == null) {
-                log.error("At least one required Tuakiri attribute is null: cn='" + cn + "', shared-token=" + sharedToken);
+            String eppn = (String) request.getAttribute("eppn");
+            String o = (String) request.getAttribute("o");
+            flog.info(auditUtil.createAuditLogMessage(request, "eppn=" + eppn + " cn=\"" + cn +"\" shared-token=" + sharedToken));
+            if (cn == null || sharedToken == null || o == null) {
+                log.error("At least one mandatory Tuakiri attribute is null: cn='" + cn + "', shared-token='" + sharedToken + "', o='" + o + "'");
             }
             Researcher r = this.pdDao.getResearcherForTuakiriSharedToken(sharedToken);
+            if (r == null && eppn != null) {
+            	r = this.pdDao.getResearcherForEppn(eppn);
+            }
             Adviser a = this.pdDao.getAdviserForTuakiriSharedToken(sharedToken);
+            if (a == null && eppn != null) {
+            	a = this.pdDao.getAdviserForEppn(eppn);
+            }
+            boolean isResearcher = (r == null) ? false : true;
             boolean hasPersonRegistered = (a == null && r == null) ? false : true;
             request.setAttribute("hasPersonRegistered", hasPersonRegistered);
             if (hasPersonRegistered) {
-                boolean isResearcher = (r == null) ? false : true;
-                request.setAttribute("person", isResearcher ? new Person(r) : new Person(a));
+                request.setAttribute("person", isResearcher ? new Person(r) : new Person(a));                
             }
         } catch (final Exception e) {
             log.error("Unexpected error in AdminFilter", e);

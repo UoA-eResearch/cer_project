@@ -13,6 +13,17 @@
     )
   </select>	
 
+  <select id="getAdviserForEppn" parameterType="java.lang.String" resultType="nz.ac.auckland.cer.project.pojo.Adviser">
+    SELECT *
+    FROM adviser 
+    WHERE id IN (
+      SELECT adviserId 
+      FROM adviser_properties
+      WHERE propname = 'eppn' AND
+            propvalue = #{eppn}
+    )
+  </select>	
+
   <select id="getResearcherForTuakiriSharedToken" parameterType="java.lang.String" resultType="nz.ac.auckland.cer.project.pojo.Researcher">
     SELECT *
     FROM researcher 
@@ -21,6 +32,17 @@
       FROM researcher_properties
       WHERE propname = 'tuakiriSharedToken' AND
             propvalue = #{sharedToken}
+    )
+  </select> 
+
+  <select id="getResearcherForEppn" parameterType="java.lang.String" resultType="nz.ac.auckland.cer.project.pojo.Researcher">
+    SELECT *
+    FROM researcher 
+    WHERE id IN (
+      SELECT researcherId 
+      FROM researcher_properties
+      WHERE propname = 'eppn' AND
+            propvalue = #{eppn}
     )
   </select> 
 

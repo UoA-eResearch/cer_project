@@ -30,6 +30,12 @@ public interface ProjectDatabaseDao {
     public Researcher getResearcherForTuakiriSharedToken(
             String sharedToken) throws Exception;
 
+    public Researcher getResearcherForEppn(
+            String eppn) throws Exception;
+
+    public Adviser getAdviserForEppn(
+            String eppn) throws Exception;
+
     public Researcher getResearcherForId(
             Integer id) throws Exception;
 

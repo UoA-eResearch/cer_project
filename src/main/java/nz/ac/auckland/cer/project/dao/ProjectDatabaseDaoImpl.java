@@ -64,6 +64,21 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return null;
     }
 
+    public Adviser getAdviserForEppn(
+            String eppn) throws Exception {
+
+        List<Adviser> list = getSqlSession().selectList("getAdviserForEppn", eppn);
+        if (list != null) {
+            if (list.size() == 0) {
+                return null;
+            } else if (list.size() > 1) {
+                log.error("Internal error: More than one adviser in database with eppn " + eppn);
+            }
+            return list.get(0);
+        }
+        return null;
+    }
+
     public Researcher[] getAllStaffOrPostDocs() throws Exception {
 
         Researcher[] researchers = new Researcher[0];
@@ -94,6 +109,21 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
                 return null;
             } else if (list.size() > 1) {
                 log.error("Internal error: More than one researcher in database with shared token " + sharedToken);
+            }
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public Researcher getResearcherForEppn(
+            String eppn) throws Exception {
+
+        List<Researcher> list = getSqlSession().selectList("getResearcherForEppn", eppn);
+        if (list != null) {
+            if (list.size() == 0) {
+                return null;
+            } else if (list.size() > 1) {
+                log.error("Internal error: More than one researcher in database with eppn " + eppn);
             }
             return list.get(0);
         }
@@ -137,6 +167,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
                     if (p.getProjectCode().startsWith("uoa") ||
                             p.getProjectCode().startsWith("uoo") ||
                             p.getProjectCode().startsWith("rvmf") ||
+                            p.getProjectCode().startsWith("nesi") ||
                             p.getProjectCode().startsWith("landcare") ) {
                         projects.add(p);
                     }
