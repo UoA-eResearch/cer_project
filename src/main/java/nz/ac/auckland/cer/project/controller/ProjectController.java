@@ -2,6 +2,10 @@ package nz.ac.auckland.cer.project.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.util.Person;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,15 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.util.Person;
-
 @Controller
 public class ProjectController {
 
     private Logger log = Logger.getLogger(ProjectController.class.getName());
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     private String redirectIfNoAccount;
     private String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
 

@@ -9,12 +9,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
-import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutputType;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
 import nz.ac.auckland.cer.project.validation.ResearchOutputValidator;
 
 import org.apache.log4j.Logger;
@@ -39,7 +39,7 @@ public class ResearchOutputController {
     private final Logger log = Logger.getLogger(ResearchOutputController.class
             .getName());
     @Autowired
-    private ProjectDatabaseDao projectDao;
+    private ProjectDbDao projectDao;
     private String redirectIfNoAccount;
 
     @RequestMapping(value = "add_research_output", method = RequestMethod.GET)

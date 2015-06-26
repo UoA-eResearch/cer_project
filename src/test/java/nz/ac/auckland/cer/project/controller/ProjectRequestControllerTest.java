@@ -11,20 +11,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.Affiliation;
-import nz.ac.auckland.cer.project.pojo.Limitations;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectProperty;
-import nz.ac.auckland.cer.project.pojo.ProjectRequest;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.Affiliation;
+import nz.ac.auckland.cer.common.db.project.pojo.Limitations;
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectProperty;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectRequest;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
 
 import org.junit.After;
 import org.junit.Before;
@@ -50,7 +53,7 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 @WebAppConfiguration
 public class ProjectRequestControllerTest {
 
-    private Affiliation[] affiliations;
+    private List<Affiliation> affiliations;
     private final String expectedRedirect = "request_project_response";
     private Limitations limitations;
     private MockMvc mockMvc;
@@ -58,7 +61,7 @@ public class ProjectRequestControllerTest {
     private Person person;
     private Researcher superviser;
     private ProjectRequest pr;
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     private Researcher[] researchers;
     @Autowired private WebApplicationContext wac;
     @Autowired private EmailUtil eu;
@@ -109,7 +112,8 @@ public class ProjectRequestControllerTest {
         p.setDescription(pr.getProjectDescription());
         p.setId(42);
 
-        this.affiliations = new Affiliation[] { new Affiliation("Test", "Test", "Test") };
+        this.affiliations = new LinkedList<Affiliation>();
+        this.affiliations.add(new Affiliation("Test", "Test", "Test"));
         this.researchers = new Researcher[1];
         Researcher tmp = new Researcher();
         tmp.setFullName("John Doe");

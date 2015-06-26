@@ -6,13 +6,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.MembershipRequest;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.RPLink;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.MembershipRequest;
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.RPLink;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
 import nz.ac.auckland.cer.project.validation.MembershipRequestValidator;
 
 import org.apache.log4j.Logger;
@@ -34,7 +34,7 @@ public class MembershipRequestController {
     private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
     @Autowired private EmailUtil emailUtil;
     private final Logger log = Logger.getLogger(ProjectRequestController.class.getName());
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     private String redirectIfNoAccount;
 
     private void addResearcherToProject(

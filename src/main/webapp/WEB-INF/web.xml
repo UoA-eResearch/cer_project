@@ -41,7 +41,7 @@
 	</filter>
 	<filter>
 		<filter-name>RequestLogger</filter-name>
-		<filter-class>nz.ac.auckland.cer.project.filter.RequestLogger</filter-class>
+		<filter-class>nz.ac.auckland.cer.common.filter.RequestLogger</filter-class>
 	</filter>
 
 	<filter-mapping>

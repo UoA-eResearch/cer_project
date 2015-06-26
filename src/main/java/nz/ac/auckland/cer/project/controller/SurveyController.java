@@ -9,15 +9,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.FollowUp;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
-import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.FollowUp;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutputType;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.project.pojo.survey.ResearchOutcome;
 import nz.ac.auckland.cer.project.pojo.survey.Survey;
 import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
 import nz.ac.auckland.cer.project.util.SurveyUtil;
 import nz.ac.auckland.cer.project.validation.SurveyValidator;
 
@@ -42,7 +42,7 @@ public class SurveyController {
 	@Autowired
 	private EmailUtil emailUtil;
 	@Autowired
-	private ProjectDatabaseDao projectDao;
+	private ProjectDbDao projectDao;
 	@Autowired
 	private SurveyUtil surveyUtil;
 

@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.survey.Feedback;
 import nz.ac.auckland.cer.project.pojo.survey.FutureNeeds;
 import nz.ac.auckland.cer.project.pojo.survey.PerfImpBigger;

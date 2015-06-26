@@ -47,9 +47,10 @@
 
   <bean id="SurveyUtil" class="nz.ac.auckland.cer.project.util.SurveyUtil"/>
   
+  <bean id="AuditLog" class="nz.ac.auckland.cer.common.util.AuditLog"/>
   <bean id="AdminFilter" class="nz.ac.auckland.cer.project.filter.AdminFilter"/>
   
-  <bean id="IdentityInterceptor" class="nz.ac.auckland.cer.project.filter.IdentityInterceptor">
+  <bean id="IdentityInterceptor" class="nz.ac.auckland.cer.common.filter.IdentityInterceptor">
     <property name="idResource" value="${test.identity.properties.path}"/>
   </bean>
 

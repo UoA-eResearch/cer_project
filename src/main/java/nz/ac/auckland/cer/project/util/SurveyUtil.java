@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
 import nz.ac.auckland.cer.project.pojo.survey.PerfImpBigger;
 import nz.ac.auckland.cer.project.pojo.survey.Feedback;
 import nz.ac.auckland.cer.project.pojo.survey.FutureNeeds;

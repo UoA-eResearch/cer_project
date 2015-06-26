@@ -17,14 +17,14 @@ import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.MembershipRequest;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.RPLink;
-import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.MembershipRequest;
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.RPLink;
+import nz.ac.auckland.cer.common.db.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
 
 import org.junit.After;
 import org.junit.Before;
@@ -56,7 +56,7 @@ public class MembershipRequestControllerTest {
     private MembershipRequest mr;
     private Person person;
     private Project project;
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     private ProjectWrapper projectWrapper;
     @Autowired private WebApplicationContext wac;
     @Autowired private EmailUtil eu;

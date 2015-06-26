@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectRequest;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.RPLink;
+import nz.ac.auckland.cer.common.db.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.util.AffiliationUtil;
 import nz.ac.auckland.cer.common.util.TemplateEmail;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectRequest;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.RPLink;
-import nz.ac.auckland.cer.project.pojo.Researcher;
 import nz.ac.auckland.cer.project.pojo.survey.Survey;
 
 import org.apache.log4j.Logger;

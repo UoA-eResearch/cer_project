@@ -10,16 +10,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import static org.mockito.Mockito.*;
-
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.util.Person;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,7 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class ProjectControllerTest {
 
     @Autowired private WebApplicationContext wac;
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     private MockMvc mockMvc;
     private Person person;
     private Project project;

@@ -2,7 +2,6 @@ package nz.ac.auckland.cer.project.controller;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,20 +10,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashMap;
-
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.FollowUp;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
-import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.FollowUp;
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutputType;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
 
 import org.junit.After;
 import org.junit.Before;
@@ -53,7 +50,7 @@ public class SurveyControllerTest {
     private Project p;
     private ProjectWrapper pw;
     private Person person;
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     @Autowired private WebApplicationContext wac;
     @Autowired private EmailUtil eu;
     private GreenMail smtpServer;

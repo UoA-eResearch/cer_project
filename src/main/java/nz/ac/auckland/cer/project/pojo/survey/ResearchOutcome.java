@@ -3,7 +3,7 @@ package nz.ac.auckland.cer.project.pojo.survey;
 import java.util.LinkedList;
 import java.util.List;
 
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
 
 public class ResearchOutcome {
 

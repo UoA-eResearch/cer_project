@@ -1,6 +1,6 @@
 package nz.ac.auckland.cer.project.validation;
 
-import nz.ac.auckland.cer.project.pojo.MembershipRequest;
+import nz.ac.auckland.cer.common.db.project.pojo.MembershipRequest;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;

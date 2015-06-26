@@ -13,13 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.HashMap;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.FollowUp;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
-import nz.ac.auckland.cer.project.pojo.ResearchOutputType;
-import nz.ac.auckland.cer.project.util.Person;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.FollowUp;
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutputType;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +47,7 @@ public class SurveyControllerErrorTest {
     private Project p;
     private ProjectWrapper pw;
     private Person person;
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     @Autowired private WebApplicationContext wac;
     private GreenMail smtpServer;
 

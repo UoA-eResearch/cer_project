@@ -13,21 +13,21 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.APLink;
-import nz.ac.auckland.cer.project.pojo.Affiliation;
-import nz.ac.auckland.cer.project.pojo.Limitations;
-import nz.ac.auckland.cer.project.pojo.Project;
-import nz.ac.auckland.cer.project.pojo.ProjectFacility;
-import nz.ac.auckland.cer.project.pojo.ProjectProperty;
-import nz.ac.auckland.cer.project.pojo.ProjectRequest;
-import nz.ac.auckland.cer.project.pojo.ProjectWrapper;
-import nz.ac.auckland.cer.project.pojo.RPLink;
-import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.pojo.ScienceStudy;
-import nz.ac.auckland.cer.project.util.AffiliationUtil;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.APLink;
+import nz.ac.auckland.cer.common.db.project.pojo.Affiliation;
+import nz.ac.auckland.cer.common.db.project.pojo.Limitations;
+import nz.ac.auckland.cer.common.db.project.pojo.Project;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectFacility;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectProperty;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectRequest;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectWrapper;
+import nz.ac.auckland.cer.common.db.project.pojo.RPLink;
+import nz.ac.auckland.cer.common.db.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.pojo.ScienceStudy;
+import nz.ac.auckland.cer.common.db.project.util.AffiliationUtil;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.project.util.EmailUtil;
-import nz.ac.auckland.cer.project.util.Person;
 import nz.ac.auckland.cer.project.validation.ProjectRequestValidator;
 
 import org.apache.log4j.Logger;
@@ -51,7 +51,7 @@ public class ProjectRequestController {
 	@Autowired
 	private EmailUtil emailUtil;
 	@Autowired
-	private ProjectDatabaseDao projectDao;
+	private ProjectDbDao projectDao;
 	private final String adviserWarning = "In our books you are an adviser but not a researcher. Only researchers may use this tool.";
 	private String defaultHostInstitution;
 	private Integer initialResearcherRoleOnProject;
@@ -69,14 +69,14 @@ public class ProjectRequestController {
 
 	private void augmentModel(Map<String, Object> mav) {
 
-		Affiliation[] afs = null;
+		List<Affiliation> afs = null;
 		Map<Integer, String> superviserMap = null;
 		Map<Integer, String> scienceStuyMap = null;
 		String errorMessage = "";
 
 		try {
 			afs = this.projectDao.getAffiliations();
-			if (afs == null || afs.length == 0) {
+			if (afs == null || afs.size() == 0) {
 				throw new Exception();
 			}
 			List<String> tmp = this.affilUtil.getAffiliationStrings(afs);

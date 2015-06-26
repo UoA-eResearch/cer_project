@@ -1,6 +1,6 @@
 package nz.ac.auckland.cer.project.validation;
 
-import nz.ac.auckland.cer.project.pojo.ProjectRequest;
+import nz.ac.auckland.cer.common.db.project.pojo.ProjectRequest;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.validation.Errors;

@@ -1,6 +1,6 @@
 package nz.ac.auckland.cer.project.validation;
 
-import nz.ac.auckland.cer.project.pojo.ResearchOutput;
+import nz.ac.auckland.cer.common.db.project.pojo.ResearchOutput;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;

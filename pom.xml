@@ -335,6 +335,12 @@
       <version>1.0.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+        <groupId>nz.ac.auckland.cer</groupId>
+        <artifactId>cer-common</artifactId>
+        <version>0.1</version>
+        <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <pluginRepositories>
@@ -361,6 +367,11 @@
       <id>spring-maven-milestone</id>
       <name>Springframework Maven Repository</name>
       <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+    </repository>
+    <repository>
+      <id>code-nesi</id>
+      <name>NeSI repository</name>
+      <url>http://code.nesi.org.nz/nexus/content/repositories/releases/</url>
     </repository>
   </repositories>
 
