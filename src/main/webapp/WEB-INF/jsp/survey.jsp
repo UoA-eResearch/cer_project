@@ -127,7 +127,7 @@
         <div class="survey-section">
         <div class="survey-section-header">1. Performance Improvements</div>
         <div class="survey-section-description">
-          Please tick the appropriate boxes if the cluster enables you to run more, larger or faster jobs. 
+          Please tick the appropriate boxes if the Pan cluster or the Research Virtual Machine Farm enables you to run more, larger or faster jobs. 
           More than one box could apply to you.<br/>
           If this is the first time we have asked for your feedback, please think of this section as <i>Performance improvements
           compared to using your desktop environment, or machines available in your lab</i>.<br/>
