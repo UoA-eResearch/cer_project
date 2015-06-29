@@ -137,8 +137,21 @@
             
         <table cellpadding="10" cellspacing="2">
           <tr>
+
             <td valign="top">
-              <form:checkbox id="improv_faster" path="improvements" value="faster" label="My jobs run faster"/>
+              <form:checkbox id="improv_more" path="improvements" value="more" label="I can run more jobs"/>
+              <div id="more_div">
+                <hr>
+                <p>
+                  I can run up to <form:input path="perfImpMore.number" size="5" maxlength="5"/> jobs
+                  at the same time, which is <form:input path="perfImpMore.factor" size="5" maxlength="5"/>
+                  times more concurrent jobs than before
+                </p>
+              </div>
+            </td>
+
+            <td valign="top">
+              <form:checkbox id="improv_faster" path="improvements" value="faster" label="The code runs faster"/>
               <div id="faster_div">
                 <hr>
                 <p>
@@ -158,11 +171,11 @@
             </td>
           
             <td valign="top">
-              <form:checkbox id="improv_bigger" path="improvements" value="bigger" label="I can run larger jobs"/>
+              <form:checkbox id="improv_bigger" path="improvements" value="bigger" label="I can run larger problems"/>
               <div id="bigger_div">
                 <hr>
                 <p>
-                  I can run larger jobs now, up to <form:input path="perfImpBigger.factor" size="5" maxlength="5"/> times
+                  I can simulate larger problems now, up to <form:input path="perfImpBigger.factor" size="5" maxlength="5"/> times
                   larger than before, thanks to:
                 </p>
                 <p>
@@ -177,17 +190,6 @@
               </div>
             </td>
 
-            <td valign="top">
-              <form:checkbox id="improv_more" path="improvements" value="more" label="I can run more jobs"/>
-              <div id="more_div">
-                <hr>
-                <p>
-                  I can run up to <form:input path="perfImpMore.number" size="5" maxlength="5"/> jobs
-                  at the same time, which is <form:input path="perfImpMore.factor" size="5" maxlength="5"/>
-                  times more concurrent jobs than before
-                </p>
-              </div>
-            </td>
           </tr>
       
           <tr>
