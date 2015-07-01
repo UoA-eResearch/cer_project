@@ -31,6 +31,7 @@ public class SurveyValidator implements Validator {
         if (survey.getAddResearchOutputRow() == 0) {
             this.validatePerformanceSection(survey, surveyObject, errors);
             this.validateResearchOutcomeSection(survey, surveyObject, errors);
+            this.validateYourViewsSection(survey, surveyObject, errors);
         }
     }
 
@@ -74,6 +75,25 @@ public class SurveyValidator implements Validator {
             }        	
         }
     }
+
+    /*
+     * Validate the "More" subsection of the Performance section of the survey
+     */
+    private void validateYourViewsSection(
+            Survey survey,
+            Object surveyObject,
+            Errors errors) {
+
+    	String tmp1 = survey.getYourViews().getRecommendChoice();
+    	String tmp2 = survey.getYourViews().getMeetNeedChoice();
+    	String tmp3 = survey.getYourViews().getAdequateSupportChoice();
+    	if (tmp1 == null || tmp1.trim().isEmpty() ||
+    		tmp2 == null || tmp2.trim().isEmpty() ||
+    		tmp3 == null || tmp3.trim().isEmpty()) {
+    		errors.rejectValue("yourViews.recommendChoice", "project.survey.yourviews.required");    	
+    	}
+    }
+
 
     private void validatePerformanceSection(
             Survey survey,

@@ -95,6 +95,9 @@ public class SurveyControllerTest {
         		.param("pCode", this.p.getId().toString())
         		.param("improvements", "same")
         		.param("researchOutcome.hasNoResearchOutput", "true")
+        		.param("yourViews.recommendChoice", "Agree")
+        		.param("yourViews.meetNeedChoice", "Agree")
+        		.param("yourViews.adequateSupportChoice", "Agree")
         		.requestAttr("person", this.person);
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())

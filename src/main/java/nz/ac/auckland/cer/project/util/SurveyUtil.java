@@ -20,7 +20,9 @@ public class SurveyUtil {
 	protected String fnTemplate = "Future Needs:<br>__FN__";
 	protected String fbTemplate = "Feedback:<br>__FB__";
 	protected String roTemplate = "Research Outcome:<br>__RO__";
-	protected String fuTemplate = "__PI__<br><br>__FN__<br><br>__FB__";
+	protected String yvTemplate = "Views:<br>__YV__";
+	protected String gbtmTemplate = "I would like you to follow up with me: __GBTM__";
+	protected String fuTemplate = "__PI__<br><br>__YV__<br><br>__FB__<br><br>__FN__<br><br>__GBTM__";
 	protected String surveyTemplate = fuTemplate + "<br><br>__RO__";
 
 	// create string from performance improvements
@@ -115,29 +117,65 @@ public class SurveyUtil {
 			if (l == null || l.isEmpty() ) {
 				sb.append("N/A");
 			} else {
-				for (ResearchOutput ro: l) {
-					sb.append(ro.getDescription()).append(" (typeId=")
-					  .append(ro.getTypeId()).append(")<br>");						
+				for (int i=0; i<l.size(); i++) {
+					sb.append(l.get(i).getDescription()).append(" (typeId=")
+					  .append(l.get(i).getTypeId()).append(")");						
+					if (i < l.size()-1) {
+						sb.append("<br>");
+					}
 				}
 			}
 		}
 		return roTemplate.replace("__RO__", sb.toString());
 	}
 
+	// create string from overall view
+	public String createYvString(Survey s) {
+
+		StringBuilder sb = new StringBuilder();
+		if (s == null || s.getYourViews() == null) {
+			sb.append("N/A");
+		} else {
+			sb.append(s.getYourViews().toString());
+		}
+		return yvTemplate.replace("__YV__", sb.toString());
+	}
+
+	// create string from research outputs
+	public String createGbtmString(Survey s) {
+
+		StringBuilder sb = new StringBuilder();
+		if (s == null || s.getGetBackToMe() == null) {
+			sb.append("N/A");
+		} else {
+			if (s.getGetBackToMe()) {
+				sb.append("Yes");
+			} else {
+				sb.append("No");
+			}
+		}
+		return gbtmTemplate.replace("__GBTM__", sb.toString());
+	}
+
 	public String createFollowUpString(Survey s) throws Exception {
 
-		return fuTemplate.replace("__PI__", this.createPiString(s))
+		return fuTemplate
+			.replace("__PI__", this.createPiString(s))
+			.replace("__YV__", this.createYvString(s))
+			.replace("__GBTM__", this.createGbtmString(s))
 			.replace("__FN__", this.createFnString(s))
 			.replace("__FB__", this.createFbString(s));
 	}
 
 	public String createSurveyString(Survey s) throws Exception {
 
-		return surveyTemplate.replace("__PI__", this.createPiString(s))
+		return surveyTemplate
+			.replace("__PI__", this.createPiString(s))
 			.replace("__FN__", this.createFnString(s))
 			.replace("__FB__", this.createFbString(s))
-			.replace("__RO__", this.createRoString(s));			
+			.replace("__RO__", this.createRoString(s))
+			.replace("__YV__", this.createYvString(s))
+			.replace("__GBTM__", this.createGbtmString(s));
 	}
-	
 
 }

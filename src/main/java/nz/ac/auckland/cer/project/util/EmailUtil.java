@@ -247,8 +247,6 @@ public class EmailUtil {
 		templateParams
 				.put("__PROJECT_CODE__", pw.getProject().getProjectCode());
 		templateParams.put("__PROJECT_TITLE__", pw.getProject().getName());
-		templateParams.put("__PROJECT_DESCRIPTION__", pw.getProject()
-				.getDescription());
 		templateParams.put("__PROJECT_LINK__", this.projectBaseUrl
 				+ pw.getProject().getId());
 

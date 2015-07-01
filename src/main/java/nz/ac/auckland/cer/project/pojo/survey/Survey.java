@@ -13,6 +13,8 @@ public class Survey {
 	private FutureNeeds futureNeeds;
 	private Feedback feedback;
 	private ResearchOutcome researchOutcome;
+	private YourViews yourViews;
+	private Boolean getBackToMe = false;
 
 	public Survey() {
 		this.perfImpBigger = new PerfImpBigger();
@@ -21,8 +23,9 @@ public class Survey {
 		this.futureNeeds = new FutureNeeds();
 		this.feedback = new Feedback();
 		this.researchOutcome = new ResearchOutcome();
+		this.yourViews = new YourViews();
 	}
-	
+
 	public PerfImpFaster getPerfImpFaster() {
 		return perfImpFaster;
 	}
@@ -105,6 +108,26 @@ public class Survey {
 	public void setAddResearchOutputRow(Integer addResearchOutputRow) {
 
 		this.addResearchOutputRow = addResearchOutputRow;
+	}
+
+	public YourViews getYourViews() {
+
+		return yourViews;
+	}
+
+	public void setYourViews(YourViews yourViews) {
+
+		this.yourViews = yourViews;
+	}
+
+	public Boolean getGetBackToMe() {
+		
+		return getBackToMe;
+	}
+
+	public void setGetBackToMe(Boolean getBackToMe) {
+		
+		this.getBackToMe = getBackToMe;
 	}
 
 }

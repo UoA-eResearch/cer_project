@@ -9,9 +9,6 @@ Project Information:
 Title:
 __PROJECT_TITLE__
 
-Description:
-__PROJECT_DESCRIPTION__
-
 
 Survey:
 =======

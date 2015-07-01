@@ -19,7 +19,7 @@
                 $(div_name).fadeTo("fast",1.0);
                 $(div_name).find('textarea,:text,:checkbox').prop("disabled", false);
             } else {
-                $(div_name).fadeTo("fast", 0.2);
+                $(div_name).fadeTo("fast", 0.4);
                 $(div_name).find('textarea,:text,:checkbox').prop("disabled", true);
                 $(div_name).find('textarea,:text').val('');
                 $(div_name).find(':checkbox').removeAttr('checked');
@@ -127,10 +127,12 @@
         <div class="survey-section">
         <div class="survey-section-header">1. Performance Improvements</div>
         <div class="survey-section-description">
-          Please tick the appropriate boxes if the Pan cluster or the Research Virtual Machine Farm enables you to run more, larger or faster jobs. 
+          Please tick the appropriate boxes if the Pan cluster or the Research Virtual
+          Machine Farm enables you to run more, larger or faster jobs. 
           More than one box could apply to you.<br/>
-          If this is the first time we have asked for your feedback, please think of this section as <i>Performance improvements
-          compared to using your desktop environment, or machines available in your lab</i>.<br/>
+          If this is the first time we have asked for your feedback, please think of 
+          this section as <i>Performance improvements compared to using your desktop 
+          environment, or machines available in your lab</i>.<br/>
           Otherwise, please specify improvements since last year's survey.
         </div>
         <div class="survey-section-body">
@@ -139,29 +141,34 @@
           <tr>
 
             <td valign="top">
-              <form:checkbox id="improv_more" path="improvements" value="more" label="I can run more jobs"/>
+              <form:checkbox id="improv_more" path="improvements" 
+                  value="more" label="I can run more jobs"/>
               <div id="more_div">
                 <hr>
                 <p>
-                  I can run up to <form:input path="perfImpMore.number" size="5" maxlength="5"/> jobs
-                  at the same time, which is <form:input path="perfImpMore.factor" size="5" maxlength="5"/>
+                  I can run up to
+                  <form:input path="perfImpMore.number" size="5" maxlength="5"/>
+                  jobs at the same time, which is 
+                  <form:input path="perfImpMore.factor" size="5" maxlength="5"/>
                   times more concurrent jobs than before
                 </p>
               </div>
             </td>
 
             <td valign="top">
-              <form:checkbox id="improv_faster" path="improvements" value="faster" label="The code runs faster"/>
+              <form:checkbox id="improv_faster" path="improvements" 
+                  value="faster" label="The code runs faster"/>
               <div id="faster_div">
                 <hr>
                 <p>
-                  My jobs run <form:input path="perfImpFaster.factor" size="5" maxlength="5"/> times faster
-                  than before, thanks to:
+                  My jobs run
+                  <form:input path="perfImpFaster.factor" size="5" maxlength="5"/>
+                  times faster than before, thanks to:
                 </p>
                 <p>
                   <form:checkboxes items="${survey.perfImpFaster.optionStrings}" 
-                                   path="perfImpFaster.options" 
-                                   delimiter="<br/>"/>
+                      path="perfImpFaster.options" 
+                      delimiter="<br/>"/>
                 </p>
                 <p>
                   Other reason:<br/>
@@ -171,21 +178,24 @@
             </td>
           
             <td valign="top">
-              <form:checkbox id="improv_bigger" path="improvements" value="bigger" label="I can run larger problems"/>
+              <form:checkbox id="improv_bigger" path="improvements" 
+                  value="bigger" label="I can run larger problems"/>
               <div id="bigger_div">
                 <hr>
                 <p>
-                  I can simulate larger problems now, up to <form:input path="perfImpBigger.factor" size="5" maxlength="5"/> times
-                  larger than before, thanks to:
+                  I can simulate larger problems now, up to
+                  <form:input path="perfImpBigger.factor" size="5" maxlength="5"/>
+                  times larger than before, thanks to:
                 </p>
                 <p>
                   <form:checkboxes items="${survey.perfImpBigger.optionStrings}" 
-                                   path="perfImpBigger.options" 
-                                   delimiter="<br/>"/>
+                      path="perfImpBigger.options" 
+                      delimiter="<br/>"/>
                 </p>
                 <p>
                     Other reason:<br/>
-                    <form:textarea path="perfImpBigger.otherReason" rows="3" cols="40"/>
+                    <form:textarea path="perfImpBigger.otherReason" 
+                        rows="3" cols="40"/>
                 </p>
               </div>
             </td>
@@ -194,7 +204,8 @@
       
           <tr>
             <td colspan="3">
-              <form:checkbox id="improv_same" path="improvements" value="same" label="No improvements"/>
+              <form:checkbox id="improv_same" path="improvements" 
+                  value="same" label="No improvements"/>
             </td>
           </tr>
         </table>
@@ -225,13 +236,17 @@
                 </form:select>
               </td>
               <td>
-                <form:textarea path="researchOutcome.researchOutputs[${i.index}].description" placeholder="Add the description/citation here" rows="3" cols="100"/>        
+                <form:textarea path="researchOutcome.researchOutputs[${i.index}].description" 
+                    placeholder="Add the description/citation here" 
+                    rows="3" cols="100"/>        
               </td>
             </tr>
           </c:forEach>
           <tr>
             <td colspan="2">
-              <form:input id="doAddResearchOutputRow" path="addResearchOutputRow" type="submit" value="Add new blank row to add more research outputs"/>
+              <form:input id="doAddResearchOutputRow" path="addResearchOutputRow" 
+                  type="submit" 
+                  value="Add new blank row to add more research outputs"/>
             </td>
           </tr>
           <tr>
@@ -267,13 +282,59 @@
         </c:if>
         </div>
         </div>
-      
 
 
+
+        <!-- Your views -->
+        <br/><br/>
+        <div class="survey-section">
+        <div class="survey-section-header">3. Your Views</div>
+        <div class="survey-section-description">
+          Please indicate how much you agree with the following statements about the
+          NeSI Auckland cluster and the Centre for eResearch Research VM Farm.<br>
+          <i>If you are using only one of those services at the moment,
+             rate your experience based on the service you are familiar with.</i>
+        </div>
+        <div class="survey-section-body">
+          <table cellpadding="3" cellspacing="2" class="fixed">
+            <col/>
+            <c:forEach var="choice" items="${survey.yourViews.choices}">
+              <col width="80px" />
+            </c:forEach>
+           	<tr>
+           	  <td>&nbsp;</td>
+           	  <c:forEach var="choice" items="${survey.yourViews.choices}">
+           	    <td style='text-align: center'>${choice.value}</td>
+           	  </c:forEach>
+           	</tr>
+           	<tr>
+           	  <td>${survey.yourViews.recommend}</td>
+              <form:radiobuttons path="yourViews.recommendChoice" 
+                  items="${survey.yourViews.choices}" 
+                  itemValue="value" itemLabel="label" 
+                  element="td style='text-align: center'"/>
+            </tr>
+            <tr>
+              <td>${survey.yourViews.meetNeed}</td> 	
+              <form:radiobuttons path="yourViews.meetNeedChoice"
+                  items="${survey.yourViews.choices}" 
+                  itemValue="value" itemLabel="label" 
+                  element="td style='text-align: center'"/>
+            </tr>
+            <tr>
+              <td>${survey.yourViews.adequateSupport}</td>
+              <form:radiobuttons path="yourViews.adequateSupportChoice" 
+                  items="${survey.yourViews.choices}" 
+                  itemValue="value" itemLabel="label" 
+                  element="td style='text-align: center'"/>          
+          </table>
+        </div>
+        </div>
+    
         <!-- Future needs -->
         <br/><br/>
         <div class="survey-section">
-        <div class="survey-section-header">3. Anticipated Future Needs (optional)</div>
+        <div class="survey-section-header">4. Anticipated Future Needs (optional)</div>
         <div class="survey-section-description">
           Your feedback in this section will help us make decisions on future hardware purchases.
         </div>
@@ -284,8 +345,8 @@
               <td valign="top">
                 <p>
                   <form:checkboxes items="${survey.futureNeeds.optionStrings}"
-                                   path="futureNeeds.options"
-                                   delimiter="<br/>"/>
+                      path="futureNeeds.options"
+                      delimiter="<br/>"/>
                 </p>
                 <p>
                   Other:<br/>
@@ -302,12 +363,12 @@
       <!-- Feedback -->
       <br/><br/>
       <div class="survey-section">
-      <div class="survey-section-header">4. Feedback (optional)</div>
+      <div class="survey-section-header">5. Feedback (optional)</div>
       <div class="survey-section-description">
+        What could we do to improve your ability to conduct research?
         Your feedback will help us improve the service we provide.
       </div>
       <div class="survey-section-body">
-      
           Feedback:<br/>
           <form:textarea path="feedback.feedback" rows="8" cols="100"/>
       </div>
@@ -315,8 +376,14 @@
       
       
       <p>
+        <form:checkbox id="getBackToMe" path="getBackToMe" 
+            value="True" label="I would like you to follow up with me"/>
+      </p>
+      
+      <p>
         <input type="submit" value="Submit Survey">
       </p>
+    
     </form:form>
     
     </c:otherwise>

@@ -132,8 +132,9 @@ public class SurveyControllerErrorTest {
         RequestBuilder rb = post("/survey").param("pCode", this.p.getId().toString()).requestAttr("person", this.person);
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())
-            .andExpect(model().attributeErrorCount("survey", 2))
-            .andExpect(model().attributeHasFieldErrors("survey", "researchOutcome.researchOutputs", "improvements"));
+            .andExpect(model().attributeErrorCount("survey", 3))
+            .andExpect(model().attributeHasFieldErrors("survey", 
+            	"researchOutcome.researchOutputs", "improvements", "yourViews.recommendChoice"));
         //.andDo(print());
         verify(projectDao, times(0)).addOrUpdateFollowUp((FollowUp) any());
         verify(projectDao, times(0)).addOrUpdateResearchOutput((ResearchOutput) any());
@@ -148,11 +149,15 @@ public class SurveyControllerErrorTest {
         RequestBuilder rb = post("/survey")
         		.param("pCode", this.p.getId().toString())
         		.param("improvements", "same")
+        		.param("yourViews.recommendChoice", "Agree")
+        		.param("yourViews.meetNeedChoice", "Agree")
+        		.param("yourViews.adequateSupportChoice", "Agree")
         		.requestAttr("person", this.person);
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk())
             .andExpect(model().attributeErrorCount("survey", 1))
-            .andExpect(model().attributeHasFieldErrors("survey", "researchOutcome.researchOutputs"));
+            .andExpect(model().attributeHasFieldErrors("survey", 
+            		"researchOutcome.researchOutputs"));
         //.andDo(print());
         verify(projectDao, times(0)).addOrUpdateFollowUp((FollowUp) any());
         verify(projectDao, times(0)).addOrUpdateResearchOutput((ResearchOutput) any());
