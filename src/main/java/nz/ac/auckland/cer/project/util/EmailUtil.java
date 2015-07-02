@@ -255,8 +255,10 @@ public class EmailUtil {
 		templateParams.put("__SURVEY_STRING__", surveyString);
 
 		try {
+			String emailSubject = this.surveyNoticeEmailSubject + " (" + 
+					pw.getProject().getProjectCode() + ")";
 			this.templateEmail.sendFromResource(this.emailFrom, this.emailTo,
-					null, this.replyTo, this.surveyNoticeEmailSubject,
+					null, this.replyTo, emailSubject,
 					this.surveyNoticeBodyResource, templateParams);
 		} catch (Exception e) {
 			log.error("Failed to send survey email.", e);
