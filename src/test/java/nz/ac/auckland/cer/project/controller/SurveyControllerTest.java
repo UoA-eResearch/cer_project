@@ -110,7 +110,7 @@ public class SurveyControllerTest {
         assert (this.eu.getEmailFrom().equals(((InternetAddress) m.getFrom()[0]).toString()));
         assert (this.eu.getEmailTo().equals(((InternetAddress) m.getRecipients(RecipientType.TO)[0]).toString()));
         assert (this.eu.getReplyTo().equals(((InternetAddress) m.getReplyTo()[0]).toString()));
-        assert ("Survey reply".equals(m.getSubject()));
+        assert ("2015 CeR annual survey reply".equals(m.getSubject()));
         String body = GreenMailUtil.getBody(m);
         assert (!body.contains("__"));
         assert (body.contains("Performance Improvements:\r\nN/A"));
