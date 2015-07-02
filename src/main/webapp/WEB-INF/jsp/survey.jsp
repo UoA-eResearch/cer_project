@@ -67,7 +67,6 @@
 
   <body>
 
-    <h2>Project Survey</h2>
 
     <c:choose>
       <c:when test="${not empty error_message}">
@@ -77,49 +76,52 @@
       </c:when>
       <c:otherwise>
     
-      <table id="projectTable" cellpadding="5">
-        <tr>
-          <td valign="top"><nobr><b>Project Title</b>:</nobr></td>
-          <td>${pw.project.name}</td>
-        </tr>
-        <tr>
-          <td valign="top"><nobr><b>Project Description</b>:</nobr></td>
-          <td>${pw.project.description}</td>
-        </tr>
-        <tr>
-          <td valign="top"><nobr><b>Researchers</b>:</nobr></td>
-          <td>
-            <table id="researcherTable" class="tablesorter">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Role on project</th>
-              </tr>
-            </thead>
-            <tbody>
-              <c:forEach items="${pw.rpLinks}" var="rpLink">
-                <tr>
-                  <td>${rpLink.researcher.fullName}</td>
-                  <td>${rpLink.researcherRoleName}</td>
-                </tr>
-              </c:forEach>
-            </tbody>
-          </table>
-            
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"><nobr><b>Project Code</b>:</nobr></td>
-          <td>${pw.project.projectCode}</td>
-        </tr>
-      </table>
-
-      <p/>
       
-  
       <form:form id="form" method="POST" commandName="survey" action='survey'>
-      
+            
+        <h2>Project Survey</h2>
+  
         <form:errors path="*" cssClass="errorblock" element="div" />
+      
+        <table id="projectTable" cellpadding="5">
+          <tr>
+            <td valign="top"><nobr><b>Project Title</b>:</nobr></td>
+            <td>${pw.project.name}</td>
+          </tr>
+          <tr>
+            <td valign="top"><nobr><b>Project Description</b>:</nobr></td>
+            <td>${pw.project.description}</td>
+          </tr>
+          <tr>
+            <td valign="top"><nobr><b>Researchers</b>:</nobr></td>
+            <td>
+              <table id="researcherTable" class="tablesorter">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Role on project</th>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach items="${pw.rpLinks}" var="rpLink">
+                  <tr>
+                    <td>${rpLink.researcher.fullName}</td>
+                    <td>${rpLink.researcherRoleName}</td>
+                  </tr>
+                </c:forEach>
+              </tbody>
+            </table>
+            
+            </td>
+          </tr>
+          <tr>
+            <td valign="top"><nobr><b>Project Code</b>:</nobr></td>
+            <td>${pw.project.projectCode}</td>
+          </tr>
+        </table>
+
+        <p/>
+      
         <form:hidden path="projectCode"/>
         <form:hidden id="addResearchOutputRow" path="addResearchOutputRow"/>
       
@@ -127,8 +129,8 @@
         <div class="survey-section">
         <div class="survey-section-header">1. Performance Improvements</div>
         <div class="survey-section-description">
-          Please tick the appropriate boxes if the Pan cluster or the Research Virtual
-          Machine Farm enables you to run more, larger or faster jobs. 
+          Please tick the appropriate boxes if the NeSI Auckland Pan cluster or the 
+          Centre for eResearch Research VM Farm enables you to run more, larger or faster jobs. 
           More than one box could apply to you.<br/>
           If this is the first time we have asked for your feedback, please think of 
           this section as <i>Performance improvements compared to using your desktop 
@@ -291,7 +293,7 @@
         <div class="survey-section-header">3. Your Views</div>
         <div class="survey-section-description">
           Please indicate how much you agree with the following statements about the
-          NeSI Auckland cluster and the Centre for eResearch Research VM Farm.<br>
+          NeSI Auckland Pan cluster and the Centre for eResearch Research VM Farm.<br>
           <i>If you are using only one of those services at the moment,
              rate your experience based on the service you are familiar with.</i>
         </div>
