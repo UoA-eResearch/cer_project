@@ -129,7 +129,7 @@ public class ProjectRequestController {
 			rpLinks.add(rpl);
 		}
 		APLink apl = new APLink();
-		apl.setAdviserId(6);
+		apl.setAdviserId(1);
 		apl.setAdviserRoleId(1);
 
 		p.setName(pr.getProjectTitle());
