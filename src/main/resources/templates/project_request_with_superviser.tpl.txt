@@ -21,3 +21,5 @@ E-mail      : __SUPERVISER_EMAIL__
 Phone       : __SUPERVISER_PHONE__
 
 __SUPERVISER_EXTRA_INFOS__
+
+Supervisor notification: __SUPERVISER_NOTIFICATION_STATUS__
