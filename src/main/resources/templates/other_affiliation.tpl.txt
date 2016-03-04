@@ -1,13 +1,18 @@
+#group Application Support Team
 #requester __RESEARCHER_EMAIL__
 #tags no_feedback no_initial_notification no_solved_notification
 
-An affiliation, that has not yet been stored in the database, has been
-put into the project request form as affiliation of a supervisor.
+An affiliation not known to the database has been put into the project request
+form as the affiliation of a supervisor.
 
-Markus, Nick, Martin:
-Please check the following three fields for typos and add them to the database:
+Please check the following three fields for typos and, if appropriate, add them
+to the project database:
 
 Institution: __INSTITUTION__
 Division   : __DIVISION__
 Department : __DEPARTMENT__
 
+If you create a new institution for this supervisor, please also consider
+adding the institution's code to the "academicInstitutionCodes" list in
+grand_unified_user_creator. If you are unsure how to do this, please consult
+a maintainer of the panadmin toolkit.
