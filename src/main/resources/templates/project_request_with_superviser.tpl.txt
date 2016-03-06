@@ -1,3 +1,7 @@
+#group Application Support Team
+#requester __RESEARCHER_EMAIL__
+#tags no_initial_notification no_solved_notification no_feedback
+
 __RESEARCHER_NAME__ requested a new project to be created.
 
 Title:
