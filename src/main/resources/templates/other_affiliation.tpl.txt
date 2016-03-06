@@ -12,7 +12,11 @@ Institution: __INSTITUTION__
 Division   : __DIVISION__
 Department : __DEPARTMENT__
 
-If you create a new institution for this supervisor, please also consider
-adding the institution's code to the "academicInstitutionCodes" list in
-grand_unified_user_creator. If you are unsure how to do this, please consult
-a maintainer of the panadmin toolkit.
+If you create a new institution record for this supervisor, please also
+consider adding the institution's code to the "academicInstitutionCodes" list
+in grand_unified_user_creator. If you are unsure how to do this, please
+consult a maintainer of the panadmin toolkit.
+
+If there are typos, please correct any affected values in the profile of the
+affected supervisor, whether or not you create a new institution record in the
+database.
